@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Local Claude Code config (not shared)
+.claude/
+
+# GStack workspace (external scratch / mockups)
+.gstack/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>LazzyMerlin OG Template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;600&family=LXGW+WenKai+TC:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F2E8;
+      --bg-raised: #F1EADD;
+      --ink: #1C1410;
+      --ink-muted: #5C5247;
+      --primary: #416880;
+      --stone: #5C5247;
+      --hairline: rgba(92, 82, 71, 0.3);
+    }
+    [data-theme="dark"] {
+      --bg: #070D14;
+      --bg-raised: #0E1720;
+      --ink: #EBE3DA;
+      --ink-muted: #8B7D71;
+      --primary: #699FC5;
+      --stone: #8B7D71;
+      --hairline: rgba(139, 125, 113, 0.28);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #333;
+      font-family: 'Geist', 'Noto Sans TC', sans-serif;
+      padding: 40px;
+    }
+
+    /* Control panel */
+    .controls {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+      background: #fff;
+      padding: 20px 24px;
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      align-items: end;
+    }
+    .controls label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #666;
+      margin-bottom: 6px;
+      font-family: 'Geist Mono', monospace;
+    }
+    .controls input, .controls select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .controls .help {
+      font-size: 11px;
+      color: #888;
+      margin-top: 8px;
+      grid-column: 1 / -1;
+    }
+
+    /* The actual OG card — fixed 1200x630 for social media */
+    .og-card {
+      width: 1200px;
+      height: 630px;
+      background: var(--bg);
+      color: var(--ink);
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    /* Ambient orbs (from site) */
+    .og-ambient {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .og-orb-1 {
+      position: absolute;
+      right: -10%;
+      top: -20%;
+      width: 70%;
+      height: 70%;
+      border-radius: 50%;
+      background: radial-gradient(circle, color-mix(in srgb, var(--primary) 25%, transparent), transparent 70%);
+      filter: blur(80px);
+    }
+    .og-orb-2 {
+      position: absolute;
+      left: -15%;
+      bottom: -30%;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      background: radial-gradient(circle, oklch(0.65 0.06 65 / 0.2), transparent 70%);
+      filter: blur(100px);
+    }
+
+    /* Grain */
+    .og-grain {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Content layout */
+    .og-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      padding: 72px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Top: sigil + wordmark */
+    .og-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .og-sigil {
+      color: var(--primary);
+      font-size: 36px;
+      line-height: 1;
+    }
+    .og-wordmark {
+      font-family: 'LXGW WenKai TC', serif;
+      font-size: 24px;
+      letter-spacing: 0.02em;
+    }
+    .og-wordmark .en {
+      color: var(--ink-muted);
+      font-family: 'Geist Mono', monospace;
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+
+    /* Middle: project title */
+    .og-middle {
+      max-width: 880px;
+    }
+    .og-kicker {
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.22em;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .og-kicker::before {
+      content: '';
+      width: 36px;
+      height: 1px;
+      background: var(--primary);
+    }
+    .og-title {
+      font-family: 'LXGW WenKai TC', serif;
+      font-size: 96px;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
+    .og-subtitle {
+      font-size: 24px;
+      color: var(--ink-muted);
+      line-height: 1.5;
+      max-width: 720px;
+      font-family: 'Geist', 'Noto Sans TC', sans-serif;
+    }
+
+    /* Bottom: brand */
+    .og-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--hairline);
+      padding-top: 24px;
+    }
+    .og-brand {
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+    }
+    .og-brand .primary {
+      color: var(--primary);
+    }
+    .og-sigil-corner {
+      color: var(--primary);
+      font-size: 28px;
+      opacity: 0.6;
+    }
+
+    /* Print-friendly (for screenshot tools) */
+    @media print {
+      body { padding: 0; background: transparent; }
+      .controls { display: none; }
+      .og-card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls">
+    <div>
+      <label>Kicker（分類）</label>
+      <input type="text" id="kicker" value="FEATURED SPELL" />
+    </div>
+    <div>
+      <label>Project Title</label>
+      <input type="text" id="title" value="稷下學院官網" />
+    </div>
+    <div>
+      <label>Subtitle（選用）</label>
+      <input type="text" id="subtitle" value="策略顧問公司官網，內建問卷系統與自動產出 PDF 報告。" />
+    </div>
+    <div>
+      <label>Theme</label>
+      <select id="theme">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+    <div class="help">
+      匯出方法：截圖工具（CleanShot）選 1200×630 區域 → 儲存為 PNG。或用 Puppeteer / Playwright 做自動化。<br>
+      每個專案建立一張 OG image，放在 <code>/public/og/{project-name}.png</code>，在 <code>&lt;head&gt;</code> 加 <code>&lt;meta property="og:image" content="..."&gt;</code>。
+    </div>
+  </div>
+
+  <div class="og-card" id="ogCard">
+    <div class="og-ambient">
+      <div class="og-orb-1"></div>
+      <div class="og-orb-2"></div>
+    </div>
+    <div class="og-grain"></div>
+
+    <div class="og-content">
+      <div class="og-top">
+        <span class="og-sigil">✦</span>
+        <span class="og-wordmark">威爾的懶人主義 <span class="en">LazzyMerlin</span></span>
+      </div>
+
+      <div class="og-middle">
+        <div class="og-kicker" id="kickerOut">FEATURED SPELL</div>
+        <h1 class="og-title" id="titleOut">稷下學院官網</h1>
+        <p class="og-subtitle" id="subtitleOut">策略顧問公司官網，內建問卷系統與自動產出 PDF 報告。</p>
+      </div>
+
+      <div class="og-bottom">
+        <div class="og-brand"><span class="primary">LAZZYMERLIN</span> · EST. MMXXVI · lazzymerlin.com</div>
+        <div class="og-sigil-corner">◈</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const bind = (inId, outId) => {
+      const inp = document.getElementById(inId);
+      const out = document.getElementById(outId);
+      inp.addEventListener('input', () => out.textContent = inp.value);
+    };
+    bind('kicker', 'kickerOut');
+    bind('title', 'titleOut');
+    bind('subtitle', 'subtitleOut');
+    document.getElementById('theme').addEventListener('change', e => {
+      document.documentElement.setAttribute('data-theme', e.target.value);
+    });
+  </script>
+
+</body>
+</html>
