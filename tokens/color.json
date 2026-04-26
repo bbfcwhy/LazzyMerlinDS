@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
+  "color": {
+    "wood": {
+      "$description": "Brand Core 8 色 wood palette（§2.1）。所有其他色都從這裡 reference 出來，不做新 hex。",
+      "parchment":       { "$value": "#F5EFE4", "$type": "color", "$description": "Light surface · 奶油紙底" },
+      "tan":             { "$value": "#DECCA7", "$type": "color", "$description": "Light surface muted / Dark ink muted" },
+      "stone":           { "$value": "#967459", "$type": "color", "$description": "中性 muted accent · 兩 mode 共用" },
+      "espresso":        { "$value": "#4E3029", "$type": "color", "$description": "Light ink muted / Dark surface muted" },
+      "midnight-petrol": { "$value": "#0F1C26", "$type": "color", "$description": "Dark surface · Light ink · 品牌藍錨" },
+      "primary-deep":    { "$value": "#334D5C", "$type": "color", "$description": "Brand 強調 · 兩 mode 共用 · dark mode 不當文字（對比不足）" },
+      "primary":         { "$value": "#46647C", "$type": "color", "$description": "主 CTA / 連結色 · light primary = dark primary-soft" },
+      "mid-petrol":      { "$value": "#5E7A8D", "$type": "color", "$description": "Light primary-soft = dark primary（兩 mode 互換）" }
+    },
+    "earth": {
+      "$description": "Status Extension（§2.2）· 大地色系，跟 wood palette 同 saturation 量級。Status-only 不擴 brand core。",
+      "terracotta-light": { "$value": "#9E5949", "$type": "color", "$description": "Light mode error / destructive · Terracotta 陶土紅" },
+      "terracotta-dark":  { "$value": "#C58775", "$type": "color", "$description": "Dark mode error / destructive · 提亮版陶土" },
+      "sage-light":       { "$value": "#6A7A60", "$type": "color", "$description": "Light mode success · Sage / Moss 苔蘚綠" },
+      "sage-dark":        { "$value": "#A8B898", "$type": "color", "$description": "Dark mode success · 提亮版 sage" },
+      "ochre-light":      { "$value": "#8E6E37", "$type": "color", "$description": "Light mode warning · Burnt Ochre 赭石黃" },
+      "ochre-dark":       { "$value": "#D4AB6E", "$type": "color", "$description": "Dark mode warning · 提亮版赭" }
+    },
+    "light": {
+      "$description": "Light mode role tokens · 所有 light mode CSS 用這層",
+      "bg":           { "$value": "{color.wood.parchment}",       "$type": "color" },
+      "bg-raised":    { "$value": "{color.wood.parchment}",       "$type": "color", "$description": "卡片底色（同 surface，靠 shadow 區分）" },
+      "bg-muted":     { "$value": "{color.wood.tan}",             "$type": "color" },
+      "ink":          { "$value": "{color.wood.midnight-petrol}", "$type": "color" },
+      "ink-muted":    { "$value": "{color.wood.espresso}",        "$type": "color" },
+      "primary":      { "$value": "{color.wood.primary}",         "$type": "color" },
+      "primary-soft": { "$value": "{color.wood.mid-petrol}",      "$type": "color" },
+      "primary-deep": { "$value": "{color.wood.primary-deep}",    "$type": "color" },
+      "stone":        { "$value": "{color.wood.stone}",           "$type": "color" },
+      "info":         { "$value": "{color.wood.primary}",         "$type": "color" },
+      "success":      { "$value": "{color.earth.sage-light}",     "$type": "color" },
+      "warning":      { "$value": "{color.earth.ochre-light}",    "$type": "color" },
+      "error":        { "$value": "{color.earth.terracotta-light}", "$type": "color" },
+      "destructive":  { "$value": "{color.earth.terracotta-light}", "$type": "color" }
+    },
+    "dark": {
+      "$description": "Dark mode role tokens · primary ↔ primary-soft 互換、ink ↔ bg 互換",
+      "bg":           { "$value": "{color.wood.midnight-petrol}", "$type": "color" },
+      "bg-raised":    { "$value": "{color.wood.midnight-petrol}", "$type": "color" },
+      "bg-muted":     { "$value": "{color.wood.espresso}",        "$type": "color" },
+      "ink":          { "$value": "{color.wood.parchment}",       "$type": "color" },
+      "ink-muted":    { "$value": "{color.wood.tan}",             "$type": "color" },
+      "primary":      { "$value": "{color.wood.mid-petrol}",      "$type": "color", "$description": "= light primary-soft（互換）" },
+      "primary-soft": { "$value": "{color.wood.primary}",         "$type": "color", "$description": "= light primary（互換）" },
+      "primary-deep": { "$value": "{color.wood.primary-deep}",    "$type": "color" },
+      "stone":        { "$value": "{color.wood.stone}",           "$type": "color" },
+      "info":         { "$value": "{color.wood.mid-petrol}",      "$type": "color" },
+      "success":      { "$value": "{color.earth.sage-dark}",      "$type": "color" },
+      "warning":      { "$value": "{color.earth.ochre-dark}",     "$type": "color" },
+      "error":        { "$value": "{color.earth.terracotta-dark}", "$type": "color" },
+      "destructive":  { "$value": "{color.earth.terracotta-dark}", "$type": "color" }
+    },
+    "transparent": {
+      "$description": "rgba 透明度層（hairline / border / focus ring 等）",
+      "border-light":     { "$value": "rgba(15, 28, 38, 0.10)",   "$type": "color" },
+      "border-dark":      { "$value": "rgba(245, 239, 228, 0.08)", "$type": "color" },
+      "hairline-light":   { "$value": "rgba(150, 116, 89, 0.30)",  "$type": "color" },
+      "hairline-dark":    { "$value": "rgba(94, 122, 141, 0.30)",  "$type": "color" }
+    }
+  }
+}

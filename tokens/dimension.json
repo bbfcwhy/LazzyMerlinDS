@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
+  "spacing": {
+    "$description": "Spacing scale base 4px（§4.1）",
+    "2xs": { "$value": "2px",   "$type": "dimension" },
+    "xs":  { "$value": "4px",   "$type": "dimension" },
+    "sm":  { "$value": "8px",   "$type": "dimension" },
+    "md":  { "$value": "12px",  "$type": "dimension" },
+    "lg":  { "$value": "16px",  "$type": "dimension" },
+    "xl":  { "$value": "24px",  "$type": "dimension" },
+    "2xl": { "$value": "32px",  "$type": "dimension" },
+    "3xl": { "$value": "48px",  "$type": "dimension" },
+    "4xl": { "$value": "64px",  "$type": "dimension" },
+    "5xl": { "$value": "96px",  "$type": "dimension" },
+    "6xl": { "$value": "128px", "$type": "dimension" }
+  },
+  "radius": {
+    "$description": "Border radius（§4.2）",
+    "sm":   { "$value": "6px",    "$type": "dimension", "$description": "小元件" },
+    "md":   { "$value": "10px",   "$type": "dimension", "$description": "輸入框、小卡" },
+    "lg":   { "$value": "12px",   "$type": "dimension", "$description": "標準卡片（預設）" },
+    "xl":   { "$value": "16px",   "$type": "dimension", "$description": "大容器、modal、Soft inset 元件" },
+    "2xl":  { "$value": "20px",   "$type": "dimension", "$description": "Hero tile / Tactile 大元件" },
+    "full": { "$value": "9999px", "$type": "dimension", "$description": "Pill / avatar" }
+  },
+  "z-index": {
+    "$description": "Z-index scale（§4.4）",
+    "base":     { "$value": 0,    "$type": "number" },
+    "ambient":  { "$value": 0,    "$type": "number" },
+    "grain":    { "$value": 1,    "$type": "number" },
+    "content":  { "$value": 2,    "$type": "number" },
+    "sticky":   { "$value": 10,   "$type": "number" },
+    "overlay":  { "$value": 50,   "$type": "number" },
+    "progress": { "$value": 100,  "$type": "number" },
+    "modal":    { "$value": 200,  "$type": "number" },
+    "toast":    { "$value": 300,  "$type": "number" },
+    "tooltip":  { "$value": 400,  "$type": "number" },
+    "debug":    { "$value": 9999, "$type": "number" }
+  },
+  "breakpoint": {
+    "$description": "斷點（§4.3）",
+    "sm": { "$value": "640px",  "$type": "dimension" },
+    "md": { "$value": "768px",  "$type": "dimension" },
+    "lg": { "$value": "1024px", "$type": "dimension" },
+    "xl": { "$value": "1280px", "$type": "dimension" }
+  },
+  "max-content-width": {
+    "$value": "760px",
+    "$type": "dimension",
+    "$description": "Editorial 窄欄（§4.3）"
+  }
+}

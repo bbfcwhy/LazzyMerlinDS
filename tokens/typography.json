@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
+  "typography": {
+    "$description": "字體系統（§3）· 3 family + Mono",
+    "family": {
+      "display":   { "$value": "'LXGW WenKai TC', serif",        "$type": "fontFamily", "$description": "霞鶩文楷 · Hero / 大標題 / 文章 title" },
+      "body":      { "$value": "'Geist', 'Noto Sans TC', sans-serif", "$type": "fontFamily", "$description": "正文（中英混排）" },
+      "mono":      { "$value": "'Geist Mono', monospace",        "$type": "fontFamily", "$description": "Small-caps label / 羅馬數字 / 程式碼" }
+    },
+    "weight": {
+      "regular":  { "$value": 400, "$type": "fontWeight" },
+      "medium":   { "$value": 500, "$type": "fontWeight" },
+      "semibold": { "$value": 600, "$type": "fontWeight" }
+    },
+    "scale": {
+      "$description": "Type Scale（§3.2）",
+      "display-xl":  { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "clamp(52px, 8vw, 88px)", "lineHeight": 1.15, "fontWeight": 400 }, "$type": "typography" },
+      "display-l":   { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "clamp(36px, 5vw, 56px)", "lineHeight": 1.2,  "fontWeight": 400 }, "$type": "typography" },
+      "h1":          { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "40px", "lineHeight": 1.25, "fontWeight": 500 }, "$type": "typography" },
+      "h2":          { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "28px", "lineHeight": 1.3,  "fontWeight": 500 }, "$type": "typography" },
+      "h3":          { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "22px", "lineHeight": 1.4,  "fontWeight": 400 }, "$type": "typography" },
+      "h4":          { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "18px", "lineHeight": 1.45, "fontWeight": 500 }, "$type": "typography" },
+      "body-large":  { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "17px", "lineHeight": 1.75, "fontWeight": 400 }, "$type": "typography" },
+      "body":        { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "16px", "lineHeight": 1.65, "fontWeight": 400 }, "$type": "typography" },
+      "small":       { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "14px", "lineHeight": 1.55, "fontWeight": 400 }, "$type": "typography" },
+      "label":       { "$value": { "fontFamily": "{typography.family.mono}",    "fontSize": "12px", "lineHeight": 1,    "fontWeight": 500, "letterSpacing": "0.2em", "textTransform": "uppercase" }, "$type": "typography" },
+      "caption":     { "$value": { "fontFamily": "{typography.family.mono}",    "fontSize": "10px", "lineHeight": 1.3,  "fontWeight": 400 }, "$type": "typography" }
+    }
+  }
+}

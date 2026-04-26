@@ -1,0 +1,70 @@
+# Changelog
+
+LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](https://semver.org/lang/zh-TW/)，格式參考 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.1.0/)。
+
+> Breaking change 政策、版本 bump 規則見 `DESIGN.md §17 Versioning`。
+
+## [Unreleased]
+
+## [0.1.0] — 2026-04-26
+
+第一次正式 release。LazzyMerlin（慵懶梅林實驗室）品牌核心 design system 從零成型，涵蓋品牌核心、視覺語言、跨平台落地、完整 Components 規範、Accessibility。
+
+### Added
+
+**規範文件（`DESIGN.md`，§1～§17）**
+- §1 品牌核心 · 二人（+ 雙貓）實驗室定位、tone of voice（冷面笑匠 + 水瓶座機鋒）、魔法感承載原則
+- §2 色彩系統 · **8 色 wood palette**（Petrol 三層藍 + 木質暖調）+ **3 色 Earth Tone Status Extension**（Terracotta / Sage / Ochre）+ Theme Switch 規範
+- §3 字體系統 · 3 family（LXGW WenKai TC + Geist + Noto Sans TC）+ 10 階 type scale
+- §4 間距 / Layout / 形狀 · spacing 11 階 + radius 6 階 + z-index 11 階 + 4 breakpoint
+- §5 動態與材質 · **Tactile material 為主視覺語言**（三層 register：Tactile / Hybrid / Soft Inset）+ 5 個 ambient signature
+- §6 裝飾元素 · unicode glyphs / hairline / small-caps label / 羅馬數字
+- §7 跨 7 平台套用指南 · Web / iOS / macOS / Notion / Chrome ext / IG / Game
+- §8 Brand Mark + **App Icon 家族**（iOS / macOS / Android / PWA）
+- §9 Character 系統 · 梅林 / 雙貓 / 威爾
+- §10 命名敘事 + 邊緣狀態文案（404 / Loading / Empty / Error）
+- §11 Imagery 指南 + OG template + **Iconography**（Lucide stroke 1.75px）
+- §12 反面教材
+- §13 實作參考
+- §14 **Accessibility** · focus ring / reduced motion / ARIA / 觸控目標
+- §15 **Components 規範** · Buttons / Form / Cards / Chips / Overlays / Feedback / Navigation / Data Display / State Layouts（10 大類元件）
+- §16 Decisions Log · 17 筆完整 paper trail
+- §17 Versioning 政策
+
+**視覺資產**
+- `assets/Lazzy Merlin Logo.png` · 主 logo 2D 版（女巫 + 雙貓 + 弧形字）
+- `assets/Lazzy Merlin Logo_3D.png` · 立體 render 版（hero / splash / social media）
+
+**元件實作參考**
+- `preview/components-preview.html` · §15 元件視覺實作（canonical）
+- `preview/components-preview-palette-A.html` · 三層藍 palette what-if 對照（deprecated，作決策歷史）
+- `preview/og-template.html` · 1200×630 OG image 模板
+- `preview/preview.html` · 早期過渡版（deprecated）
+
+**結構化 Design Tokens（`tokens/`）**
+- `tokens/color.json` · Wood palette 8 色 + Earth tone 6 變體 + light/dark mode role tokens + transparent
+- `tokens/typography.json` · Font family / weight / 10 階 type scale
+- `tokens/dimension.json` · Spacing 11 階 / radius 6 階 / z-index 11 階 / breakpoint 4 個
+- `tokens/shadow.json` · Soft Neumorphic + Tactile-Raised box-shadow（按元件大小：button / card / chip / avatar / badge）
+- `tokens/motion.json` · Duration / easing tokens
+- W3C Design Tokens 草案格式，相容 Figma Tokens Studio + Style Dictionary
+
+**Repo 治理**
+- `README.md` · Repo landing
+- `CHANGELOG.md` · 本檔案
+- Git repo + GitHub remote `bbfcwhy/LazzyMerlinDS`
+- `git tag v0.1.0`
+
+### Decisions（精選）
+
+詳見 `DESIGN.md §16` 17 筆完整紀錄。最重要決策：
+
+- **Tactile material 升格為 DS 主視覺語言**（非 flat / 非 neo-brutalist）—— 配方：對角光源 + 雙層 inset rim + 多層 drop shadow + noise overlay。`preview/components-preview.html` 為 canonical reference
+- **嚴格 8 色 wood palette + 3 色 Earth Tone Extension**（不做鮮豔紅綠黃 / 金 / 紫）
+- **Avatar fallback 三色循環用「藍 + 棕 + 綠」三 hue**（避免三層藍視覺擠壓 · 借 earth-green 給 avatar fill）
+- **Tactile noise 用 `::after` + `z-index: -1` + `isolation: isolate`**（不用 `background-blend-mode`，避免顏色變深 + 文字被染色）
+- **Loading state 不弱化 color，靠 spinner + `pointer-events: none`**（避免 `currentColor` cycle 踩坑 + alpha mix 字色不一致）
+- **品牌定位為「二人（+ 雙貓）實驗室」**（Merlin 是老婆名字諧音 · 梅林出主意 · 威爾用 AI 實現）
+
+[Unreleased]: https://github.com/bbfcwhy/LazzyMerlinDS/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/bbfcwhy/LazzyMerlinDS/releases/tag/v0.1.0

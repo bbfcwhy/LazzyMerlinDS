@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
+  "motion": {
+    "$description": "動態系統（§5.1）· 慢半拍 · 預設 250ms 而非 SaaS 常見 150ms",
+    "duration": {
+      "micro":  { "$value": "150ms",  "$type": "duration" },
+      "short":  { "$value": "220ms",  "$type": "duration" },
+      "medium": { "$value": "250ms",  "$type": "duration", "$description": "預設值（hover / focus）" },
+      "long":   { "$value": "400ms",  "$type": "duration" },
+      "press":  { "$value": "80ms",   "$type": "duration", "$description": "Pressed state 急收回彈" },
+      "drift":  { "$value": "24000ms","$type": "duration", "$description": "Ambient orb 循環（A-2）" },
+      "spin":   { "$value": "700ms",  "$type": "duration", "$description": "Spinner 自轉（§15.7.2）" },
+      "skeleton": { "$value": "1400ms", "$type": "duration", "$description": "Skeleton pulse（§15.7.3）" },
+      "theme-switch": { "$value": "400ms", "$type": "duration", "$description": "Theme toggle bg / color 過渡（§2.4.3）" }
+    },
+    "easing": {
+      "default": { "$value": "cubic-bezier(0.4, 0, 0.2, 1)",   "$type": "cubicBezier" },
+      "magic":   { "$value": "cubic-bezier(0.23, 1, 0.32, 1)", "$type": "cubicBezier", "$description": "流動感、ambient drift" },
+      "press":   { "$value": "ease",                            "$type": "cubicBezier", "$description": "Pressed 短促回彈" }
+    }
+  }
+}

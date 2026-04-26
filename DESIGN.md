@@ -2137,3 +2137,89 @@ Centered spinner layout：
 | 2026-04-25 | §15.5.5 / §15.8 補 `currentColor` cycle 踩坑警告 + Loading state 簡化 | 使用者觀察到「處理中」字仍是黑色。根因：CSS spec 為避免循環解析，當 `color` rule 自己含 `currentColor` 時會從 parent inherited 取（不是 element 當前 color）。我寫 `.btn[data-state="loading"] { color: color-mix(currentColor 75%, transparent) }`，currentColor 從 body inherit `var(--ink)` 深色 → mix 出深色 alpha 0.75 字。第一次修法用 variant-specific override (`var(--bg)` for primary 等) 解決 cycle，但 alpha 0.75 在藍底上 blend 出來的色仍偏暗、跟其他按鈕純米色字不一致。**最終修法：不弱化 color，靠 spinner + `text-shadow: none + pointer-events: none + cursor: not-allowed` 表達 loading**（Stripe / Linear 也是這做法）—— 文字保持滿色跟其他按鈕完全一致。§15.5.5 補完整警告 + 兩種正解 pattern。 |
 | 2026-04-25 | 三層藍識別性問題 · §15.5.1 並排原則 + §15.8.4 Avatar fallback 改 sage | 使用者觀察到三層藍 `#334D5C / #46647C / #5E7A8D` 加 Tactile + noise 後視覺擠壓難分辨（特別是 chip variants 兩藍並排、avatar stack 重疊）。根因是 wood palette 的 narrow blue range 內三層藍明度差只 8-10%，加 noise 染色後縮到 < 5%。考慮過動 palette hex（治本）但破壞 light/dark mode 互換對稱、影響整個 LazzyMerlin DS。**選不動 palette、改用法**：(1) §15.5.1 補「並排 chip 用色原則」—— 不要 chip--primary + chip--soft 兩藍同框，建議用「藍 + 棕 + 綠」三 hue 交錯；`chip--soft` token 退回 §2.3 原規則「只做 tint / hover bg」，不當主 fill。(2) §15.8.4 Avatar fallback 三色循環從 `primary / stone / primary-soft` 改成 `primary / stone / earth-green`（藍 + 棕 + 綠 三 hue 循環），借用 status palette earth-green 作 avatar fill —— avatar fallback 不傳達 status 語意，dual use OK。components-preview 中 SPELL chip / BETA chip / 三處 avatar 都改用 inline earth-green 套用。 |
 | 2026-04-25 | 對照 Palette Variant A 後最終確認走 B | 為了讓使用者比較動 palette（A）vs 改用法（B）兩個方向的視覺效果，建立 `components-preview-palette-A.html` what-if 對照版：拉開三色明度（primary-deep `#2A3F4D` / primary `#46647C` / primary-soft `#7088A0`），保留 SPELL/BETA chip 跟 avatar 用 primary-soft 看識別性。對照結果：A 版 primary-soft 對 surface 對比僅 ~2.85:1（不過 AA Normal）、三色仍是同 hue「藍家族」感，且動 palette 影響整個 LazzyMerlin DS（個人網站 / 跨專案需重新校色）。最終確認走 **方向 B（不動 palette、avatar fallback 改用 sage 三 hue 循環、`chip--soft` 退回 tint role）**。A 版檔案保留 §13.2 作決策歷史對照，加 DEPRECATED banner 提示不再維護。 |
+| 2026-04-26 | v0.1.0 release · 結構化 tokens + README + CHANGELOG + git tag | DS 從 markdown + HTML preview 升級成可被工具消費的 source of truth：(1) `tokens/` 目錄 5 檔（color / typography / dimension / shadow / motion）採 W3C Design Tokens 草案格式（`$value` / `$type` / `$description`），相容 Figma Tokens Studio + Style Dictionary。(2) `README.md` repo landing 給未來合作者 / AI 助理 / 自己看（包含快速開始 / 設計理念 / 反面教材 / 子專案位置）。(3) `CHANGELOG.md` 採 keep-a-changelog 格式，v0.1.0 從 §16 整理出 Added 清單 + 精選決策。(4) §17 Versioning 規範：semver 規則、Decisions Log vs CHANGELOG 分工、breaking change 政策、git tag 格式。(5) `git tag v0.1.0` 標記初始 stable release，子專案可 pin 版本。 |
+
+---
+
+## 十七、Versioning 政策
+
+### 17.1 Semver 規則
+
+LazzyMerlin DS 遵循 [Semantic Versioning 2.0.0](https://semver.org/lang/zh-TW/)：版本號 `MAJOR.MINOR.PATCH`。
+
+| Bump | 觸發條件 | 範例 |
+|---|---|---|
+| **MAJOR**（v1.x → v2.0）| Breaking change · 動到 `tokens/` 內任何 hex / 結構性 token；改 §2.1 wood palette；改既有元件 anatomy；移除 token | 換 brand 主色、刪除 chip variant、改 spacing scale 階數 |
+| **MINOR**（v0.1 → v0.2）| 新增非破壞性功能 · 加新 token / 新元件 / 新 chapter；擴 size scale | 新增 chip--earth-green token、§17 Versioning 章節、新增 component spec |
+| **PATCH**（v0.1.0 → v0.1.1）| 修正 / 補充 · 不影響落地的修字、補 example、修 typo、加 reference | DESIGN.md 修錯字、補 reference link、CHANGELOG 補一筆遺漏 |
+
+**v0.x.y 階段**：API 不穩定，MINOR 也可能含 breaking change。v1.0.0 後嚴格遵守 semver。
+
+### 17.2 Git Tag 格式
+
+```bash
+git tag v0.1.0          # release tag
+git tag v0.1.0-rc.1     # release candidate（預期將成為 v0.1.0）
+git tag v0.1.0-alpha.1  # 早期測試版
+```
+
+子專案 pin 版本範例（在子專案的 README 或 docs 寫）：
+
+```
+本專案使用 LazzyMerlin DS v0.1.0
+規範文件：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.1.0/DESIGN.md
+Tokens：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.1.0/tokens
+```
+
+### 17.3 CHANGELOG.md vs §16 Decisions Log 分工
+
+兩者並存，角色不同：
+
+| 文件 | 角色 | 寫法 |
+|---|---|---|
+| **`CHANGELOG.md`** | 給「使用 DS 的人」看的 release notes | Keep a Changelog 格式：Added / Changed / Deprecated / Removed / Fixed · 一句帶過 what changed |
+| **`DESIGN.md §16 Decisions Log`** | 給「未來的自己 / 維護者」看的 paper trail | 每筆含 What + **Why**（背景 / 觸發 / 替代方案被否決原因）· 長段敘事 |
+
+通常一個 PR 兩處都寫：CHANGELOG 簡述、Decisions Log 詳述。Decisions Log 是 narrative，記錄「為什麼這個決策」，未來看會懂；CHANGELOG 是 list，給快速 scan。
+
+### 17.4 Breaking Change 政策
+
+任何 hex 改動 = **automatic major bump**（影響整個 DS 視覺一致性）。要 break 必須：
+
+1. **先在 §16 寫 deprecation notice**（一個版本前預告）
+2. **CHANGELOG 標 `### Deprecated`**
+3. **下個 MAJOR release 才實際移除**
+4. 給子專案至少一個 release window 跟上
+
+範例（hypothetical）：
+- v0.5.0：CHANGELOG 標 「Deprecated: `chip--soft` token 將在 v1.0.0 移除，改用 `chip--earth-green`」
+- v1.0.0：實際移除，子專案需 migrate
+
+### 17.5 各子專案落地建議
+
+新專案建立時：
+
+```bash
+# 在子專案 docs/DESIGN-VERSION.md 寫
+LazzyMerlin DS pinned: v0.1.0
+最後同步: 2026-04-26
+下次同步檢查: 看 CHANGELOG 有 Breaking 才 bump
+```
+
+定期（每月 / 每季）跑同步 check：
+1. 拉取 LazzyMerlin DS 最新版
+2. 看 CHANGELOG 從 pinned 版本之後的所有 entry
+3. 沒 breaking → 直接 bump pin 版本
+4. 有 breaking → 評估 migration cost、決定何時跟上
+
+### 17.6 v0.x → v1.0 路徑
+
+當前 v0.1.0。預計 v1.0.0 release 條件（暫定）：
+
+- [ ] 至少 1 個子專案完整落地驗證（稷下學院 / 聽了以後）
+- [ ] Token 結構穩定 3 個月無 breaking change
+- [ ] 跨平台落地 QA Checklist 完成（§13 補一節）
+- [ ] iOS / macOS SDK 範例專案（驗證 §7.2 / §7.3 規範可行）
+- [ ] Accessibility audit 過一輪（§14 規範實測）
+
+到 v1.0.0 後 LazzyMerlin DS 成為 brand 級穩定 SoT，破壞性更動需嚴格遵守 semver MAJOR bump。
