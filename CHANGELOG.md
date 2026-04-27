@@ -6,6 +6,13 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 ## [Unreleased]
 
+### Fixed
+- Pagination active page 從 Tactile-Raised 改 Tactile-Pressed。原本 Raised 的 4 層 drop shadow 視覺中心偏右下、造成數字看起來偏左上；且在 list 內顯得太重。改 Pressed inset shadow 後 active page 文字精確置中、跟其他 ghost button 視覺節奏一致，跟 §15.5.1 chip-selected 邏輯統一
+- Pagination button 統一 `36×36px + padding: 0 + justify-content: center`，確保所有 page button 同尺寸
+
+### Changed
+- DESIGN.md §15.8.3 Pagination 補完整規範（active = Pressed、button 統一 36×36、CSS pattern 範例）
+
 ## [0.1.1] — 2026-04-27
 
 ### Changed

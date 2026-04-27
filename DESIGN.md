@@ -1946,8 +1946,19 @@ Reduced-motion：`animation: none; opacity: 0.5;` 靜態顯示。
 #### 15.8.3 Pagination
 
 - Number-based：`< 1 2 [3] 4 5 ... 12 >`
-- 每個 number 用 sm Button（Hybrid 或 Tertiary）
-- Active page：Tactile Pressed 樣式（被按下感）
+- **Page button 統一 `36×36px` 方形 + `padding: 0` + `justify-content: center`** —— 確保所有 button 同尺寸、文字精確置中
+- Inactive page 用 Tertiary（Ghost）樣式（無 background）
+- **Active page：Tactile Pressed**（不用 Raised）—— Raised 的 4 層 drop shadow 視覺中心會偏右下，造成數字看起來偏左上；且 Raised 在 list 內顯得太重。Pressed inset shadow 表達「被選中」，跟 §15.5.1 chip-selected 同邏輯：
+  ```css
+  .pagination .btn--primary {
+    background-color: var(--primary);
+    background-image: none;       /* 取消 Tactile-Raised 的 linear gradient */
+    box-shadow:
+      inset 3px 4px 8px rgba(0, 0, 0, 0.30),
+      inset -1px -1px 4px rgba(255, 255, 255, 0.18),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+  }
+  ```
 - 純文字 prev/next（不用「Previous」/「Next」全字）：用 `←` / `→` icon
 
 #### 15.8.4 Avatar
@@ -2140,6 +2151,7 @@ Centered spinner layout：
 | 2026-04-26 | v0.1.0 release · 結構化 tokens + README + CHANGELOG + git tag | DS 從 markdown + HTML preview 升級成可被工具消費的 source of truth：(1) `tokens/` 目錄 5 檔（color / typography / dimension / shadow / motion）採 W3C Design Tokens 草案格式（`$value` / `$type` / `$description`），相容 Figma Tokens Studio + Style Dictionary。(2) `README.md` repo landing 給未來合作者 / AI 助理 / 自己看（包含快速開始 / 設計理念 / 反面教材 / 子專案位置）。(3) `CHANGELOG.md` 採 keep-a-changelog 格式，v0.1.0 從 §16 整理出 Added 清單 + 精選決策。(4) §17 Versioning 規範：semver 規則、Decisions Log vs CHANGELOG 分工、breaking change 政策、git tag 格式。(5) `git tag v0.1.0` 標記初始 stable release，子專案可 pin 版本。 |
 | 2026-04-27 | v0.1.1 patch · 移除規範文件中的具名子專案引用 | DS 應該是 brand-level 的純規範，不該耦合具體子專案。子專案會更替、開源 / 對外分享時也不該強迫他人理解這些專案。修法：(1) 規範文件（DESIGN.md §7.7 / §11.3 / §13.3 / §17.6 + README.md）改用抽象敘述（「子專案」/「個人網站」/「遊戲類專案」）。(2) Demo HTML（components-preview / palette-A / preview / og-template）改 fictional placeholder（「範例 · 一」/「專案 A」），保留 typography 視覺溫度但不指名。(3) §16 本身的歷史條目**不動**（paper trail 跟 git log 同性質，改寫破壞 immutability）。(4) `CLAUDE.md` 仍保留具名（repo 內個人 working instructions，非 DS proper）。順帶修正 §13.3 logo 檔名（`lazzymerlin-logo.png` → `Lazzy Merlin Logo.png` + `Lazzy Merlin Logo_3D.png`）+ 移除「個人網站作配色 source of truth」過時條目。 |
 | 2026-04-27 | v0.1.1 fix · `.progress-linear__bar` 補 noise overlay | 使用者觀察到「專案進度」progress bar fill 沒紋理但「音量」slider fill 有。根因：v0.1.0 整理「Tactile 觸感升格為全域語言」時改了 `.slider__fill` 加 `::after + z-index: -1` noise，但漏改 `.progress-linear__bar`（兩者結構幾乎相同，都是純色 fill 上 noise）。本次補完：兩個 preview 檔案的 `.progress-linear__bar` 加 isolation + overflow + ::after noise overlay。觸感現在跟 slider / chip / avatar / badge / button 全部統一。 |
+| 2026-04-27 | Pagination active 從 Raised 改 Pressed · §15.8.3 補完整規範 | 使用者觀察到 pagination active 的「3」數字看起來沒置中。根因兩層：(1) 視覺：`.btn--primary` Tactile-Raised 的 4 層 drop shadow 全部往右下方延伸，造成「視覺感受的 button 中心」偏右下，相對地數字被推到左上感。(2) 規範：原本規範說「active = Tactile Pressed」但實作用了 `.btn--primary`（= Raised），active 在 list 內顯得太重、跟 ghost button (1/2/4/5) 大小視覺差太多，破壞 pagination「同階一排」的節奏感。修法：(1) `.pagination .btn` 統一 `36×36 + padding: 0 + justify-content: center`，所有 page button 同尺寸文字精確置中。(2) `.pagination .btn--primary` override 為 Pressed inset shadow（取消 raised 的 linear gradient + 4 層 drop shadow），跟 §15.5.1 chip-selected 用 Pressed override 同邏輯。§15.8.3 規範補完整 CSS pattern 跟 rationale。 |
 
 ---
 

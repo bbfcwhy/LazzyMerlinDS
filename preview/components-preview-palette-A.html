@@ -1084,7 +1084,35 @@
     .breadcrumb__current { color: var(--ink); font-weight: 500; }
 
     .pagination { display: inline-flex; gap: 4px; align-items: center; }
-    .pagination .btn { min-height: 36px; min-width: 36px; padding: 6px 10px; }
+    .pagination .btn {
+      width: 36px; height: 36px;
+      min-width: 36px; min-height: 36px;
+      padding: 0;
+      justify-content: center;
+    }
+    /* Pagination active · Tactile Pressed（同 §15.5.1 chip-selected 邏輯）*/
+    .pagination .btn--primary {
+      background-color: var(--primary);
+      background-image: none;
+      color: var(--bg);
+      box-shadow:
+        inset 3px 4px 8px rgba(0, 0, 0, 0.30),
+        inset -1px -1px 4px rgba(255, 255, 255, 0.18),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+    }
+    .pagination .btn--primary:hover {
+      transform: none;
+      box-shadow:
+        inset 3px 4px 8px rgba(0, 0, 0, 0.30),
+        inset -1px -1px 4px rgba(255, 255, 255, 0.18),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+    }
+    [data-theme="dark"] .pagination .btn--primary {
+      box-shadow:
+        inset 3px 4px 8px rgba(0, 0, 0, 0.55),
+        inset -1px -1px 4px rgba(94, 122, 141, 0.10),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.30);
+    }
 
     /* ===================================================================
        §15.9 DATA DISPLAY (Table / List)
