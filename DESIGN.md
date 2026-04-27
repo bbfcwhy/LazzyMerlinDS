@@ -1221,6 +1221,7 @@ Home / About / Projects / Notebook / Contact
 - **品牌 Logo · 2D**：`assets/Lazzy Merlin Logo.png`
 - **品牌 Logo · 3D**：`assets/Lazzy Merlin Logo_3D.png`
 - **OG Image 模板**：`preview/og-template.html`
+- **跨子專案落地 checklist**：[`docs/landing-checklist.md`](docs/landing-checklist.md) —— onboard 新 session Claude 套用 LazzyMerlin DS 到子專案的 step-by-step 流程，含字體載入 / tokens / CSS variables / 元件實作 / 邊緣狀態文案 / 反面教材 / 跟 DS repo 互動規則 / 落地驗收 checklist
 
 ### 13.4 參考對標
 Paco Coursey (paco.me)、Steven Tey (steventey.com)、Anthropic.com、Rauno Freiberg (rauno.me)
@@ -2152,6 +2153,7 @@ Centered spinner layout：
 | 2026-04-27 | v0.1.1 patch · 移除規範文件中的具名子專案引用 | DS 應該是 brand-level 的純規範，不該耦合具體子專案。子專案會更替、開源 / 對外分享時也不該強迫他人理解這些專案。修法：(1) 規範文件（DESIGN.md §7.7 / §11.3 / §13.3 / §17.6 + README.md）改用抽象敘述（「子專案」/「個人網站」/「遊戲類專案」）。(2) Demo HTML（components-preview / palette-A / preview / og-template）改 fictional placeholder（「範例 · 一」/「專案 A」），保留 typography 視覺溫度但不指名。(3) §16 本身的歷史條目**不動**（paper trail 跟 git log 同性質，改寫破壞 immutability）。(4) `CLAUDE.md` 仍保留具名（repo 內個人 working instructions，非 DS proper）。順帶修正 §13.3 logo 檔名（`lazzymerlin-logo.png` → `Lazzy Merlin Logo.png` + `Lazzy Merlin Logo_3D.png`）+ 移除「個人網站作配色 source of truth」過時條目。 |
 | 2026-04-27 | v0.1.1 fix · `.progress-linear__bar` 補 noise overlay | 使用者觀察到「專案進度」progress bar fill 沒紋理但「音量」slider fill 有。根因：v0.1.0 整理「Tactile 觸感升格為全域語言」時改了 `.slider__fill` 加 `::after + z-index: -1` noise，但漏改 `.progress-linear__bar`（兩者結構幾乎相同，都是純色 fill 上 noise）。本次補完：兩個 preview 檔案的 `.progress-linear__bar` 加 isolation + overflow + ::after noise overlay。觸感現在跟 slider / chip / avatar / badge / button 全部統一。 |
 | 2026-04-27 | Pagination active 從 Raised 改 Pressed · §15.8.3 補完整規範 | 使用者觀察到 pagination active 的「3」數字看起來沒置中。根因兩層：(1) 視覺：`.btn--primary` Tactile-Raised 的 4 層 drop shadow 全部往右下方延伸，造成「視覺感受的 button 中心」偏右下，相對地數字被推到左上感。(2) 規範：原本規範說「active = Tactile Pressed」但實作用了 `.btn--primary`（= Raised），active 在 list 內顯得太重、跟 ghost button (1/2/4/5) 大小視覺差太多，破壞 pagination「同階一排」的節奏感。修法：(1) `.pagination .btn` 統一 `36×36 + padding: 0 + justify-content: center`，所有 page button 同尺寸文字精確置中。(2) `.pagination .btn--primary` override 為 Pressed inset shadow（取消 raised 的 linear gradient + 4 層 drop shadow），跟 §15.5.1 chip-selected 用 Pressed override 同邏輯。§15.8.3 規範補完整 CSS pattern 跟 rationale。 |
+| 2026-04-27 | 新增 `docs/landing-checklist.md` · 跨子專案落地 onboarding | 為了把 LazzyMerlin DS 套用到第一個子專案（個人網站 lazzywill），需要 cross-session hand-off：當前 session 對 DS 全熟，但 deploy 該在子專案 repo 內做（避免 DS repo 耦合具體產品）。修法：建 `docs/landing-checklist.md` 作為跨子專案重用的 onboarding doc，分 Phase 0~8（環境確認 / 字體 / tokens / CSS variables / Tactile material / 元件 MVP / Theme switch / Ambient layer / 邊緣狀態文案）+ 反面教材 12 條 + 跟 DS repo 互動規則（gap report 流程、升版同步流程）+ 落地驗收 checklist 9 項。第 0 段直接是「給新 session Claude 的 quick onboard prompt」可 paste 用。同時是 §17.6 v1.0 條件第 3 項「跨平台落地 QA Checklist」初步版本。DESIGN.md §13.3 加 reference 指向新 doc。未來其他子專案落地（iOS / macOS / Notion 等）走同一份 doc 的不同 phase。 |
 
 ---
 
