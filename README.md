@@ -88,7 +88,30 @@ LazzyMerlin 的實際產品專案各自獨立 repo（散落在 `~/Projects/` 下
 
 ## License
 
-私人 brand assets，未公開授權。如有合作或引用需求請聯繫威爾。
+LazzyMerlin DS 採 **dual licensing**，分清楚「能參考的」跟「不能挪用的」：
+
+### 開放參考（Spec / Code · CC BY 4.0 精神）
+以下內容歡迎參考、學習、改作 —— 只要署名（attribution）：
+- `DESIGN.md` 設計規範文字
+- `tokens/` 結構化 design tokens（W3C 格式 JSON）
+- `preview/` 元件視覺實作 HTML / CSS
+- `docs/` 落地 checklist 跟操作流程
+
+如果你的專案套了 LazzyMerlin DS 的某些 pattern，credit 一下「Inspired by [LazzyMerlin DS](https://github.com/bbfcwhy/LazzyMerlinDS)」即可。
+
+### 保留所有權（Brand Identity · All Rights Reserved）
+以下屬於品牌資產、**不可商用 / 不可挪用 / 不可二次創作**：
+- `assets/` 內所有 logo（梅林 + 雙貓 + LazzyMerlin wordmark）
+- 「LazzyMerlin」/「慵懶梅林實驗室」品牌名稱
+- 梅林（女巫）/ 雙貓 character 設計（§9 Character 系統）
+- 邊緣狀態文案的具體 wording（§10.3）—— pattern 可參考、原文不可照抄
+
+如果你想用品牌名 / logo / character 做任何衍生（合作、引用、致敬），請聯繫威爾（bbfcwhy@gmail.com）。
+
+### 簡單版規則
+**Spec / code = 開放參考有 attribution 即可 ｜ Brand identity = 保留**
+
+寫 LazzyMerlin DS 的目的是把 brand 規範開放給未來合作者 / 跨專案落地 / 給 AI 工具當設計 reference。這跟「保護 brand identity」可以並存。
 
 ---
 

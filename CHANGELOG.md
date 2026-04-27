@@ -10,6 +10,10 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 - `docs/landing-checklist.md` · 跨子專案落地 onboarding 文件。新 session Claude paste 第 0 段 prompt 即可進入 LazzyMerlin DS 心智，後續按 Phase 0~8 走完字體載入 / tokens / CSS variables / Tactile material / 元件 MVP / Theme switch / Ambient layer / 邊緣狀態文案。附反面教材清單、跟 DS repo 互動規則、落地驗收 checklist。同時是 §17.6 v1.0 條件第 3 項「跨平台落地 QA Checklist」初步版本。
 - DESIGN.md §13.3 加 reference 指向 `docs/landing-checklist.md`
 
+### Changed
+- **Repo visibility · PRIVATE → PUBLIC**。LazzyMerlin DS 設計上就是 brand-level source of truth，沒 secrets，公開後 raw URL / GitHub link / Tokens Studio sync 都可不需 auth 直接用，未來合作者 / 跨專案落地 / AI 工具 onboarding 都更順
+- README License section 重寫 · 從「私人 brand assets，未公開授權」改成 dual licensing：spec / code 開放參考（CC BY 4.0 精神，需 attribution）、brand identity / logo / character 保留所有權
+
 ### Fixed
 - Pagination active page 從 Tactile-Raised 改 Tactile-Pressed。原本 Raised 的 4 層 drop shadow 視覺中心偏右下、造成數字看起來偏左上；且在 list 內顯得太重。改 Pressed inset shadow 後 active page 文字精確置中、跟其他 ghost button 視覺節奏一致，跟 §15.5.1 chip-selected 邏輯統一
 - Pagination button 統一 `36×36px + padding: 0 + justify-content: center`，確保所有 page button 同尺寸
