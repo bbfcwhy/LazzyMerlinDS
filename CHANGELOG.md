@@ -6,6 +6,29 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-04-27
+
+### Changed
+- 規範文件（`DESIGN.md` / `README.md`）移除所有具名子專案引用，改用抽象敘述（「子專案」/「個人網站」/「遊戲類專案」）
+- Demo HTML（`preview/components-preview.html` / `components-preview-palette-A.html` / `preview.html` / `og-template.html`）改用 fictional placeholder（「範例 · 一」/「專案 A」），保留 typography hierarchy 視覺溫度但不指名真實專案
+- `DESIGN.md §13.3` 資產路徑修正為實際檔名（`Lazzy Merlin Logo.png` / `Lazzy Merlin Logo_3D.png`）+ OG template 改 repo-relative path
+
+### Fixed
+- `components-preview.html` / `components-preview-palette-A.html` · `.progress-linear__bar` 補上 `::after + z-index: -1` noise overlay（v0.1.0 漏改 —— `.slider__fill` 已有但 progress bar 沒同步），跟其他純色填色區塊觸感統一
+
+### Removed
+- `DESIGN.md §13.3`「現有個人網站（配色 source of truth）」條目 —— DS 已穩定獨立、不再從個人網站 sync palette，歷史脈絡見 §16
+- `§7.7` 中「LazzyMerlin Games」sub-brand 命名（簡化為 `✦ LazzyMerlin` 通用簽名）
+
+### Preserved
+- `DESIGN.md §16 Decisions Log` 歷史條目不改寫（paper trail 跟 git log 同性質，改寫破壞 immutability）
+- `CLAUDE.md` 個人 working instructions 不動（非 DS proper · 是 repo 內 AI 操作指引）
+
+### Why
+DS 應該是 brand-level 的純規範，不該耦合具體子專案。子專案會更替、對外分享時不該強迫他人理解這些專案。清乾淨後 LazzyMerlin DS 可作為跨專案 source of truth，未來新專案套用時不會誤以為「一定要做這幾個專案」。
+
+[0.1.1]: https://github.com/bbfcwhy/LazzyMerlinDS/releases/tag/v0.1.1
+
 ## [0.1.0] — 2026-04-26
 
 第一次正式 release。LazzyMerlin（慵懶梅林實驗室）品牌核心 design system 從零成型，涵蓋品牌核心、視覺語言、跨平台落地、完整 Components 規範、Accessibility。

@@ -1011,8 +1011,25 @@
     }
     .progress-linear__bar {
       position: absolute; left: 0; top: 0; bottom: 0;
-      background: var(--primary); border-radius: var(--radius-full);
+      background-color: var(--primary); border-radius: var(--radius-full);
       transition: width 400ms ease;
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .progress-linear__bar::after {
+      content: '';
+      position: absolute; inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background-image: var(--noise-bg);
+      background-size: var(--noise-bg-size);
+      mix-blend-mode: overlay;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    [data-theme="dark"] .progress-linear__bar::after {
+      mix-blend-mode: soft-light;
+      opacity: 0.75;
     }
     .progress-linear--indeterminate .progress-linear__bar {
       width: 30%;
@@ -1438,21 +1455,21 @@
 
         <div class="grid-3">
           <article class="card card--editorial">
-            <span class="card__kicker">FEATURED · Spell I</span>
-            <h3 class="card__title">稷下學院</h3>
-            <p class="card__body">把繁雜的書院事務交給 AI 助教，學者只需寫字、思考、爭論。</p>
-            <span class="card__meta">Web · 2026</span>
+            <span class="card__kicker">FEATURED · 範例 一</span>
+            <h3 class="card__title">範例 · 一</h3>
+            <p class="card__body">Editorial card · Tactile Base material。標題用霞鶩文楷、body 用 Geist + Noto Sans TC，padding 28px 撐起浮雕。</p>
+            <span class="card__meta">Web · MMXXVI</span>
           </article>
           <article class="card card--editorial">
-            <span class="card__kicker">FEATURED · Spell II</span>
-            <h3 class="card__title">聽了以後</h3>
-            <p class="card__body">把 podcast 的當下情緒留住、整理成可搜尋的個人聽記。</p>
-            <span class="card__meta">Web · 2026</span>
+            <span class="card__kicker">FEATURED · 範例 二</span>
+            <h3 class="card__title">範例 · 二</h3>
+            <p class="card__body">同樣用 Editorial 規範。Hover 時 translateY(-3px) + shadow 放大 + ::after noise overlay 不變。</p>
+            <span class="card__meta">Web · MMXXVI</span>
           </article>
           <article class="card card--plain">
             <span class="card__kicker">DRAFT</span>
-            <h3 class="card__title">Sortless</h3>
-            <p class="card__body">桌面上的東西不用整理，AI 替你記得它在哪。</p>
+            <h3 class="card__title">範例 · 三</h3>
+            <p class="card__body">Plain card · Hybrid material（hairline border + soft shadow）。比 Editorial 輕量，適合 list 內。</p>
             <span class="card__meta">macOS · WIP</span>
           </article>
         </div>
@@ -1648,7 +1665,7 @@
           <span class="breadcrumb__sep">·</span>
           <a href="#">專案</a>
           <span class="breadcrumb__sep">·</span>
-          <a href="#">稷下學院</a>
+          <a href="#">範例專案</a>
           <span class="breadcrumb__sep">·</span>
           <span class="breadcrumb__current" aria-current="page">設計系統</span>
         </nav>
@@ -1689,21 +1706,21 @@
             </thead>
             <tbody>
               <tr>
-                <td><strong>稷下學院</strong></td>
+                <td><strong>專案 A</strong></td>
                 <td>Web</td>
                 <td><span class="chip chip--primary" style="font-size: 9px;">LIVE</span></td>
                 <td class="num">1,284</td>
                 <td class="num">$3,420</td>
               </tr>
               <tr>
-                <td><strong>聽了以後</strong></td>
+                <td><strong>專案 B</strong></td>
                 <td>Web · iOS</td>
                 <td><span class="chip chip--soft" style="font-size: 9px;">BETA</span></td>
                 <td class="num">512</td>
                 <td class="num">$890</td>
               </tr>
               <tr>
-                <td><strong>Sortless</strong></td>
+                <td><strong>專案 C</strong></td>
                 <td>macOS</td>
                 <td><span class="chip" style="font-size: 9px;">DRAFT</span></td>
                 <td class="num">—</td>

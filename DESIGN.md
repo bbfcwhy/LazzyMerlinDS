@@ -852,7 +852,7 @@ Notion 沒自訂 CSS，只能靠以下元素傳達品牌：
 
 ### 7.7 Game（Opt-out）
 - 遊戲 UI 元件通常跟遊戲本身有關，**不強制**使用 LazzyMerlin 設計元素
-- 建議：**splash screen 與 About 頁**帶入品牌色（Petrol + Parchment）與 `✦ LazzyMerlin Games` 簽名
+- 建議：**splash screen 與 About 頁**帶入品牌色（Petrol + Parchment）與 `✦ LazzyMerlin` 簽名
 - 遊戲選單 typography 不必強用楷體
 
 ---
@@ -1089,9 +1089,9 @@ Home / About / Projects / Notebook / Contact
 ┌────────────────────────────────────┐
 │ ✦  威爾的懶人主義 LazzyMerlin      │ ← 左上角 sigil + wordmark
 │                                    │
-│ ─── FEATURED SPELL                 │ ← kicker（small-caps, primary）
+│ ─── FEATURED                       │ ← kicker（small-caps, primary）
 │                                    │
-│   稷下學院官網                      │ ← title（霞鶩文楷 96px）
+│   〈專案標題〉                       │ ← title（霞鶩文楷 96px）
 │                                    │
 │   (subtitle 一段說明)               │ ← subtitle（Geist 24px）
 │                                    │
@@ -1218,9 +1218,9 @@ Home / About / Projects / Notebook / Contact
 - `preview/components-preview-palette-A.html` — 2026-04-25「三層藍識別性問題」的 what-if 對照版（動 palette 拉開三色明度），對照後決定走方向 B 不動 palette，本檔保留作決策歷史
 
 ### 13.3 其他資產
-- **品牌 Logo**：`~/Projects/LazzyMerlin/assets/lazzymerlin-logo.png`
-- **OG Image 模板**：`~/.gstack/projects/LazzyMerlin/designs/design-system-20260422/v3/og-template.html`
-- **現有個人網站**（配色 source of truth）：`https://lazzywill.lazzymerlin.workers.dev/`
+- **品牌 Logo · 2D**：`assets/Lazzy Merlin Logo.png`
+- **品牌 Logo · 3D**：`assets/Lazzy Merlin Logo_3D.png`
+- **OG Image 模板**：`preview/og-template.html`
 
 ### 13.4 參考對標
 Paco Coursey (paco.me)、Steven Tey (steventey.com)、Anthropic.com、Rauno Freiberg (rauno.me)
@@ -2138,6 +2138,8 @@ Centered spinner layout：
 | 2026-04-25 | 三層藍識別性問題 · §15.5.1 並排原則 + §15.8.4 Avatar fallback 改 sage | 使用者觀察到三層藍 `#334D5C / #46647C / #5E7A8D` 加 Tactile + noise 後視覺擠壓難分辨（特別是 chip variants 兩藍並排、avatar stack 重疊）。根因是 wood palette 的 narrow blue range 內三層藍明度差只 8-10%，加 noise 染色後縮到 < 5%。考慮過動 palette hex（治本）但破壞 light/dark mode 互換對稱、影響整個 LazzyMerlin DS。**選不動 palette、改用法**：(1) §15.5.1 補「並排 chip 用色原則」—— 不要 chip--primary + chip--soft 兩藍同框，建議用「藍 + 棕 + 綠」三 hue 交錯；`chip--soft` token 退回 §2.3 原規則「只做 tint / hover bg」，不當主 fill。(2) §15.8.4 Avatar fallback 三色循環從 `primary / stone / primary-soft` 改成 `primary / stone / earth-green`（藍 + 棕 + 綠 三 hue 循環），借用 status palette earth-green 作 avatar fill —— avatar fallback 不傳達 status 語意，dual use OK。components-preview 中 SPELL chip / BETA chip / 三處 avatar 都改用 inline earth-green 套用。 |
 | 2026-04-25 | 對照 Palette Variant A 後最終確認走 B | 為了讓使用者比較動 palette（A）vs 改用法（B）兩個方向的視覺效果，建立 `components-preview-palette-A.html` what-if 對照版：拉開三色明度（primary-deep `#2A3F4D` / primary `#46647C` / primary-soft `#7088A0`），保留 SPELL/BETA chip 跟 avatar 用 primary-soft 看識別性。對照結果：A 版 primary-soft 對 surface 對比僅 ~2.85:1（不過 AA Normal）、三色仍是同 hue「藍家族」感，且動 palette 影響整個 LazzyMerlin DS（個人網站 / 跨專案需重新校色）。最終確認走 **方向 B（不動 palette、avatar fallback 改用 sage 三 hue 循環、`chip--soft` 退回 tint role）**。A 版檔案保留 §13.2 作決策歷史對照，加 DEPRECATED banner 提示不再維護。 |
 | 2026-04-26 | v0.1.0 release · 結構化 tokens + README + CHANGELOG + git tag | DS 從 markdown + HTML preview 升級成可被工具消費的 source of truth：(1) `tokens/` 目錄 5 檔（color / typography / dimension / shadow / motion）採 W3C Design Tokens 草案格式（`$value` / `$type` / `$description`），相容 Figma Tokens Studio + Style Dictionary。(2) `README.md` repo landing 給未來合作者 / AI 助理 / 自己看（包含快速開始 / 設計理念 / 反面教材 / 子專案位置）。(3) `CHANGELOG.md` 採 keep-a-changelog 格式，v0.1.0 從 §16 整理出 Added 清單 + 精選決策。(4) §17 Versioning 規範：semver 規則、Decisions Log vs CHANGELOG 分工、breaking change 政策、git tag 格式。(5) `git tag v0.1.0` 標記初始 stable release，子專案可 pin 版本。 |
+| 2026-04-27 | v0.1.1 patch · 移除規範文件中的具名子專案引用 | DS 應該是 brand-level 的純規範，不該耦合具體子專案。子專案會更替、開源 / 對外分享時也不該強迫他人理解這些專案。修法：(1) 規範文件（DESIGN.md §7.7 / §11.3 / §13.3 / §17.6 + README.md）改用抽象敘述（「子專案」/「個人網站」/「遊戲類專案」）。(2) Demo HTML（components-preview / palette-A / preview / og-template）改 fictional placeholder（「範例 · 一」/「專案 A」），保留 typography 視覺溫度但不指名。(3) §16 本身的歷史條目**不動**（paper trail 跟 git log 同性質，改寫破壞 immutability）。(4) `CLAUDE.md` 仍保留具名（repo 內個人 working instructions，非 DS proper）。順帶修正 §13.3 logo 檔名（`lazzymerlin-logo.png` → `Lazzy Merlin Logo.png` + `Lazzy Merlin Logo_3D.png`）+ 移除「個人網站作配色 source of truth」過時條目。 |
+| 2026-04-27 | v0.1.1 fix · `.progress-linear__bar` 補 noise overlay | 使用者觀察到「專案進度」progress bar fill 沒紋理但「音量」slider fill 有。根因：v0.1.0 整理「Tactile 觸感升格為全域語言」時改了 `.slider__fill` 加 `::after + z-index: -1` noise，但漏改 `.progress-linear__bar`（兩者結構幾乎相同，都是純色 fill 上 noise）。本次補完：兩個 preview 檔案的 `.progress-linear__bar` 加 isolation + overflow + ::after noise overlay。觸感現在跟 slider / chip / avatar / badge / button 全部統一。 |
 
 ---
 
@@ -2216,7 +2218,7 @@ LazzyMerlin DS pinned: v0.1.0
 
 當前 v0.1.0。預計 v1.0.0 release 條件（暫定）：
 
-- [ ] 至少 1 個子專案完整落地驗證（稷下學院 / 聽了以後）
+- [ ] 至少 1 個子專案完整落地驗證（任一 web 或 iOS / macOS 專案）
 - [ ] Token 結構穩定 3 個月無 breaking change
 - [ ] 跨平台落地 QA Checklist 完成（§13 補一節）
 - [ ] iOS / macOS SDK 範例專案（驗證 §7.2 / §7.3 規範可行）
