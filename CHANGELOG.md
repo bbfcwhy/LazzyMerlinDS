@@ -13,6 +13,10 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 ### Changed
 - **Repo visibility · PRIVATE → PUBLIC**。LazzyMerlin DS 設計上就是 brand-level source of truth，沒 secrets，公開後 raw URL / GitHub link / Tokens Studio sync 都可不需 auth 直接用，未來合作者 / 跨專案落地 / AI 工具 onboarding 都更順
 - README License section 重寫 · 從「私人 brand assets，未公開授權」改成 dual licensing：spec / code 開放參考（CC BY 4.0 精神，需 attribution）、brand identity / logo / character 保留所有權
+- **`docs/landing-checklist.md` Phase 1 字體載入** 補強 framework 專用建議：Next.js 13+ 走 `next/font/google` + `next/font/local`（SSR preload / 自動 self-host / 自動 subset / 防 layout shift），純 HTML / Vite / Astro 走 CDN `<link>` 或 `@fontsource/*`，iOS / macOS bundle 維持 §7.2/§7.3 規範。LXGW WenKai TC 不在 Google Fonts ESM API，須走 local font 路徑並下載到 `public/fonts/`。**此補強由 lazzywill 個人網站 2026-04-28 落地實測得到，回流補進 checklist**
+
+### Validated
+- **§17.6 v1.0 條件第 1 條達成 ✓** · 個人網站 lazzywill 完整落地驗證（落地驗收 checklist 10 項全綠：字體載入 / Light + Dark mode / reduced motion / focus ring / AA 對比 / 沒引入新 hex / 反面教材 9 條全沒踩 / 邊緣狀態文案套 §10.3 / Footer 簽名 / production build 成功）。子專案 pin v0.1.1，未來跟著 DS 升版同步
 
 ### Fixed
 - Pagination active page 從 Tactile-Raised 改 Tactile-Pressed。原本 Raised 的 4 層 drop shadow 視覺中心偏右下、造成數字看起來偏左上；且在 list 內顯得太重。改 Pressed inset shadow 後 active page 文字精確置中、跟其他 ghost button 視覺節奏一致，跟 §15.5.1 chip-selected 邏輯統一

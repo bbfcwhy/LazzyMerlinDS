@@ -48,7 +48,70 @@ https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/main/docs/landing-checkl
 
 ## Phase 1 · 字體載入
 
-**Web 專案** — Google Fonts CDN，加進 `<head>`：
+按子專案技術棧選對應策略 —— **Next.js 走 `next/font/google` 不要走 CDN `<link>`**。
+
+### Next.js 13+ App Router · 推薦
+
+```tsx
+// app/layout.tsx 或 app/[locale]/layout.tsx
+import { Geist, Geist_Mono, Noto_Sans_TC } from 'next/font/google';
+import localFont from 'next/font/local';
+
+const geist = Geist({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-geist',
+  display: 'swap',
+});
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-geist-mono',
+  display: 'swap',
+});
+
+const notoSansTC = Noto_Sans_TC({
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-noto-sans-tc',
+  display: 'swap',
+});
+
+// LXGW WenKai TC 不在 Google Fonts ESM API，要走 next/font/local
+// 自己下載 OTF/WOFF2 放專案 `public/fonts/` 或 `app/fonts/`（路徑見 §3.5 下載連結）
+const lxgwWenKai = localFont({
+  src: '../public/fonts/LXGWWenKaiTC-Regular.woff2',
+  variable: '--font-lxgw',
+  display: 'swap',
+});
+
+export default function Layout({ children }) {
+  return (
+    <html lang="zh-Hant" className={`${geist.variable} ${geistMono.variable} ${notoSansTC.variable} ${lxgwWenKai.variable}`}>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+CSS 用 variable：
+
+```css
+body { font-family: var(--font-geist), var(--font-noto-sans-tc), sans-serif; }
+.display { font-family: var(--font-lxgw), serif; }
+.mono { font-family: var(--font-geist-mono), monospace; }
+```
+
+**為什麼不走 CDN `<link>`**（Next.js 場景特別重要）：
+- `next/font/google` 自動 SSR preload — 首次 render 時字體已 ready，減少 FOUT/FOIT
+- Build 時自動下載 + self-host — 不依賴 `fonts.googleapis.com` 線上連線
+- 自動 subset — 只載入用到的字符（中文 subset 從 ~10MB 降到 ~200KB）
+- 自動 `size-adjust` 防 layout shift
+- LXGW WenKai TC 走 `next/font/local`，把 OTF/WOFF2 下載到專案內，跟著 deploy 一起 ship（避免 Google Fonts 該字體相容性 / 速度問題）
+
+→ 此規範由 lazzywill 個人網站 2026-04-28 落地實測得到，回流補進此 phase。
+
+### 純 HTML / Vite + React / Astro · 用 Google Fonts CDN
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,9 +119,20 @@ https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/main/docs/landing-checkl
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;600&family=LXGW+WenKai+TC:wght@400&display=swap" rel="stylesheet">
 ```
 
-**iOS / macOS bundle** — 見 DS DESIGN.md §3 + §7.2/§7.3，bundle OTF 進 app target，本 checklist 暫不展開。
+LXGW WenKai TC 在 Google Fonts 上有，但檔案較大（繁中 subset 仍 ~5MB），考慮 subset 或自行 host。Astro 推薦走 `@fontsource/*` package（`@fontsource/geist` / `@fontsource/noto-sans-tc`，build 時自動 self-host）。
 
-**Reduced motion / 系統字體 fallback** — `font-family: 'Geist', 'Noto Sans TC', sans-serif;` body 用，display 用 `'LXGW WenKai TC', serif;`。
+### iOS / macOS bundle
+
+見 DS DESIGN.md §3 + §7.2 / §7.3，bundle OTF 進 app target。LXGW WenKai TC 檔案 ~10MB，iOS app 建議做繁體常用字 subset（用 `pyftsubset`）。本 checklist 暫不展開細節。
+
+### Reduced motion / 系統字體 fallback
+
+```css
+body { font-family: 'Geist', 'Noto Sans TC', sans-serif; }
+.display { font-family: 'LXGW WenKai TC', serif; }
+```
+
+任一 strategy（next/font / CDN / fontsource）載入後 CSS 用 family stack 即可，fallback 系統字體保證 ungraceful degradation。
 
 ---
 

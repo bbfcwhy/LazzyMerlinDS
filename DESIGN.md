@@ -2155,6 +2155,7 @@ Centered spinner layout：
 | 2026-04-27 | Pagination active 從 Raised 改 Pressed · §15.8.3 補完整規範 | 使用者觀察到 pagination active 的「3」數字看起來沒置中。根因兩層：(1) 視覺：`.btn--primary` Tactile-Raised 的 4 層 drop shadow 全部往右下方延伸，造成「視覺感受的 button 中心」偏右下，相對地數字被推到左上感。(2) 規範：原本規範說「active = Tactile Pressed」但實作用了 `.btn--primary`（= Raised），active 在 list 內顯得太重、跟 ghost button (1/2/4/5) 大小視覺差太多，破壞 pagination「同階一排」的節奏感。修法：(1) `.pagination .btn` 統一 `36×36 + padding: 0 + justify-content: center`，所有 page button 同尺寸文字精確置中。(2) `.pagination .btn--primary` override 為 Pressed inset shadow（取消 raised 的 linear gradient + 4 層 drop shadow），跟 §15.5.1 chip-selected 用 Pressed override 同邏輯。§15.8.3 規範補完整 CSS pattern 跟 rationale。 |
 | 2026-04-27 | 新增 `docs/landing-checklist.md` · 跨子專案落地 onboarding | 為了把 LazzyMerlin DS 套用到第一個子專案（個人網站 lazzywill），需要 cross-session hand-off：當前 session 對 DS 全熟，但 deploy 該在子專案 repo 內做（避免 DS repo 耦合具體產品）。修法：建 `docs/landing-checklist.md` 作為跨子專案重用的 onboarding doc，分 Phase 0~8（環境確認 / 字體 / tokens / CSS variables / Tactile material / 元件 MVP / Theme switch / Ambient layer / 邊緣狀態文案）+ 反面教材 12 條 + 跟 DS repo 互動規則（gap report 流程、升版同步流程）+ 落地驗收 checklist 9 項。第 0 段直接是「給新 session Claude 的 quick onboard prompt」可 paste 用。同時是 §17.6 v1.0 條件第 3 項「跨平台落地 QA Checklist」初步版本。DESIGN.md §13.3 加 reference 指向新 doc。未來其他子專案落地（iOS / macOS / Notion 等）走同一份 doc 的不同 phase。 |
 | 2026-04-27 | Repo visibility · PRIVATE → PUBLIC + dual licensing | 把 hand-off doc URL 貼到新 session 後 Claude 回傳 404，根因：repo 是 private，`raw.githubusercontent.com` 是 anonymous public CDN，不接受 auth header，所以 private repo 的 raw URL 永遠 404。修法：執行 `gh repo edit --visibility public` 把 repo 改 public。配套更新 README License section 為 dual licensing：(1) Spec / Tokens / Preview / Docs 走 CC BY 4.0 精神（開放參考、需 attribution）。(2) Brand identity（logo / character / 品牌名 / 邊緣狀態文案具體 wording）保留所有權，不可商用 / 挪用 / 二次創作。「寫 LazzyMerlin DS 的目的是把 brand 規範開放給未來合作者 / 跨專案落地 / 給 AI 工具當設計 reference」跟「保護 brand identity」可以並存。Public 後 raw URL / GitHub link / Tokens Studio sync 都不需 auth 直接用。 |
+| 2026-04-28 | **§17.6 v1.0 第 1 條達成** · 個人網站 lazzywill 完整落地 + Phase 1 Next.js 補強回流 | 第一個子專案落地：個人網站 lazzywill（Next.js 13+ App Router + shadcn/ui + Cloudflare Workers）。落地驗收 checklist 10 項全綠：字體載入 / Light + Dark mode / reduced motion / focus ring（shadcn cva 內建 `focus-visible:ring`）/ AA 對比 / 沒引入新 hex / 反面教材 9 條全沒踩 / 邊緣狀態文案套 §10.3 / Footer 簽名 / production build 成功。子專案 pin v0.1.1。**回流補強**：Phase 1 字體載入規範補 Next.js 框架專用建議 —— Next.js 場景必走 `next/font/google` 而非 CDN `<link>`，理由：SSR preload 防 FOUT/FOIT、build 時自動 self-host 不依賴 fonts.googleapis.com 線上、自動 subset（中文從 ~10MB 降到 ~200KB）、`size-adjust` 防 layout shift。LXGW WenKai TC 不在 Google Fonts ESM API，須走 `next/font/local` + 下載到 `public/fonts/`。其他 framework（純 HTML / Vite / Astro）保留 CDN link 路徑。**子專案 shadcn alias 命名差異不算 DS gap**（subproject 層面 alias bridge 即可）。 |
 
 ---
 
@@ -2231,12 +2232,12 @@ LazzyMerlin DS pinned: v0.1.0
 
 ### 17.6 v0.x → v1.0 路徑
 
-當前 v0.1.0。預計 v1.0.0 release 條件（暫定）：
+當前 v0.1.1（main HEAD 已累積 v0.1.2 candidate fixes）。預計 v1.0.0 release 條件（持續更新）：
 
-- [ ] 至少 1 個子專案完整落地驗證（任一 web 或 iOS / macOS 專案）
-- [ ] Token 結構穩定 3 個月無 breaking change
-- [ ] 跨平台落地 QA Checklist 完成（§13 補一節）
+- [x] 至少 1 個子專案完整落地驗證（任一 web 或 iOS / macOS 專案）— **2026-04-28 達成 · 個人網站 lazzywill** 完整落地，驗收 checklist 10 項全綠（見 CHANGELOG v0.1.2 candidate · Validated 段）
+- [ ] Token 結構穩定 3 個月無 breaking change（觀察期：v0.1.1 release 為起點 2026-04-27 → 2026-07-27）
+- [x] 跨平台落地 QA Checklist 完成 — **2026-04-27 達成 · `docs/landing-checklist.md`**
 - [ ] iOS / macOS SDK 範例專案（驗證 §7.2 / §7.3 規範可行）
-- [ ] Accessibility audit 過一輪（§14 規範實測）
+- [ ] Accessibility audit 過一輪（§14 規範實測 · lazzywill 落地已過初步檢查，但未做正式 audit）
 
 到 v1.0.0 後 LazzyMerlin DS 成為 brand 級穩定 SoT，破壞性更動需嚴格遵守 semver MAJOR bump。
