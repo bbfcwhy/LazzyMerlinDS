@@ -1070,7 +1070,7 @@ Home / About / Projects / Notebook / Contact
 
 每個 LazzyMerlin 專案的頁面都該有 OG image（避免分享時變醜）。
 
-**模板檔案**：`~/.gstack/projects/LazzyMerlin/designs/design-system-20260422/v3/og-template.html`
+**模板檔案**：`preview/og-template.html`
 
 用法：
 1. 打開 HTML，即時輸入 kicker / title / subtitle / theme
@@ -2159,6 +2159,7 @@ Centered spinner layout：
 | 2026-04-28 | **§17.6 v1.0 第 1 條達成** · 個人網站 lazzywill 完整落地 + Phase 1 Next.js 補強回流 | 第一個子專案落地：個人網站 lazzywill（Next.js 13+ App Router + shadcn/ui + Cloudflare Workers）。落地驗收 checklist 10 項全綠：字體載入 / Light + Dark mode / reduced motion / focus ring（shadcn cva 內建 `focus-visible:ring`）/ AA 對比 / 沒引入新 hex / 反面教材 9 條全沒踩 / 邊緣狀態文案套 §10.3 / Footer 簽名 / production build 成功。子專案 pin v0.1.1。**回流補強**：Phase 1 字體載入規範補 Next.js 框架專用建議 —— Next.js 場景必走 `next/font/google` 而非 CDN `<link>`，理由：SSR preload 防 FOUT/FOIT、build 時自動 self-host 不依賴 fonts.googleapis.com 線上、自動 subset（中文從 ~10MB 降到 ~200KB）、`size-adjust` 防 layout shift。LXGW WenKai TC 不在 Google Fonts ESM API，須走 `next/font/local` + 下載到 `public/fonts/`。其他 framework（純 HTML / Vite / Astro）保留 CDN link 路徑。**子專案 shadcn alias 命名差異不算 DS gap**（subproject 層面 alias bridge 即可）。 |
 | 2026-04-28 | v0.1.2 release · 第一次「子專案落地驅動」的 patch release | LazzyMerlin DS 第一次因為實際子專案落地觸發的 release，自然的 milestone：(1) **§17.6 v1.0 第 1 條 ✓** 個人網站 lazzywill 落地驗證（驗收 10 項全綠、子專案 pin v0.1.1）。(2) **第 3 條 ✓** `docs/landing-checklist.md` 跨子專案 onboarding doc（Phase 0~8 + 反面教材 + 落地驗收 checklist + 給新 session Claude 的 quick onboard prompt）。(3) **Repo PRIVATE → PUBLIC + dual licensing**（spec / code CC BY 4.0 精神、brand identity 保留所有權）—— 起因 raw URL anonymous CDN 在 private repo 永遠 404，順勢把 brand 規範對外開放。(4) **Pagination active 從 Raised 改 Pressed**（§15.8.3 補完整規範 + button 統一 36×36）。(5) **3D logo 壓縮 8.4MB → 4.2MB**（半張保真度、git clone / Tokens Studio sync 都更輕）。(6) **Phase 1 字體載入** Next.js 規範補強（由 lazzywill 落地實測回流）。本 patch 不含 token 結構變更，§17.6 第 2 條（Token 結構穩定 3 個月）觀察期延續 v0.1.1 起點 2026-04-27。 |
 | 2026-04-28 | v0.1.2 後 · 補 §2 Color Palette 色票卡 + 移除 deprecated preview 檔 | 使用者 review 時發現 components-preview.html 沒有色票卡，要查 hex 值得回頭翻 DESIGN.md §2 / tokens/color.json 不方便。補完整色票 section（Wood Palette 8 raw + Role Tokens Light ↔ Dark 並排對照 + Earth Tone status Light → Dark 提亮對照 + 透明度層 alpha 在 mode backdrop 上呈現）插在 §8 Brand Logo 之前作為 TOC 第一順位。同時順勢清掉兩份 deprecated preview：(1) `components-preview-palette-A.html` 三層藍 what-if 對照、(2) `preview.html` v0.1.0 前早期過渡版。歷史對照改信任 git tag（`git show v0.1.0:<path>`）+ §16 文字描述，避免主 preview 升版時 deprecated 檔案越漂越遠（這次補色票卡就漏改 palette-A，證明維護成本變雜訊）。§13.2 deprecated preview 列表保留 `v3/*` 那批（在 `~/.gstack/` 外部目錄不在 repo 內），但移除已刪除的兩份 preview 條目。og-template.html 仍用 v0.1.0 前舊 palette（`#F7F2E8 / #416880 / #1C1410`）跟現行 wood palette 不一致 —— 已記錄為 v0.1.3 candidate task，本次不動。 |
+| 2026-04-28 | v0.1.3 release · og-template.html 升版 + §11.3 路徑修正 | 觸發點：使用者 2nd Brain（Obsidian vault）未來要做大量社群貼文 + IG 圖卡 + Notion 同步，會把 LazzyMerlin §11.3 OG template 當 reference。但 og-template.html 整檔仍用 v0.1.0 finalize 前的舊 palette（`#F7F2E8 / #416880 / #1C1410 / #5C5247`），跟現行 wood palette 不一致 —— 如果 2nd Brain 閻多比拿這檔當 reference 會學到錯的調色。修法：(1) **og-template.html palette 全面升版到 wood palette role tokens**（`#F5EFE4 Parchment / #0F1C26 Midnight Petrol / #46647C Petrol / #4E3029 Espresso / #967459 Stone / hairline `rgba(150,116,89,0.30)`），dark mode 同步（`#0F1C26 bg / #5E7A8D primary 互換 / #DECCA7 ink-muted`）。(2) **og-orb-2 暖色從 `oklch(0.65 0.06 65 / 0.2)` 換成 `var(--earth-ochre)`**（`#8E6E37` light / `#D4AB6E` dark 提亮），保留「左下暖調 vs 右上 Petrol 冷調」對比但對齊 §2.2 earth tone status extension。`◈` corner sigil 保留（跟左上 `✦` 上下呼應的有趣 detail）。(3) **§11.3 模板檔案路徑修正**：原本指 `~/.gstack/projects/LazzyMerlin/designs/design-system-20260422/v3/og-template.html`（指錯到 gstack 外部 designs 目錄），改成 repo 內實際路徑 `preview/og-template.html`，跟 §13.3 一致。(4) **不影響任何已生產的 OG image PNG**（那些是 static screenshots 不會自動 regen），僅 future regenerated OG image 才會套新 palette。 |
 
 ---
 
@@ -2235,7 +2236,7 @@ LazzyMerlin DS pinned: v0.1.0
 
 ### 17.6 v0.x → v1.0 路徑
 
-當前 v0.1.2。預計 v1.0.0 release 條件（持續更新）：
+當前 v0.1.3。預計 v1.0.0 release 條件（持續更新）：
 
 - [x] 至少 1 個子專案完整落地驗證（任一 web 或 iOS / macOS 專案）— **2026-04-28 達成 · 個人網站 lazzywill** 完整落地，驗收 checklist 10 項全綠（見 CHANGELOG v0.1.2 · Validated 段）
 - [ ] Token 結構穩定 3 個月無 breaking change（觀察期：v0.1.1 release 為起點 2026-04-27 → 2026-07-27）
