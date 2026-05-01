@@ -12,7 +12,7 @@
 切到子專案資料夾開新 Claude Code session 後，paste 以下這段給它：
 
 ```
-我要把 LazzyMerlin Design System v0.1.1 套用到這個子專案。
+我要把 LazzyMerlin Design System v0.1.4 套用到這個子專案。
 
 LazzyMerlin DS 是我的跨平台品牌核心 design system，住在獨立 repo：
 https://github.com/bbfcwhy/LazzyMerlinDS
@@ -43,6 +43,34 @@ https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/main/docs/landing-checkl
 然後評估：
 - 既有 design 跟 LazzyMerlin DS 衝突嗎？例如既有用 Inter 字體（DS 不允許），需要全替換
 - 既有 token system？例如 Tailwind config 用既有色階，需要遷移到 LazzyMerlin tokens
+
+### iOS / macOS 專案 · Xcode 16 額外注意
+
+iOS 子專案（Xcode 16+）用 `PBXFileSystemSynchronizedRootGroup` 模式時（Xcode 16 預設新建 project 即此模式），`Info.plist` **必須放在 source folder 外**（project root 跟 `.xcodeproj` 同層），不然 build 會炸：
+
+```
+error: Multiple commands produce 'Info.plist'
+```
+
+根因：synchronized group 會自動把 source folder 內所有檔案當 build resource，Info.plist 同時被當 resource 跟 metadata 處理就衝突。修法：把 Info.plist 移到 source folder 外，target 的 Info.plist setting 指向新路徑。QTL 落地踩過此雷，浪費約 30 分鐘。
+
+---
+
+## Process tip · 抓 LazzyMerlin DS 規範必用 curl，不要 WebFetch
+
+子專案落地時要從 LazzyMerlin DS repo 拿 spec / preview / token 內容時，**必用 `curl` 抓 raw markdown**，不要透過 WebFetch、`/url`、LLM browse 工具：
+
+```bash
+# ✅ 正確
+curl -s https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/DESIGN.md > /tmp/lm-spec.md
+
+# ✗ 錯誤
+WebFetch https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.1.4/DESIGN.md
+```
+
+**為什麼：** WebFetch / browse 工具會 LLM-summarize 內容、漏掉 spec 的關鍵數值（box-shadow 完整 multi-layer 數值、邊緣狀態文案完整 wording、inset rim 兩層 hex 等）。QTL 落地踩過此雷：M1 Tactile material 強度只到 spec 1/4 ~ 1/8，因為 WebFetch 漏掉 §5.4.1 完整 box-shadow stack，M3.5 重做才修正。
+
+curl raw 才能拿到完整 markdown，落地後對齊一次到位。
 
 ---
 
@@ -142,14 +170,14 @@ body { font-family: 'Geist', 'Noto Sans TC', sans-serif; }
 
 ```bash
 mkdir -p src/styles/tokens
-curl -o src/styles/tokens/color.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/color.json
-curl -o src/styles/tokens/typography.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/typography.json
-curl -o src/styles/tokens/dimension.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/dimension.json
-curl -o src/styles/tokens/shadow.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/shadow.json
-curl -o src/styles/tokens/motion.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/motion.json
+curl -o src/styles/tokens/color.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/color.json
+curl -o src/styles/tokens/typography.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/typography.json
+curl -o src/styles/tokens/dimension.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/dimension.json
+curl -o src/styles/tokens/shadow.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/shadow.json
+curl -o src/styles/tokens/motion.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/motion.json
 ```
 
-子專案 README 寫一行：「LazzyMerlin DS pinned: v0.1.1（[CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md)）」。
+子專案 README 寫一行：「LazzyMerlin DS pinned: v0.1.4（[CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md)）」。
 
 ### B · Style Dictionary 自動產 CSS variables
 
@@ -367,24 +395,24 @@ CSS pattern 全部從 `preview/components-preview.html` Phase 4 copy。**reduced
 ## 重要 GitHub URLs
 
 - **Repo**：https://github.com/bbfcwhy/LazzyMerlinDS
-- **Spec v0.1.1**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.1.1/DESIGN.md
-- **Components Preview v0.1.1**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.1.1/preview/components-preview.html
-- **Tokens v0.1.1**：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.1.1/tokens
+- **Spec v0.1.4**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.1.4/DESIGN.md
+- **Components Preview v0.1.4**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.1.4/preview/components-preview.html
+- **Tokens v0.1.4**：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.1.4/tokens
 - **CHANGELOG**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md
 
-### Pin 到 v0.1.1 的 raw URLs
+### Pin 到 v0.1.4 的 raw URLs
 
 ```
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/color.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/typography.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/dimension.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/shadow.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.1/tokens/motion.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/color.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/typography.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/dimension.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/shadow.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/motion.json
 ```
 
-### v0.1.1 之後到 main HEAD 的 patches（可選 cherry-pick）
+### v0.1.4 之後到 main HEAD 的 patches（可選 cherry-pick）
 
-- Pagination active 改 Pressed（`commit ee69dcc`）—— 已併進 main，下個 v0.1.2 會包
+目前無，main HEAD 與 v0.1.4 對齊。
 
 ---
 
