@@ -24,32 +24,32 @@ Xcode → File → New → Project...
 
 | 欄位 | 值 |
 |---|---|
-| Product Name | `LazzyMerlinPreview` |
+| Product Name | `LazzyMerlinDSPreview` |
 | Team | （你個人 Apple Developer 帳號或 None for simulator-only） |
-| Organization Identifier | `ai.lazzymerlin` |
-| Bundle Identifier | `ai.lazzymerlin.LazzyMerlinPreview`（auto） |
+| Organization Identifier | `com.lazzymerlin` |
+| Bundle Identifier | `com.lazzymerlin.LazzyMerlinDSPreview`（auto） |
 | Interface | SwiftUI |
 | Language | Swift |
 | Storage | None |
 | Include Tests | ☐（不要） |
 
-存到：`/Users/bbfcwhy/Projects/LazzyMerlin/preview-ios/`（**注意：要選到 `preview-ios/` 這層、Xcode 會在裡面再建一層 `LazzyMerlinPreview/`**）
+存到：`/Users/bbfcwhy/Projects/LazzyMerlin/preview-ios/`（**注意：要選到 `preview-ios/` 這層、Xcode 會在裡面再建一層 `LazzyMerlinDSPreview/`**）
 
-> 如果你已經有 `preview-ios/LazzyMerlinPreview/` 資料夾，存 project 時 Xcode 會合併進來。
+> 如果你已經有 `preview-ios/LazzyMerlinDSPreview/` 資料夾，存 project 時 Xcode 會合併進來。
 
 ### 2. 刪掉 Xcode 預設檔、用我寫好的取代
 
 Xcode wizard 會自動生兩個檔：
-- `LazzyMerlinPreview/LazzyMerlinPreviewApp.swift`
-- `LazzyMerlinPreview/ContentView.swift`
+- `LazzyMerlinDSPreview/LazzyMerlinDSPreviewApp.swift`
+- `LazzyMerlinDSPreview/ContentView.swift`
 
-兩個 Xcode 生的檔都**直接刪掉**（Move to Trash）。preview-ios/LazzyMerlinPreview/ 內已經有我寫好的同名檔。
+兩個 Xcode 生的檔都**直接刪掉**（Move to Trash）。preview-ios/LazzyMerlinDSPreview/ 內已經有我寫好的同名檔。
 
 ### 3. 把現有 source files drag 進 Xcode
 
-在 Finder 打開 `preview-ios/LazzyMerlinPreview/`，把這些 drag 進 Xcode 的 navigator（拖到 LazzyMerlinPreview 群組底下）：
+在 Finder 打開 `preview-ios/LazzyMerlinDSPreview/`，把這些 drag 進 Xcode 的 navigator（拖到 LazzyMerlinDSPreview 群組底下）：
 
-- `LazzyMerlinPreviewApp.swift`
+- `LazzyMerlinDSPreviewApp.swift`
 - `ContentView.swift`
 - `Tokens/` 整個資料夾
 - `Sections/` 整個資料夾
@@ -57,18 +57,18 @@ Xcode wizard 會自動生兩個檔：
 drag 時 Xcode 會問：
 - ☑ Copy items if needed —— **不打勾**（檔案已經在正確位置）
 - ☑ Create groups —— 打勾
-- ☑ Add to targets: LazzyMerlinPreview (iOS), LazzyMerlinPreview (macOS) —— 兩個都打勾
+- ☑ Add to targets: LazzyMerlinDSPreview (iOS), LazzyMerlinDSPreview (macOS) —— 兩個都打勾
 
 ### 4. Asset catalog 取代
 
-Xcode wizard 會自動生 `LazzyMerlinPreview/Assets.xcassets/`。我寫好的 asset catalog 已在同位置（包含 15 個 colorset + TactileNoise imageset），直接覆蓋即可：
+Xcode wizard 會自動生 `LazzyMerlinDSPreview/Assets.xcassets/`。我寫好的 asset catalog 已在同位置（包含 15 個 colorset + TactileNoise imageset），直接覆蓋即可：
 
 ```bash
 # Xcode 關閉的情況下執行
-rm -rf preview-ios/LazzyMerlinPreview/Assets.xcassets.bak
-mv preview-ios/LazzyMerlinPreview/Assets.xcassets preview-ios/LazzyMerlinPreview/Assets.xcassets.bak
+rm -rf preview-ios/LazzyMerlinDSPreview/Assets.xcassets.bak
+mv preview-ios/LazzyMerlinDSPreview/Assets.xcassets preview-ios/LazzyMerlinDSPreview/Assets.xcassets.bak
 # (Xcode wizard 生的版本備份)
-# 我寫的版本應該已在 preview-ios/LazzyMerlinPreview/Assets.xcassets/
+# 我寫的版本應該已在 preview-ios/LazzyMerlinDSPreview/Assets.xcassets/
 # 重開 Xcode 即可
 ```
 
@@ -81,7 +81,7 @@ mv preview-ios/LazzyMerlinPreview/Assets.xcassets preview-ios/LazzyMerlinPreview
 設定路徑：
 
 ```
-Xcode → Project navigator 選 LazzyMerlinPreview project
+Xcode → Project navigator 選 LazzyMerlinDSPreview project
   → Build Settings → 搜 "Info.plist"
   → Info.plist File：改成 ../Info.plist (or absolute path)
 ```
@@ -92,7 +92,7 @@ Xcode → Project navigator 選 LazzyMerlinPreview project
 
 macOS sandbox 需要：
 ```
-TARGETS → LazzyMerlinPreview (macOS) → Signing & Capabilities
+TARGETS → LazzyMerlinDSPreview (macOS) → Signing & Capabilities
   → App Sandbox（Xcode 預設加，保留即可）
 ```
 
@@ -100,8 +100,8 @@ TARGETS → LazzyMerlinPreview (macOS) → Signing & Capabilities
 
 | Target | 跑法 |
 |---|---|
-| **iOS** | scheme 選 LazzyMerlinPreview (iOS) + 模擬器選 iPhone 17 Pro → Cmd+R |
-| **macOS** | scheme 選 LazzyMerlinPreview (macOS) → Cmd+R |
+| **iOS** | scheme 選 LazzyMerlinDSPreview (iOS) + 模擬器選 iPhone 17 Pro → Cmd+R |
+| **macOS** | scheme 選 LazzyMerlinDSPreview (macOS) → Cmd+R |
 
 跑起來後左上角 Master list 會看到：Buttons / Cards / Chips / Form / Feedback / Modal 六個 component sections。
 
@@ -117,7 +117,7 @@ TARGETS → LazzyMerlinPreview (macOS) → Signing & Capabilities
 - ...（其他五個 component 同模式）
 
 iOS 截圖：模擬器 Cmd+S → 自動存到 Desktop，再搬到 screenshots/  
-macOS 截圖：Cmd+Shift+5 選 LazzyMerlinPreview window → 截圖
+macOS 截圖：Cmd+Shift+5 選 LazzyMerlinDSPreview window → 截圖
 
 ## 視覺比對 workflow
 
@@ -134,8 +134,8 @@ screenshot 收齊後：
 preview-ios/
 ├── README.md                        ← 本檔
 ├── Info.plist                       ← 放 source folder 外（Xcode 26 quirk）
-├── LazzyMerlinPreview/
-│   ├── LazzyMerlinPreviewApp.swift  app entry
+├── LazzyMerlinDSPreview/
+│   ├── LazzyMerlinDSPreviewApp.swift  app entry
 │   ├── ContentView.swift            NavigationStack gallery
 │   ├── Tokens/
 │   │   ├── Color+Brand.swift        8 色 wood palette

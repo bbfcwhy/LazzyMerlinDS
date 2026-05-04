@@ -1013,7 +1013,7 @@ struct TactileRaisedModifier: ViewModifier {
 - `.tactileInset()` — 反向光源（頂緣 dark stroke、底緣 light stroke）、無 drop shadow、無 noise
 - `.tactilePressed()` — `Color("Stone")` 底 + 1 層淺 drop shadow + 反向 stroke
 
-完整四態 reference impl 見 [`preview-ios/LazzyMerlinPreview/Tokens/TactileMaterial.swift`](../../preview-ios/LazzyMerlinPreview/Tokens/TactileMaterial.swift)（v0.2.0 起 ship）。
+完整四態 reference impl 見 [`preview-ios/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift`](../../preview-ios/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift)（v0.2.0 起 ship）。
 
 ##### 視覺一致性驗證
 
@@ -1031,7 +1031,7 @@ struct TactileRaisedModifier: ViewModifier {
 - **macOS 14+ Liquid Glass**：可在 toolbar / sidebar 用 `.background(.ultraThinMaterial)` 達成 Liquid Glass 效果，跟 Tactile 卡片並存無衝突
 - **Icon**：LazzyMerlin 專屬 icon 使用 Petrol + Parchment 組合（§8.3.3 macOS 規範）
 
-**preview-ios/ 同樣 cover macOS target**：`preview-ios/LazzyMerlinPreview` 是 multiplatform SwiftUI app，iOS / macOS 共用同份 ContentView，只在需要 platform-specific 行為時用 `#if os(macOS)`。
+**preview-ios/ 同樣 cover macOS target**：`preview-ios/LazzyMerlinDSPreview` 是 multiplatform SwiftUI app，iOS / macOS 共用同份 ContentView，只在需要 platform-specific 行為時用 `#if os(macOS)`。
 
 ### 7.4 Notion 模板
 Notion 沒自訂 CSS，只能靠以下元素傳達品牌：

@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct LazzyMerlinPreviewApp: App {
+struct LazzyMerlinDSPreviewApp: App {
 
     @AppStorage("appearance") private var appearance: AppearancePreference = .system
 
