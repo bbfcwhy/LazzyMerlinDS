@@ -1,23 +1,48 @@
-# LazzyMerlin Preview · iOS / macOS
+# LazzyMerlin DS Preview · iOS / macOS
 
 LazzyMerlin DS §5.4 Tactile material 跨平台共通配方的 SwiftUI reference impl + 視覺一致性驗證。
 
 ## 目的
 
-跟 web preview（[`../preview/components-preview.html`](../preview/components-preview.html)）並列存在，驗證 web 跟 iOS / macOS 兩平台的 Tactile 視覺氣質「分不太出來」。
+跟 web preview（[`../preview/components-preview.html`](../preview/components-preview.html)）並列存在，驗證 web 跟 iOS / macOS 三平台的 Tactile 視覺氣質「分不太出來」。
 
 `screenshots/` 內的 side-by-side 截圖是 visual regression baseline —— 每次改動 §5.4 配方都要重截、確認跨平台一致。
 
-## 快速 setup（10 分鐘）
+## 目錄結構
 
-由於 .xcodeproj 不放進 repo（user-specific paths），首次 clone 後需要在 Xcode 自建 project。流程：
+```
+preview-ios/
+├── README.md                                    ← 本檔
+├── screenshots/                                 ← visual regression baseline
+└── LazzyMerlinDSPreview/                        ← Xcode project root
+    ├── LazzyMerlinDSPreview.xcodeproj/          ← gitignored（user-specific paths）
+    └── LazzyMerlinDSPreview/                    ← file-system synchronized source folder
+        ├── LazzyMerlinDSPreviewApp.swift        @main + AppearancePreference
+        ├── ContentView.swift                    NavigationStack gallery
+        ├── Tokens/
+        │   ├── Color+Brand.swift                8 色 wood palette + 3 earth tone
+        │   ├── TactileMaterial.swift            tactileRaised/Base/Inset/Pressed ViewModifier
+        │   └── BrandTypography.swift            iOS type scale + .sectionLabel()
+        ├── Sections/
+        │   ├── ButtonsView.swift
+        │   ├── CardsView.swift
+        │   ├── ChipsView.swift
+        │   ├── FormView.swift
+        │   ├── FeedbackView.swift
+        │   └── ModalView.swift
+        └── Assets.xcassets/                     15 colorset + TactileNoise.imageset
+```
+
+Source 檔案在 `preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/`（雙層、Xcode 標準 multiplatform app 結構）。Xcode 26 的 file-system synchronized group 會自動 sync 這個 folder 內的所有檔案到 build target，新增 / 改名 / 刪除 source 不需要在 .xcodeproj 內手動維護 reference。
+
+## 首次 setup（Xcode wizard）
+
+如果你還沒建 .xcodeproj（或 git clone 後第一次 setup）：
 
 ### 1. Xcode 開新 Multiplatform App
 
 ```
-Xcode → File → New → Project...
-  → Multiplatform → App
-  → Next
+Xcode → File → New → Project... → Multiplatform → App → Next
 ```
 
 填寫：
@@ -25,96 +50,60 @@ Xcode → File → New → Project...
 | 欄位 | 值 |
 |---|---|
 | Product Name | `LazzyMerlinDSPreview` |
-| Team | （你個人 Apple Developer 帳號或 None for simulator-only） |
+| Team | （個人 Apple Developer 帳號 or None for simulator-only） |
 | Organization Identifier | `com.lazzymerlin` |
 | Bundle Identifier | `com.lazzymerlin.LazzyMerlinDSPreview`（auto） |
 | Interface | SwiftUI |
 | Language | Swift |
 | Storage | None |
-| Include Tests | ☐（不要） |
+| Testing System | None（如果 dropdown 沒 None 選預設、之後忽略 test target） |
 
-存到：`/Users/bbfcwhy/Projects/LazzyMerlin/preview-ios/`（**注意：要選到 `preview-ios/` 這層、Xcode 會在裡面再建一層 `LazzyMerlinDSPreview/`**）
+存到：`/Users/bbfcwhy/Projects/LazzyMerlin/preview-ios/`（**注意：選到 `preview-ios/` 這層、Xcode 會在裡面再建一層 `LazzyMerlinDSPreview/`**）
 
-> 如果你已經有 `preview-ios/LazzyMerlinDSPreview/` 資料夾，存 project 時 Xcode 會合併進來。
+> **取消 "Create Git Repository" checkbox**（如果有）—— 避免 wizard 在 project folder 內 git init 出 nested repo（外層 LazzyMerlin DS 已經是 git repo）
 
-### 2. 刪掉 Xcode 預設檔、用我寫好的取代
+### 2. 處理 wizard 預設 source files
 
-Xcode wizard 會自動生兩個檔：
-- `LazzyMerlinDSPreview/LazzyMerlinDSPreviewApp.swift`
-- `LazzyMerlinDSPreview/ContentView.swift`
-
-兩個 Xcode 生的檔都**直接刪掉**（Move to Trash）。preview-ios/LazzyMerlinDSPreview/ 內已經有我寫好的同名檔。
-
-### 3. 把現有 source files drag 進 Xcode
-
-在 Finder 打開 `preview-ios/LazzyMerlinDSPreview/`，把這些 drag 進 Xcode 的 navigator（拖到 LazzyMerlinDSPreview 群組底下）：
-
+Wizard 會在 `preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/` 內生三個預設檔（會跟我寫好的同名衝突）：
 - `LazzyMerlinDSPreviewApp.swift`
 - `ContentView.swift`
-- `Tokens/` 整個資料夾
-- `Sections/` 整個資料夾
+- `Assets.xcassets/`
 
-drag 時 Xcode 會問：
-- ☑ Copy items if needed —— **不打勾**（檔案已經在正確位置）
-- ☑ Create groups —— 打勾
-- ☑ Add to targets: LazzyMerlinDSPreview (iOS), LazzyMerlinDSPreview (macOS) —— 兩個都打勾
+兩個處理方式：
 
-### 4. Asset catalog 取代
+**A. Finder 內手動移動**（推薦）  
+在 Finder 開 `preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/`，把這三個 wizard 預設項目丟進垃圾桶，然後從 git restore 出我寫好的版本（如果 working tree 沒有的話 `git restore preview-ios/LazzyMerlinDSPreview/`）。
 
-Xcode wizard 會自動生 `LazzyMerlinDSPreview/Assets.xcassets/`。我寫好的 asset catalog 已在同位置（包含 15 個 colorset + TactileNoise imageset），直接覆蓋即可：
+**B. Xcode 內刪除**  
+打開 Xcode、navigator 內 right-click 三個檔案 → Delete → Move to Trash。然後 drag 我寫好的同名檔進去。
 
-```bash
-# Xcode 關閉的情況下執行
-rm -rf preview-ios/LazzyMerlinDSPreview/Assets.xcassets.bak
-mv preview-ios/LazzyMerlinDSPreview/Assets.xcassets preview-ios/LazzyMerlinDSPreview/Assets.xcassets.bak
-# (Xcode wizard 生的版本備份)
-# 我寫的版本應該已在 preview-ios/LazzyMerlinDSPreview/Assets.xcassets/
-# 重開 Xcode 即可
-```
+完成後 file-system synchronized group 會自動 sync 我寫的版本進 build target。
 
-或者在 Xcode 直接刪掉 wizard 的 Assets.xcassets，drag 我的版本進去。
+### 3. 處理 wizard 自動建的 nested .git（如果有）
 
-### 5. 設定 Info.plist 路徑
+如果 wizard `Create Git Repository` 沒取消，會在 `preview-ios/LazzyMerlinDSPreview/.git/` 建 nested repo。Finder 開那層、按 Cmd+Shift+. 顯示隱藏檔案、把 `.git` 丟垃圾桶。
 
-我把 Info.plist 放在 source folder **外**（`preview-ios/Info.plist`，跟 .xcodeproj 同層），以避開 Xcode 26 file-system synchronized group 的「Multiple commands produce 'Info.plist'」error（landing-checklist Phase 0 的踩雷）。
-
-設定路徑：
-
-```
-Xcode → Project navigator 選 LazzyMerlinDSPreview project
-  → Build Settings → 搜 "Info.plist"
-  → Info.plist File：改成 ../Info.plist (or absolute path)
-```
-
-兩個 target（iOS + macOS）都要設。
-
-### 6. macOS target 額外設定
-
-macOS sandbox 需要：
-```
-TARGETS → LazzyMerlinDSPreview (macOS) → Signing & Capabilities
-  → App Sandbox（Xcode 預設加，保留即可）
-```
-
-### 7. Build & Run
+### 4. Build & Run
 
 | Target | 跑法 |
 |---|---|
 | **iOS** | scheme 選 LazzyMerlinDSPreview (iOS) + 模擬器選 iPhone 17 Pro → Cmd+R |
 | **macOS** | scheme 選 LazzyMerlinDSPreview (macOS) → Cmd+R |
 
-跑起來後左上角 Master list 會看到：Buttons / Cards / Chips / Form / Feedback / Modal 六個 component sections。
+跑起來會看到 NavigationStack gallery：Buttons / Cards / Chips / Form / Feedback / Modal 六個 component sections，加 Appearance picker 三態（系統 / 淺色 / 深色）。
 
 ## 截圖工作流
 
-每個 component 截圖兩張（light + dark），跑 iOS 模擬器跟 macOS 兩平台 = 4 張 / component × 6 components = **24 張截圖**。
+每個 component 截圖兩張（light + dark），跑 iOS 跟 macOS 兩平台 = 4 張 / component × 6 components = **24 張截圖**。
 
 放到：`preview-ios/screenshots/`，命名：
-- `buttons-ios-light.png`
-- `buttons-ios-dark.png`
-- `buttons-macos-light.png`
-- `buttons-macos-dark.png`
-- ...（其他五個 component 同模式）
+
+```
+buttons-ios-light.png       buttons-ios-dark.png
+buttons-macos-light.png     buttons-macos-dark.png
+cards-ios-light.png         cards-ios-dark.png
+... (6 components × 4 = 24)
+```
 
 iOS 截圖：模擬器 Cmd+S → 自動存到 Desktop，再搬到 screenshots/  
 macOS 截圖：Cmd+Shift+5 選 LazzyMerlinDSPreview window → 截圖
@@ -124,42 +113,19 @@ macOS 截圖：Cmd+Shift+5 選 LazzyMerlinDSPreview window → 截圖
 screenshot 收齊後：
 
 1. 開 web preview（`../preview/components-preview.html`）—— Chrome devtools 模擬同 viewport（iOS：390×844 iPhone 14 / macOS：480×800）截 web 對應 component 的 screenshot
-2. 用 [`../comparison/index.html`](../comparison/index.html) side-by-side 並排顯示 web vs iOS / macOS
+2. 用 [`../comparison/index.html`](../comparison/index.html) side-by-side 並排顯示 web vs iOS / macOS（v0.2.0 final 才生）
 3. 看哪邊「不夠分不太出來」→ 反覆校正 §5.4 共通六件配方數值
 4. iterate 直到三平台視覺氣質真正一致
 
-## Source 結構
+## .gitignore 設定（已加）
+
+`.xcodeproj` / `xcuserdata/` 等含 user-specific paths，**不 commit 進 repo**。LazzyMerlin DS root `.gitignore` 已加：
 
 ```
-preview-ios/
-├── README.md                        ← 本檔
-├── Info.plist                       ← 放 source folder 外（Xcode 26 quirk）
-├── LazzyMerlinDSPreview/
-│   ├── LazzyMerlinDSPreviewApp.swift  app entry
-│   ├── ContentView.swift            NavigationStack gallery
-│   ├── Tokens/
-│   │   ├── Color+Brand.swift        8 色 wood palette
-│   │   ├── TactileMaterial.swift    Raised / Base / Inset / Pressed ViewModifier
-│   │   └── BrandTypography.swift    type scale + .sectionLabel()
-│   ├── Sections/
-│   │   ├── ButtonsView.swift
-│   │   ├── CardsView.swift
-│   │   ├── ChipsView.swift
-│   │   ├── FormView.swift
-│   │   ├── FeedbackView.swift
-│   │   └── ModalView.swift
-│   └── Assets.xcassets/             15 colorset + TactileNoise.imageset
-└── screenshots/                     ← visual regression baseline
-```
-
-## .gitignore 提示
-
-`.xcodeproj` / `xcuserdata/` 內含 user-specific paths，**不 commit 進 repo**。在 LazzyMerlin DS root `.gitignore` 加：
-
-```
-preview-ios/*.xcodeproj/
+preview-ios/**/*.xcodeproj/
 preview-ios/**/xcuserdata/
+preview-ios/**/*.xcuserstate
+preview-ios/**/build/
 preview-ios/**/.DS_Store
+preview-ios/**/_wizard_backup/
 ```
-
-`.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist` 等 shared 檔案可以 commit，但 user-specific xcschememanagement.plist 不要。

@@ -1013,7 +1013,7 @@ struct TactileRaisedModifier: ViewModifier {
 - `.tactileInset()` — 反向光源（頂緣 dark stroke、底緣 light stroke）、無 drop shadow、無 noise
 - `.tactilePressed()` — `Color("Stone")` 底 + 1 層淺 drop shadow + 反向 stroke
 
-完整四態 reference impl 見 [`preview-ios/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift`](../../preview-ios/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift)（v0.2.0 起 ship）。
+完整四態 reference impl 見 [`preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift)（v0.2.0 起 ship）。
 
 ##### 視覺一致性驗證
 
