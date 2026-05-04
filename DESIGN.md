@@ -479,128 +479,130 @@ Hero 區背景的 3 個 blur 漸層圓，緩慢 drift（24s 循環）：
 
 ### 5.4 Tactile 材質系統（主招牌）
 
-**Tactile 是 LazzyMerlin v5 起的主視覺語言。** 所有 CTA / 卡片 / Tile 都用這套。
+**Tactile 是 LazzyMerlin 的主視覺語言**：所有 CTA / 卡片 / Tile 都用這套。核心原則：**touchable 元件需有層次感** — fillable 底 + 暗化 / 漸層 + drop shadow + 細微紋理 + 雕刻字。
 
-核心配方四件組（缺一個都不像 Tactile）：
+#### 跨平台共通配方（v0.2.0 起）
 
-```
-1. 對角光源 background
-   ├─ radial-gradient（左上 22%/18% 高光）
-   └─ linear-gradient 135deg（左上微亮 → 右下暗化）
+v0.2.0 把 Tactile 重新校準為 **跨平台共通配方** —— web 跟 SwiftUI 用同一份「六件 building blocks」，視覺氣質一致到「分不太出來」。先前（v0.1.4 及之前）的 Tactile-Heavy 強度（雙層 inset rim、4 層 drop shadow、SVG turbulence noise）因為 SwiftUI 無等價而降規格 —— web 端視覺強度約 -30%，換得 iOS / macOS / web 視覺氣質真正一致。
 
-2. 雙層 inset rim（邊緣雕刻）
-   ├─ inset 0  2px 1px 高光（頂緣 + 左緣）
-   ├─ inset 0 -2px 1px 陰影（底緣 + 右緣）
-   └─ inset 0  0 0 1px hairline（整圈細邊）
+**共通六件 building blocks：**
 
-3. 多層 drop shadow（往右下落 4 層遞進）
-   ├─ 近：3-4px / 4-6px / blur 6-14
-   ├─ 中：8-10px / 12-14px / blur 18-22
-   ├─ 遠：20-24px / 28-32px / blur 40-50
-   └─ 環境光：40-48px / 56-64px / blur 70-80
+| # | 元素 | Web (CSS) | SwiftUI |
+|---|---|---|---|
+| 1 | 對角微暗化 | `linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)` | `LinearGradient(colors: [.white.opacity(0.04), .clear, .black.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing)` |
+| 2 | 上亮下暗單層內邊（取代雙層 inset rim） | `box-shadow: inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.20)` | `.overlay { RoundedRectangle().stroke(LinearGradient(white→black, top→bottom), lineWidth: 1) }` |
+| 3 | Drop shadow（近 + 遠，共 2 層） | `box-shadow: 0 2px 4px rgba(15,28,38,0.15), 0 6px 12px rgba(15,28,38,0.10)` | `.shadow(color: .black.opacity(0.15), radius: 4, y: 2).shadow(color: .black.opacity(0.10), radius: 12, y: 6)` |
+| 4 | Noise overlay（共用 PNG tile） | `background-image: url('/assets/tactile-noise.png'); background-size: 256px; mix-blend-mode: soft-light; opacity 0.06-0.10` | `Image("TactileNoise").resizable(resizingMode: .tile).opacity(0.08).blendMode(.softLight)` |
+| 5 | Text shadow（雕刻字） | `text-shadow: 0 1px 0 rgba(255,255,255,0.40)`（深底改 `rgba(0,0,0,0.30)`） | `.shadow(color: .white.opacity(0.4), radius: 0, y: 1)`（深底改 `.black.opacity(0.3)`） |
+| 6 | Continuous radius | `border-radius: 10-20px`（CSS `border-radius` 視覺即 continuous squircle） | `RoundedRectangle(cornerRadius: ..., style: .continuous)` |
 
-4. Noise overlay（::after 偽元素）
-   ├─ 雙層 SVG turbulence（90px + 220px + optional 380px）
-   ├─ Light: mix-blend-mode: overlay, opacity 0.55-0.6
-   └─ Dark:  mix-blend-mode: soft-light, opacity 0.75-0.85
-```
+**共用 asset：** [`assets/tactile-noise.png`](assets/tactile-noise.png) —— 256×256 RGBA PNG，從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` render，stitchable 無縫平鋪。Web 跟 iOS bundle 同一份，從來源就保證跨平台一致。
 
 #### 5.4.1 Tactile 四態材質
 
-四種材質對應四種語意角色，**任何 Tactile 元件選一種**：
+四種材質對應四種語意角色，**任何 Tactile 元件選一種**。每態都用 §5.4 共通六件 building blocks 組合，跨平台等價：
 
-| Material | 背景 | 凸/凹 | 用途 |
-|---|---|---|---|
-| **Base** | `--bg-raised` | 微凸（薄浮雕） | 一般卡片、容器、page surface |
-| **Raised** | `--primary` / `--primary-deep` | 強凸（厚浮雕） | 主 CTA、Hero tile、強調 panel |
-| **Inset** | `--bg`（同底色） | 凹陷 | 表單輸入、容器內凹槽、selected slot |
-| **Pressed** | `--stone` 或暗色 | 整片下沉（仍有薄外影） | active 狀態、selected toggle |
+| Material | 背景 | 凸/凹 | 套用配方件 | 用途 |
+|---|---|---|---|---|
+| **Base** | `--bg-raised` | 微凸（薄浮雕） | 1 + 2 + 3（弱）+ 4（極淡）+ 6 | 一般卡片、容器、page surface |
+| **Raised** | `--primary` / `--primary-deep` | 強凸（厚浮雕） | 1 + 2 + 3（強）+ 4 + 5 + 6 | 主 CTA、Hero tile、強調 panel |
+| **Inset** | `--bg`（同底色） | 凹陷 | 反向 1 + 反向 2（光源反轉）+ 6 | 表單輸入、容器內凹槽 |
+| **Pressed** | `--stone` 或暗色 | 整片下沉 | 1（強暗）+ 反向 2 + 5 + 6 + 1 層淺 drop shadow | active 狀態、selected toggle |
 
-**Base（淺浮雕）light mode 規格：**
-```css
-.tactile-base {
-  background-color: var(--bg-raised);
-  background-image:
-    radial-gradient(ellipse at 22% 18%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 55%),
-    linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(15,28,38,0.10) 100%);
-  box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, 0.70),
-    inset 2px 0 1px rgba(255, 255, 255, 0.40),
-    inset 0 -2px 1px rgba(15, 28, 38, 0.18),
-    inset -2px 0 1px rgba(15, 28, 38, 0.10),
-    inset 0 0 0 1px rgba(15, 28, 38, 0.06),
-    3px 4px 6px rgba(15, 28, 38, 0.14),
-    8px 12px 18px rgba(15, 28, 38, 0.18),
-    20px 28px 40px rgba(15, 28, 38, 0.22),
-    40px 56px 70px rgba(15, 28, 38, 0.16);
-}
-```
-
-**Raised（強浮雕）light mode 規格** — 用於 primary CTA：
+**Raised（主 CTA）web 規格：**
 ```css
 .tactile-raised {
   background-color: var(--primary);
   color: var(--bg);
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.30);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.30);
   background-image:
-    radial-gradient(ellipse at 22% 18%, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0) 55%),
-    linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%);
+    linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%),
+    url('/assets/tactile-noise.png');
+  background-size: auto, 256px 256px;
+  background-blend-mode: normal, soft-light;
   box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, 0.35),
-    inset 2px 0 1px rgba(255, 255, 255, 0.18),
-    inset 0 -2px 1px rgba(0, 0, 0, 0.32),
-    inset -2px 0 1px rgba(0, 0, 0, 0.20),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.10),
-    4px 5px 8px rgba(15, 28, 38, 0.22),
-    10px 14px 22px rgba(15, 28, 38, 0.26),
-    24px 32px 50px rgba(15, 28, 38, 0.32),
-    48px 64px 80px rgba(15, 28, 38, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    0 2px 4px rgba(15, 28, 38, 0.15),
+    0 6px 12px rgba(15, 28, 38, 0.10);
+  border-radius: 12px;
 }
 ```
 
-**Inset（凹陷）light mode 規格** — 用於輸入槽、selected slot：
+**Raised SwiftUI 等價** — 完整 ViewModifier 見 §7.2.9。
+
+**Base（淺浮雕）web 規格：**
+```css
+.tactile-base {
+  background-color: var(--bg-raised);
+  background-image:
+    linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(15,28,38,0.10) 100%),
+    url('/assets/tactile-noise.png');
+  background-size: auto, 256px 256px;
+  background-blend-mode: normal, soft-light;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.50),
+    inset 0 -1px 0 rgba(15, 28, 38, 0.10),
+    0 2px 4px rgba(15, 28, 38, 0.10),
+    0 4px 8px rgba(15, 28, 38, 0.06);
+  border-radius: 12px;
+}
+```
+
+**Inset（凹陷）web 規格** — 光源反轉（左上陰影、右下反射光）：
 ```css
 .tactile-inset {
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse at 22% 18%, rgba(15,28,38,0.18) 0%, rgba(15,28,38,0) 55%),
-    linear-gradient(135deg, rgba(15,28,38,0.10) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.10) 100%);
+    linear-gradient(135deg, rgba(15,28,38,0.10) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.06) 100%);
   box-shadow:
-    inset 5px 7px 14px rgba(15, 28, 38, 0.25),
-    inset 2px 2px 4px rgba(15, 28, 38, 0.20),
-    inset -3px -3px 8px rgba(255, 255, 255, 0.55),
-    inset 0 0 0 1px rgba(15, 28, 38, 0.06);
+    inset 0 1px 2px rgba(15, 28, 38, 0.18),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.40);
+  border-radius: 10px;
 }
 ```
-注意：**Inset 的光源方向反轉** —— 左上是陰影（rim 擋光），右下是反射光。
+注意：Inset **不加 noise overlay**（凹槽紋理會打架），也**不加 drop shadow**（凹槽本來就在元件內）。
 
-**Pressed light mode 規格**：
+**Pressed web 規格：**
 ```css
 .tactile-pressed {
   background-color: var(--stone);
   color: var(--bg);
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.30);
   background-image:
-    radial-gradient(ellipse at 22% 18%, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0) 55%),
     linear-gradient(135deg, rgba(0,0,0,0.20) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.06) 100%);
   box-shadow:
-    inset 4px 5px 12px rgba(0, 0, 0, 0.42),
-    inset 2px 2px 4px rgba(0, 0, 0, 0.30),
-    inset -1px -1px 4px rgba(255, 255, 255, 0.08),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.22),
-    2px 3px 5px rgba(15, 28, 38, 0.16);
+    inset 0 1px 2px rgba(0, 0, 0, 0.30),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.10),
+    0 1px 2px rgba(15, 28, 38, 0.10);
+  border-radius: 12px;
 }
 ```
 
 #### 5.4.2 Dark mode 規則
 
-Dark mode 不是 light 直接反色，需要重寫 shadow 強度：
-- **Inset highlight**（白色高光）整體降到 `rgba(255,255,255,0.06-0.22)` 區間
-- **Inset rim shadow**（黑色雕刻）拉強到 `rgba(0,0,0,0.30-0.55)` 區間
-- **Drop shadows** 全部換成 `rgba(0,0,0,...)`，opacity 比 light mode 高 30-50%
-- **Noise overlay** opacity 從 0.55 → 0.75-0.85，blend mode 從 `overlay` → `soft-light`
+Dark mode 不是 light 直接反色，三項調整：
+- **Single inset stroke**：頂緣 highlight 降到 `rgba(255,255,255,0.10-0.20)`，底緣加深到 `rgba(0,0,0,0.30-0.40)`
+- **Drop shadows** 全部換成 `rgba(0,0,0,...)`，opacity 比 light mode 高 30-40%（dark 上 shadow 視覺感弱、需補強）
+- **Noise overlay** opacity 從 0.06-0.10 → 0.10-0.12（dark 底上要稍強才看得見），blend mode `soft-light` 不變
 
-完整 dark mode 規格見 `preview-v5-morandi.html` line 325-409。
+```css
+[data-theme="dark"] .tactile-raised {
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.40);
+  background-image:
+    linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 100%),
+    url('/assets/tactile-noise.png');
+  background-size: auto, 256px 256px;
+  background-blend-mode: normal, soft-light;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.40),
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.20);
+}
+```
+
+[從 web-only 強配方退役] v0.1.4 及之前的雙層 inset rim + 4 層 drop shadow + SVG turbulence noise 配方因為跨平台無等價，於 v0.2.0 退役。歷史完整 spec 見 `git show v0.1.4:DESIGN.md`。
 
 #### 5.4.3 Tactile 配套參數
 
@@ -700,22 +702,24 @@ Input / Switch / Slider 這類控制元件不適合 Tactile（太厚重會擋視
 
 ### 5.7 元件 → Material 對照表
 
-每個元件**選一套**，不要混用。
+每個元件**選一套**，不要混用。各 Material 在 web / iOS / macOS 三平台的 implementation 對照：
 
-| 元件類型 | Material | Reference 在 v5 preview 的 class |
-|---|---|---|
-| 主 CTA 按鈕 | **Tactile Raised** | `.btn-tactile.primary` |
-| 次 CTA / Ghost button | **Hybrid** | `.btn-hybrid` |
-| Hero / Landing tile | **Tactile（base/raised 擇一）** | `.tile-tactile.base` |
-| Editorial card / Article tile | **Tactile Base** | `.shadow-card` |
-| List view item / 輕量卡片 | **Hybrid** | `.btn-hybrid`（拉長版） |
-| Theme toggle / Pill button | **Tactile Base 簡化版** | `.theme-toggle` |
-| Input / Textarea | **Soft Inset** | `.soft-input` |
-| Switch / Toggle | **Soft Inset**（track）+ Tactile thumb | `.soft-switch` |
-| Slider | **Soft Inset**（track）+ Tactile thumb | `.soft-slider` |
-| Checkbox / Radio | **Soft Inset**（unchecked）→ **Tactile Pressed**（checked） | — |
-| Chip / Tag | 純色 fill，不加 shadow | `.chip` |
-| Pure text link | 只 color hover，**不**加 shadow / 上浮 | — |
+| 元件類型 | Material | Web class | iOS / macOS（SwiftUI） |
+|---|---|---|---|
+| 主 CTA 按鈕 | **Tactile Raised** | `.btn-tactile.primary` | `.tactileRaised()` ViewModifier（§7.2.9） |
+| 次 CTA / Ghost button | **Hybrid** | `.btn-hybrid` | `.tactileHybrid()` ViewModifier |
+| Hero / Landing tile | **Tactile（base/raised 擇一）** | `.tile-tactile.base` | `.tactileBase()` / `.tactileRaised()` |
+| Editorial card / Article tile | **Tactile Base** | `.shadow-card` | `.tactileBase()` |
+| List view item / 輕量卡片 | **Hybrid** | `.btn-hybrid`（拉長版） | `.tactileHybrid()` |
+| Theme toggle / Pill button | **Tactile Base 簡化版** | `.theme-toggle` | `.tactileBase(radius: .infinity)` |
+| Input / Textarea | **Soft Inset** | `.soft-input` | `.tactileInset()` |
+| Switch / Toggle | **Soft Inset**（track）+ Tactile thumb | `.soft-switch` | iOS `Toggle()` 自帶 + `.tint(.accent)` |
+| Slider | **Soft Inset**（track）+ Tactile thumb | `.soft-slider` | iOS `Slider()` 自帶 |
+| Checkbox / Radio | **Soft Inset**（unchecked）→ **Tactile Pressed**（checked） | — | iOS `Toggle(.checkbox)` 自帶 |
+| Chip / Tag | 純色 fill，不加 shadow | `.chip` | `.background(...).clipShape(Capsule())` |
+| Pure text link | 只 color hover，**不**加 shadow / 上浮 | — | `Button(.borderless)` |
+
+**SwiftUI 原生元件優先**：Switch / Slider / Checkbox 用 SwiftUI 內建 `Toggle()` / `Slider()`，只調 `.tint(Color("Primary"))` 套 brand color，不重造輪子。Apple 的 native control 自動跟系統 Dynamic Type / Accessibility / Reduce Motion 整合。
 
 **禁止：** 同一個元件同時用 Tactile + Soft inset（例如 input 框體用 Soft、focus 套 Tactile drop shadow）—— 看起來像 bug。
 
@@ -933,21 +937,101 @@ enum AppearancePreference: String, CaseIterable {
 
 UI 偏好：Settings 內提供「系統 / 淺色 / 深色」三態切換（不要強迫 user 跟系統，但預設跟系統）。Dark mode 互換規則跟 §2.4 一致。
 
-#### 7.2.9 Noise overlay iOS 調整
+#### 7.2.9 Tactile material 跨平台等價（v0.2.0 起）
 
-§5.4 第四件 noise overlay 在 iOS Retina（@2x / @3x）高 DPI 下，web 的 `opacity: 0.55-0.85` 會被認知為「螢幕髒」而非材質感，須**極克制**：
+v0.2.0 把 Tactile 重新校準為跨平台共通配方（見 §5.4），iOS 用 SwiftUI 完整等價實作 —— 不再「opt-out」或「降強度模擬」，而是**跟 web 用同一份 PNG noise tile + 同套六件 building blocks**，視覺氣質「分不太出來」。
 
-- **建議**：採 spec 1/10，`opacity: 0.05-0.08`，blend mode 用 `softLight`
-- **替代**：直接 opt-out，靠 §7.2.7 continuous radius + §7.2.2 surface tier shadow 撐起材質感
-- **實作**：`Image("noise-tile").resizable(resizingMode: .tile).opacity(0.06).blendMode(.softLight)` 疊在 surface 上
+**前置：** bundle [`assets/tactile-noise.png`](../../assets/tactile-noise.png) 進 `Assets.xcassets` 命名 `TactileNoise`（256×256 RGBA、stitchable）。
 
-iOS Tactile 完整等價方案（含 inset rim / drop shadow 多層 / text engraving）規劃 v0.2 補（見 v0.2 roadmap）。
+##### Tactile Raised（主 CTA · ViewModifier）
+
+```swift
+import SwiftUI
+
+extension View {
+    func tactileRaised(radius: CGFloat = 12) -> some View {
+        modifier(TactileRaisedModifier(radius: radius))
+    }
+}
+
+struct TactileRaisedModifier: ViewModifier {
+    let radius: CGFloat
+    @Environment(\.colorScheme) var colorScheme
+
+    func body(content: Content) -> some View {
+        content
+            .padding(.vertical, 12)
+            .padding(.horizontal, 22)
+            .foregroundStyle(Color("Bg"))
+            .shadow(color: colorScheme == .dark
+                    ? .black.opacity(0.40) : .black.opacity(0.30),
+                    radius: 0, y: 1) // text shadow
+            .background {
+                ZStack {
+                    Color("Primary")
+                    LinearGradient(
+                        colors: [
+                            .white.opacity(colorScheme == .dark ? 0.04 : 0.06),
+                            .clear,
+                            .black.opacity(colorScheme == .dark ? 0.30 : 0.22)
+                        ],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    )
+                    Image("TactileNoise")
+                        .resizable(resizingMode: .tile)
+                        .opacity(colorScheme == .dark ? 0.10 : 0.08)
+                        .blendMode(.softLight)
+                        .allowsHitTesting(false)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: radius, style: .continuous)
+                    .strokeBorder(
+                        LinearGradient(
+                            colors: [
+                                .white.opacity(colorScheme == .dark ? 0.15 : 0.30),
+                                .black.opacity(colorScheme == .dark ? 0.40 : 0.20)
+                            ],
+                            startPoint: .top, endPoint: .bottom
+                        ),
+                        lineWidth: 1
+                    )
+            }
+            .shadow(color: .black.opacity(colorScheme == .dark ? 0.25 : 0.15),
+                    radius: 4, y: 2)
+            .shadow(color: .black.opacity(colorScheme == .dark ? 0.20 : 0.10),
+                    radius: 12, y: 6)
+    }
+}
+```
+
+##### Tactile Base / Inset / Pressed
+
+四態 ViewModifier 對應 §5.4.1 web 規格：
+- `.tactileBase()` — 弱 drop shadow（radius 4 + 8 兩層）、`Color("BgRaised")` 底
+- `.tactileInset()` — 反向光源（頂緣 dark stroke、底緣 light stroke）、無 drop shadow、無 noise
+- `.tactilePressed()` — `Color("Stone")` 底 + 1 層淺 drop shadow + 反向 stroke
+
+完整四態 reference impl 見 [`preview-ios/LazzyMerlinPreview/Tokens/TactileMaterial.swift`](../../preview-ios/LazzyMerlinPreview/Tokens/TactileMaterial.swift)（v0.2.0 起 ship）。
+
+##### 視覺一致性驗證
+
+`preview-ios/screenshots/` 內 commit web vs iOS side-by-side screenshot 作 visual regression baseline。每次改動 §5.4 配方都要重截、確認跨平台「分不太出來」。
 
 ### 7.3 macOS（SwiftUI / AppKit）
-- 同 iOS 策略。accentColor 設 Petrol Ink。
-- **長文件 / note-taking app**：可強化「書房感」，側邊欄用 `Surface Raised`，hairline 用 Stone 色
-- **Window chrome**：保持原生，不改動
-- **Icon**：LazzyMerlin 專屬 icon 使用 Petrol + Parchment 組合
+
+完全沿用 §7.2 iOS 規範（Color / Typography / Spacing / Surface tier / Tactile material 共通配方），只在以下幾點 macOS 專屬調整：
+
+- **`accentColor`** 設 Petrol `#46647C`（同 iOS）
+- **Tactile 共通配方**：`.tactileRaised()` / `.tactileBase()` / `.tactileInset()` / `.tactilePressed()` ViewModifier 完全跨 iOS / macOS 通用（SwiftUI 同份 code）
+- **Window chrome**：保持 macOS 原生 traffic light + title bar，**不要**自繪
+- **Sidebar**：用 `.background(.regularMaterial)` 取得原生 macOS sidebar 質感，再疊 `tactileBase()` 內容卡片
+- **長文件 / note-taking app**：可強化「書房感」，側邊欄用 `Surface Raised` token，hairline 用 Stone 色 `#967459`
+- **macOS 14+ Liquid Glass**：可在 toolbar / sidebar 用 `.background(.ultraThinMaterial)` 達成 Liquid Glass 效果，跟 Tactile 卡片並存無衝突
+- **Icon**：LazzyMerlin 專屬 icon 使用 Petrol + Parchment 組合（§8.3.3 macOS 規範）
+
+**preview-ios/ 同樣 cover macOS target**：`preview-ios/LazzyMerlinPreview` 是 multiplatform SwiftUI app，iOS / macOS 共用同份 ContentView，只在需要 platform-specific 行為時用 `#if os(macOS)`。
 
 ### 7.4 Notion 模板
 Notion 沒自訂 CSS，只能靠以下元素傳達品牌：
@@ -2322,6 +2406,7 @@ Centered spinner layout：
 | 2026-04-28 | v0.1.2 後 · 補 §2 Color Palette 色票卡 + 移除 deprecated preview 檔 | 使用者 review 時發現 components-preview.html 沒有色票卡，要查 hex 值得回頭翻 DESIGN.md §2 / tokens/color.json 不方便。補完整色票 section（Wood Palette 8 raw + Role Tokens Light ↔ Dark 並排對照 + Earth Tone status Light → Dark 提亮對照 + 透明度層 alpha 在 mode backdrop 上呈現）插在 §8 Brand Logo 之前作為 TOC 第一順位。同時順勢清掉兩份 deprecated preview：(1) `components-preview-palette-A.html` 三層藍 what-if 對照、(2) `preview.html` v0.1.0 前早期過渡版。歷史對照改信任 git tag（`git show v0.1.0:<path>`）+ §16 文字描述，避免主 preview 升版時 deprecated 檔案越漂越遠（這次補色票卡就漏改 palette-A，證明維護成本變雜訊）。§13.2 deprecated preview 列表保留 `v3/*` 那批（在 `~/.gstack/` 外部目錄不在 repo 內），但移除已刪除的兩份 preview 條目。og-template.html 仍用 v0.1.0 前舊 palette（`#F7F2E8 / #416880 / #1C1410`）跟現行 wood palette 不一致 —— 已記錄為 v0.1.3 candidate task，本次不動。 |
 | 2026-04-28 | v0.1.3 release · og-template.html 升版 + §11.3 路徑修正 | 觸發點：使用者 2nd Brain（Obsidian vault）未來要做大量社群貼文 + IG 圖卡 + Notion 同步，會把 LazzyMerlin §11.3 OG template 當 reference。但 og-template.html 整檔仍用 v0.1.0 finalize 前的舊 palette（`#F7F2E8 / #416880 / #1C1410 / #5C5247`），跟現行 wood palette 不一致 —— 如果 2nd Brain 閻多比拿這檔當 reference 會學到錯的調色。修法：(1) **og-template.html palette 全面升版到 wood palette role tokens**（`#F5EFE4 Parchment / #0F1C26 Midnight Petrol / #46647C Petrol / #4E3029 Espresso / #967459 Stone / hairline `rgba(150,116,89,0.30)`），dark mode 同步（`#0F1C26 bg / #5E7A8D primary 互換 / #DECCA7 ink-muted`）。(2) **og-orb-2 暖色從 `oklch(0.65 0.06 65 / 0.2)` 換成 `var(--earth-ochre)`**（`#8E6E37` light / `#D4AB6E` dark 提亮），保留「左下暖調 vs 右上 Petrol 冷調」對比但對齊 §2.2 earth tone status extension。`◈` corner sigil 保留（跟左上 `✦` 上下呼應的有趣 detail）。(3) **§11.3 模板檔案路徑修正**：原本指 `~/.gstack/projects/LazzyMerlin/designs/design-system-20260422/v3/og-template.html`（指錯到 gstack 外部 designs 目錄），改成 repo 內實際路徑 `preview/og-template.html`，跟 §13.3 一致。(4) **不影響任何已生產的 OG image PNG**（那些是 static screenshots 不會自動 regen），僅 future regenerated OG image 才會套新 palette。 |
 | 2026-05-01 | v0.1.4 release · evidence-driven patch · QTL iOS 落地 13 條 gap 一次到位 | LazzyMerlin DS **第一個 evidence-driven patch release**：所有變更都來自 QuickTimeLapse iOS 子專案 2026-04-29 ~ 2026-05-01 落地累積的 17 條 gap report（落地 commit 範圍 `49526a2..5ced89e`、M0 → M5 + 2 個 polish）。13 條納入本 patch，4 條留 v0.2 主菜統一處理。**P0（1 條）**：(#1) §7.2 L819 iOS `accentColor` 從 `#416880 / #699FC5`（v0.1.0-pre 舊 palette legacy、跟 og-template.html / preview.html 同批殘留、v0.1.3 修 og-template 時漏掃到）改 `#46647C / #5E7A8D`，對齊 §1 wood palette + dark mode 互換規則。**P1（5 條）**：(#2) §2.2.1 + §7.2.2 加 `surface-1 / surface-2` card tier token（light luminance delta +1.5%、dark +5%）；(#3) §7.2.3 加 iOS spacing 對齊建議表（DS 4px scale ↔ HIG 8pt grid）；(#10) §7.2.9 加 iOS noise opacity 0.05-0.08 或 opt-out（避免 Retina 高 DPI 認知為「螢幕髒」）；(#11) §2.2.1 + §14.3 補 surface vs card luminance delta 規範 + border 在 surface 上對比度 SC 1.4.11 標準；(#13) §7.2.4 加 iOS Type Scale 對照表（DS web px → iOS pt）。**P2（3 條）**：(#4) §7.2.7 補 `RoundedRectangle(cornerRadius:, style: .continuous)`；(#5) §7.2.8 加 dark mode 偏好（跟系統 + 三態 override）；(#8) §7.2.6 補 SwiftUI section label 範例（`.textCase(.uppercase) + tracking`）。**P3（4 條）**：(#7) landing-checklist title v0.1.1 → v0.1.4；(#12) landing-checklist + §16 註記 WebFetch summarize bias 警告（QTL M1 Tactile 強度只到 spec 1/4-1/8、M3.5 重做才修正，根因是 WebFetch 漏掉 §5.4.1 完整 box-shadow + §10.3 完整文案，用 curl raw 才完整）；(#16) landing-checklist 補 iOS 18 / Xcode 16 PBXFileSystemSynchronizedRootGroup Info.plist 須在 source folder 外的 specific note；(#17) §8.3.2 補 AI 生 icon prompt template + 雙層輪廓警告（AI 默認帶 rounded square 底會跟 iOS mask 疊成「框中框」）。**v0.2 留 4 條主菜**：#6 + #14 Tactile material iOS 等價 reference impl（需要完整章節 + reference QTL `TactileMaterial.swift`，太大顆）、#9 brand signature placement iOS（場景判斷需再想）、#15 text-shadow iOS 沒原生（跟 #6+#14 同主題、併入 Tactile iOS 章節）。回流報告 ref：`~/Projects/QuickTimeLapse/docs/lazzymerlin-ds-feedback.md`。本 patch 不含 token 結構變更（§17.6 第 2 條觀察期延續 v0.1.1 起點 2026-04-27）。 |
+| 2026-05-04 | **Tactile 配方收斂為跨平台最大公約數**（v0.2.0 主菜）| 觸發點：使用者反思 LazzyMerlin DS 的核心問題 ——「web 端 Tactile-Heavy 在 SwiftUI 跑不出來，QTL / 未來 iOS 子專案永遠落地不到位」。技術根因：CSS 的 `inset` shadow + SVG turbulence + `mix-blend-mode` 是 web pipeline 獨有，SwiftUI 無等價，硬模擬出來只到 50% 像。三個策略方向（A 降規格全平台 Tactile-Lite / B 分層等價維護兩套 spec / C 退為氣質方向 Tactile 限 web-only）討論後使用者明確選 **方向 D · 兩平台都做 Tactile，但只做 SwiftUI 也能對齊的部分**——比 C 更嚴格，要求視覺氣質「分不太出來」。修法：(1) **§5.4 Tactile 重新定義為「跨平台共通六件配方」**：對角微暗化 / 上亮下暗單層 stroke（取代雙層 inset rim）/ 2 層 drop shadow（從 4 層降到 2 層）/ PNG noise tile（取代 SVG turbulence dynamic）/ text shadow / continuous radius —— 六件每件都 web + SwiftUI 等價可實作。(2) **§5.4.1 四態材質重寫**：Base / Raised / Inset / Pressed 仍是四態語意，但每態用六件 building blocks 組合，CSS 規格大幅簡化（drop shadow 4→2 層、雙層 inset rim → 單層 stroke、SVG turbulence → PNG tile）。(3) **§5.4.2 dark mode** 同步降規格 + 新增「dark 上 noise opacity 0.10-0.12（要稍強才看見）」。(4) **§5.7 Material 對照表加 platform column**：Web class ↔ SwiftUI ViewModifier 對照，明訂 SwiftUI 原生元件優先（Toggle / Slider / Checkbox 用 `.tint(.accent)` 不重造輪子）。(5) **§7.2.9 重寫**（v0.1.4 補的「iOS noise opt-out / 0.05-0.08 克制」**作廢**）改為「Tactile material 跨平台等價」附完整 `tactileRaised()` ViewModifier reference impl。(6) **§7.3 macOS** 沿用 §7.2 SwiftUI ViewModifier 同份 code。(7) **新增 [`assets/tactile-noise.png`](assets/tactile-noise.png)**：256×256 RGBA PNG，從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` 用 `rsvg-convert` render，stitchable 無縫，跨平台共用。**Trade-off**：web 端 Tactile 視覺強度約 -30%（雙層 inset rim → 單層 stroke 雕刻感弱、4 層 drop shadow → 2 層浮起感弱、SVG turbulence dynamic → PNG tile static），換得 iOS / macOS / web 三端視覺氣質「分不太出來」+ iOS 子專案有完整 reference impl 可 copy-paste。**v1.0 路徑加新條件第 6 條**：「跨平台 Tactile 等價 reference impl 落地驗證 ✓（建 preview-ios/ + components 6 個 MVP 截圖比對）」，作為 v0.2.0 主菜的下一步（階段 2）。 |
 
 ---
 

@@ -6,6 +6,32 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 ## [Unreleased]
 
+### v0.2.0-rc.1 進度（spec 收斂、未 release）
+
+**Changed**
+- **§5.4 Tactile material 重新定義為「跨平台共通六件配方」**：對角微暗化 + 上亮下暗單層 stroke（取代雙層 inset rim） + 2 層 drop shadow（從 4 層降）+ PNG noise tile（取代 SVG turbulence dynamic）+ text shadow + continuous radius。每件 web (CSS) + SwiftUI 等價可實作，視覺氣質「分不太出來」
+- **§5.4.1 四態材質規格大幅簡化**：Base / Raised / Inset / Pressed 仍保留語意，但 CSS 從 4-9 層 box-shadow 降到 4 層（2 inset stroke + 2 drop shadow）
+- **§5.4.2 dark mode** 同步降規格 + noise opacity 從 0.55-0.85 → 0.10-0.12（dark 上要稍強才看見）
+- **§5.7 Material 對照表加 platform column**：Web class ↔ SwiftUI ViewModifier 對照
+- **§7.2.9 重寫**（v0.1.4 補的「iOS noise opt-out / 0.05-0.08 克制」**作廢**）→ 「Tactile material 跨平台等價」附完整 `tactileRaised()` SwiftUI ViewModifier reference impl
+- **§7.3 macOS** 沿用 §7.2 SwiftUI ViewModifier 同份 code
+- **`tokens/shadow.json` `tactile-raised`** 全部重寫降規格（4-9 層 → 4 層）
+- **`tokens/shadow.json` `noise-overlay`** 改為 PNG tile reference + light/dark 統一 soft-light blend mode
+- **`preview/components-preview.html`** 共用 `--noise-bg` CSS var 從 SVG turbulence inline data URI 改 `url('../assets/tactile-noise.png')`，dark mode 多餘 blend override 移除（兩 mode 統一 soft-light）
+
+**Added**
+- **`assets/tactile-noise.png`**（256×256 RGBA stitchable PNG）· 從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` 用 `rsvg-convert` render，跨 Web / iOS / macOS 共用同一份 asset
+
+**Why**
+v0.1.4 release 後使用者反思 LazzyMerlin DS 核心問題：「web 端 Tactile-Heavy 在 SwiftUI 跑不出來、QTL / 未來 iOS 子專案永遠落地不到位」。技術根因 CSS `inset` shadow + SVG turbulence + `mix-blend-mode` 是 web pipeline 獨有，SwiftUI 無等價硬模擬只到 50% 像。決策：兩平台都做 Tactile，但只做 SwiftUI 也能對齊的部分（最大公約數），要求視覺氣質「分不太出來」。Trade-off：web 端 Tactile 視覺強度 -30%，換得 iOS / macOS / web 三端視覺氣質真正一致 + iOS 子專案有完整 reference impl 可 copy-paste。詳見 §16 2026-05-04 Decisions Log 條目。
+
+**Stage 2 待補（v0.2.0 final 才 release）**
+- 建 `preview-ios/` Xcode 26.4.1 SwiftUI app（multiplatform iOS + macOS）含 Tokens / TactileMaterial.swift / 6 個 MVP component views
+- `preview/components-preview.html` 各 component CSS 完整視覺 overhaul（套新六件配方、不只是 noise var）
+- `preview-ios/screenshots/` 截 web vs iOS side-by-side 比對圖、commit 進 repo 作 visual baseline
+- 反覆校正數值直到「分不太出來」
+- README + §17.6 v1.0 路徑加新條件第 6 條「跨平台 Tactile 等價 reference impl 落地驗證 ✓」
+
 ## [0.1.4] — 2026-05-01
 
 ### Fixed

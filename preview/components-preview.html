@@ -76,12 +76,11 @@
       --sp-3xl: 48px;
       --sp-4xl: 64px;
 
-      /* 共用 Tactile noise overlay — 給 background-image 用（給 ::after 偽元素用的內聯版仍在各元件 CSS 內）*/
-      --noise-bg:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nz1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nz1)'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='nz2'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23nz2)'/%3E%3C/svg%3E");
-      --noise-bg-size: 90px 90px, 220px 220px;
-      --noise-bg-blend: overlay, overlay;
+      /* 共用 Tactile noise overlay — v0.2.0 起改用跨平台共用 PNG tile (assets/tactile-noise.png 256×256 stitchable)
+         取代原 SVG turbulence 雙層 inline data URI；iOS / macOS 用同一份 asset bundle。 */
+      --noise-bg: url('../assets/tactile-noise.png');
+      --noise-bg-size: 256px 256px;
+      --noise-bg-blend: soft-light;
     }
     [data-theme="dark"] {
       --bg: #0F1C26;
@@ -102,9 +101,6 @@
       --earth-green: #A8B898;
       --earth-ochre: #D4AB6E;
       /* Semantic alias 不重寫 — var() 動態 resolve 跟著 earth-* / primary 自動切 */
-
-      /* Dark mode noise blend mode — overlay 在深底會過曝，改 soft-light */
-      --noise-bg-blend: soft-light, soft-light;
 
       --shadow-soft-sm:
         6px 6px 12px rgba(0, 0, 0, 0.45),
