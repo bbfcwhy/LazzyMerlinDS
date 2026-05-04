@@ -38,7 +38,7 @@ struct ContentView: View {
             .listStyle(.sidebar)
             #endif
         }
-        .tint(Color.primaryLM)
+        .tint(Color.primaryBrand)
     }
 }
 

@@ -33,7 +33,7 @@ struct SectionLabelStyle: ViewModifier {
             .font(.lmLabel)
             .textCase(.uppercase)
             .tracking(1.2)
-            .foregroundStyle(Color.primaryLM)
+            .foregroundStyle(Color.primaryBrand)
     }
 }
 

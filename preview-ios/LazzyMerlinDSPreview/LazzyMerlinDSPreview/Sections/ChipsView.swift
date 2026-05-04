@@ -10,7 +10,7 @@ struct ChipsView: View {
 
                 section("FILTER CHIPS (跨 hue 三色避免擠壓 §15.5.1)") {
                     HStack(spacing: 8) {
-                        chip("ALL", color: .primaryLM, selected: selected == "ALL") {
+                        chip("ALL", color: .primaryBrand, selected: selected == "ALL") {
                             selected = "ALL"
                         }
                         chip("DRAFTS", color: .stone, selected: selected == "DRAFTS") {
@@ -24,7 +24,7 @@ struct ChipsView: View {
 
                 section("STATUS CHIPS (Earth Tone)") {
                     HStack(spacing: 8) {
-                        statusChip("INFO", icon: "info.circle.fill", color: .primaryLM)
+                        statusChip("INFO", icon: "info.circle.fill", color: .primaryBrand)
                         statusChip("SUCCESS", icon: "checkmark.circle.fill", color: .earthGreen)
                         statusChip("WARNING", icon: "exclamationmark.triangle.fill", color: .earthOchre)
                         statusChip("ERROR", icon: "xmark.octagon.fill", color: .earthRed)
@@ -50,7 +50,7 @@ struct ChipsView: View {
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
                             .foregroundStyle(Color.bg)
-                            .background(Color.primaryLM)
+                            .background(Color.primaryBrand)
                             .clipShape(Capsule())
 
                         Circle()

@@ -43,7 +43,7 @@ struct FormView: View {
 
                 section("TOGGLE / SWITCH (SwiftUI native + .tint)") {
                     Toggle("接收懶人魔法師的更新", isOn: $notify)
-                        .tint(Color.primaryLM)
+                        .tint(Color.primaryBrand)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 12)
                         .tactileBase(radius: 10)

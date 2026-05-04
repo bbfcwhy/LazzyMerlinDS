@@ -17,7 +17,7 @@ struct TactileRaisedModifier: ViewModifier {
                     radius: 0, y: 1)                            // text shadow (#5)
             .background {
                 ZStack {
-                    Color.primaryLM                             // base fill
+                    Color.primaryBrand                             // base fill
                     LinearGradient(
                         colors: [
                             .white.opacity(colorScheme == .dark ? 0.04 : 0.06),

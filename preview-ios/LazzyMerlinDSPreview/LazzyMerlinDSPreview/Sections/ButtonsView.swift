@@ -52,7 +52,7 @@ struct ButtonsView: View {
                     Button("取消") {}
                         .padding(.vertical, 12)
                         .padding(.horizontal, 22)
-                        .foregroundStyle(Color.primaryLM)
+                        .foregroundStyle(Color.primaryBrand)
                 }
 
                 section("SIZES") {

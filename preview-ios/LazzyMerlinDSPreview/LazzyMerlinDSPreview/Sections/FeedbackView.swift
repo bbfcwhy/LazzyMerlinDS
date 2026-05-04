@@ -19,7 +19,7 @@ struct FeedbackView: View {
                 }
 
                 section("TOAST · INFO") {
-                    toast(text: "已儲存草稿。", icon: "info.circle.fill", color: .primaryLM)
+                    toast(text: "已儲存草稿。", icon: "info.circle.fill", color: .primaryBrand)
                 }
 
                 section("EMPTY STATE") {
@@ -41,7 +41,7 @@ struct FeedbackView: View {
                 section("LOADING") {
                     HStack(spacing: 12) {
                         ProgressView()
-                            .tint(Color.primaryLM)
+                            .tint(Color.primaryBrand)
                         Text("處理中⋯⋯")
                             .font(.lmBody)
                             .foregroundStyle(Color.inkMuted)

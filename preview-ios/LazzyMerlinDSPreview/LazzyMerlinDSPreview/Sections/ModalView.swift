@@ -75,7 +75,7 @@ struct ModalView: View {
             HStack {
                 Text("✦")
                     .font(.system(size: 28))
-                    .foregroundStyle(Color.primaryLM)
+                    .foregroundStyle(Color.primaryBrand)
                 Spacer()
                 Button {
                     showSheet = false
@@ -106,7 +106,7 @@ struct ModalView: View {
                 }
                 .padding(.vertical, 12)
                 .padding(.horizontal, 22)
-                .foregroundStyle(Color.primaryLM)
+                .foregroundStyle(Color.primaryBrand)
 
                 Button("好了 ✦") {
                     showSheet = false
