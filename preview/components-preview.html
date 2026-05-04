@@ -376,62 +376,60 @@
     .btn--sm .btn__icon { width: 16px; height: 16px; }
     .btn--lg .btn__icon { width: 20px; height: 20px; }
 
-    /* Tactile noise overlay — 所有 material button 統一觸感（Tactile-Raised + Hybrid Secondary）*/
-    /* z-index: -1 + isolation 把 noise 推到 background 之上、內容之下，避免染深文字 */
+    /* Tactile noise overlay — v0.2.0 起用 PNG tile + 統一 soft-light blend，跨平台共用 */
     .btn--primary, .btn--deep, .btn--destructive, .btn--secondary { isolation: isolate; }
     .btn--primary::after, .btn--deep::after, .btn--destructive::after, .btn--secondary::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
       z-index: -1;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay; opacity: 0.6;
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.08;
       pointer-events: none;
     }
-    /* Secondary 淺底，noise 強度稍低 */
-    .btn--secondary::after { opacity: 0.55; }
     [data-theme="dark"] .btn--primary::after,
     [data-theme="dark"] .btn--deep::after,
     [data-theme="dark"] .btn--destructive::after,
     [data-theme="dark"] .btn--secondary::after {
-      mix-blend-mode: soft-light; opacity: 0.85;
+      opacity: 0.10;
     }
-    [data-theme="dark"] .btn--secondary::after { opacity: 0.7; }
 
-    /* Variant: Primary (Tactile Raised, --primary) */
+    /* Variant: Primary (Tactile Raised · §5.4.1 共通六件配方) */
     .btn--primary {
       background-color: var(--primary); color: var(--bg);
       background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%);
-      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+        linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%);
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.30);
       box-shadow:
-        inset 0 2px 1px rgba(255, 255, 255, 0.35),
-        inset 2px 0 1px rgba(255, 255, 255, 0.18),
-        inset 0 -2px 1px rgba(0, 0, 0, 0.32),
-        inset -2px 0 1px rgba(0, 0, 0, 0.20),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.10),
-        3px 4px 6px rgba(15, 28, 38, 0.18),
-        8px 12px 18px rgba(15, 28, 38, 0.22),
-        20px 28px 40px rgba(15, 28, 38, 0.20);
+        inset 0 1px 0 rgba(255, 255, 255, 0.30),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+        0 2px 4px rgba(15, 28, 38, 0.15),
+        0 6px 12px rgba(15, 28, 38, 0.10);
     }
     .btn--primary:hover {
       transform: translate(-1px, -3px);
       box-shadow:
-        inset 0 2px 1px rgba(255, 255, 255, 0.40),
-        inset 2px 0 1px rgba(255, 255, 255, 0.22),
-        inset 0 -2px 1px rgba(0, 0, 0, 0.34),
-        inset -2px 0 1px rgba(0, 0, 0, 0.22),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-        4px 6px 10px rgba(15, 28, 38, 0.20),
-        10px 14px 24px rgba(15, 28, 38, 0.26),
-        24px 34px 50px rgba(15, 28, 38, 0.26);
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+        0 4px 8px rgba(15, 28, 38, 0.18),
+        0 10px 18px rgba(15, 28, 38, 0.12);
     }
     .btn--primary:active {
       transform: translateY(2px);
       transition: transform 80ms ease, box-shadow 80ms ease;
       box-shadow:
-        inset 3px 4px 10px rgba(0, 0, 0, 0.30),
-        inset -1px -1px 4px rgba(255, 255, 255, 0.18),
-        1px 1px 2px rgba(15, 28, 38, 0.10);
+        inset 0 2px 4px rgba(0, 0, 0, 0.25),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.10),
+        0 1px 2px rgba(15, 28, 38, 0.08);
+    }
+    [data-theme="dark"] .btn--primary {
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.40);
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.40),
+        0 2px 6px rgba(0, 0, 0, 0.25),
+        0 8px 16px rgba(0, 0, 0, 0.20);
     }
 
     /* Variant: Brand Deep */
@@ -714,39 +712,43 @@
       transition: transform 250ms ease, box-shadow 250ms ease;
     }
 
-    /* Editorial / Link tile — Tactile Base */
+    /* Editorial / Link tile — Tactile Base · §5.4.1 共通六件配方 */
     .card--editorial {
+      isolation: isolate;
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(15,28,38,0.10) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(33, 23, 21, 0.10),
-        inset 0 0 0 1px rgba(33, 23, 21, 0.05),
-        4px 6px 14px rgba(33, 23, 21, 0.12);
+        inset 0 1px 0 rgba(255, 255, 255, 0.50),
+        inset 0 -1px 0 rgba(15, 28, 38, 0.10),
+        0 2px 4px rgba(15, 28, 38, 0.10),
+        0 4px 8px rgba(15, 28, 38, 0.06);
     }
     [data-theme="dark"] .card--editorial {
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.10) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
-        4px 6px 14px rgba(0, 0, 0, 0.45);
+        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+        0 2px 6px rgba(0, 0, 0, 0.20),
+        0 4px 10px rgba(0, 0, 0, 0.15);
     }
     .card--editorial::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='c1a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='6'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23c1a)'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='c1b'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='1'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23c1b)'/%3E%3C/svg%3E");
-      background-size: 90px 90px, 220px 220px;
-      mix-blend-mode: overlay; opacity: 0.55;
+      z-index: -1;
+      background-image: var(--noise-bg);
+      background-size: var(--noise-bg-size);
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.06;
       pointer-events: none;
     }
-    [data-theme="dark"] .card--editorial::after { mix-blend-mode: soft-light; opacity: 0.75; }
+    [data-theme="dark"] .card--editorial::after { opacity: 0.08; }
     .card > * { position: relative; z-index: 1; }
     .card--editorial:hover {
       transform: translateY(-3px);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 -1px 0 rgba(33, 23, 21, 0.12),
-        inset 0 0 0 1px rgba(33, 23, 21, 0.06),
-        8px 12px 22px rgba(33, 23, 21, 0.18);
+        inset 0 -1px 0 rgba(15, 28, 38, 0.12),
+        0 4px 8px rgba(15, 28, 38, 0.14),
+        0 8px 16px rgba(15, 28, 38, 0.08);
     }
 
     /* Plain card — Hybrid */
@@ -800,13 +802,12 @@
       position: relative;
       isolation: isolate;
       overflow: hidden;
+      /* §5.4.1 共通六件配方：單層 stroke + 2 層 drop shadow */
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.30),
         inset 0 -1px 0 rgba(15, 28, 38, 0.18),
-        inset 0 0 0 1px rgba(15, 28, 38, 0.06),
-        1px 2px 3px rgba(15, 28, 38, 0.14),
-        3px 5px 8px rgba(15, 28, 38, 0.14),
-        6px 10px 16px rgba(15, 28, 38, 0.10);
+        0 1px 2px rgba(15, 28, 38, 0.12),
+        0 2px 5px rgba(15, 28, 38, 0.08);
     }
     .chip::after {
       content: '';
@@ -815,23 +816,20 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay;
-      opacity: 0.55;
+      mix-blend-mode: var(--noise-bg-blend);
+      opacity: 0.08;
       pointer-events: none;
     }
     [data-theme="dark"] .chip {
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.10),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.40),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-        1px 2px 3px rgba(0, 0, 0, 0.40),
-        3px 5px 8px rgba(0, 0, 0, 0.45),
-        6px 10px 16px rgba(0, 0, 0, 0.30);
+        inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+        0 1px 2px rgba(0, 0, 0, 0.30),
+        0 2px 5px rgba(0, 0, 0, 0.25);
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
     }
     [data-theme="dark"] .chip::after {
-      mix-blend-mode: soft-light;
-      opacity: 0.75;
+      opacity: 0.10;
     }
     .chip:hover { transform: translateY(-2px); }
     /* 彩色底（深 / 中）一律配米色字 + 黑 text-shadow（raised letter）；淺底 Tan 才配深字 + 白 text-shadow */
@@ -1014,29 +1012,30 @@
       background: var(--bg-raised); color: var(--ink);
       border-radius: var(--radius-xl);
       overflow: hidden;
+      isolation: isolate;
+      /* §5.4.1 共通六件配方 · modal 浮在 backdrop 上、drop shadow 拉強讓「浮起」明顯 */
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(33, 23, 21, 0.10),
-        inset 0 0 0 1px rgba(33, 23, 21, 0.05),
-        12px 24px 60px rgba(0, 0, 0, 0.30);
+        inset 0 1px 0 rgba(255, 255, 255, 0.50),
+        inset 0 -1px 0 rgba(15, 28, 38, 0.10),
+        0 8px 16px rgba(15, 28, 38, 0.20),
+        0 16px 40px rgba(15, 28, 38, 0.18);
     }
     [data-theme="dark"] .modal {
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10),
         inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
-        12px 24px 60px rgba(0, 0, 0, 0.65);
+        0 8px 20px rgba(0, 0, 0, 0.45),
+        0 16px 50px rgba(0, 0, 0, 0.55);
     }
     .modal::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='m1a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='6'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23m1a)'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='m1b'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='1'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23m1b)'/%3E%3C/svg%3E");
-      background-size: 90px 90px, 220px 220px;
-      mix-blend-mode: overlay; opacity: 0.55;
+      z-index: -1;
+      background-image: var(--noise-bg);
+      background-size: var(--noise-bg-size);
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.06;
       pointer-events: none;
     }
-    [data-theme="dark"] .modal::after { mix-blend-mode: soft-light; opacity: 0.75; }
+    [data-theme="dark"] .modal::after { opacity: 0.08; }
     .modal > * { position: relative; z-index: 1; }
     .modal__title { font-family: 'LXGW WenKai TC', serif; font-size: 24px; margin-bottom: 8px; }
     .modal__body { color: var(--ink-muted); font-size: 14px; margin-bottom: 24px; }
@@ -1058,22 +1057,41 @@
     }
     .toast {
       pointer-events: auto;
+      position: relative;
+      isolation: isolate;
       display: flex; align-items: center; gap: 10px;
       padding: 12px 16px; border-radius: var(--radius-lg);
       background: var(--bg-raised); color: var(--ink);
+      /* §5.4.1 共通六件配方 · 跟 card--editorial 對齊 */
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(15,28,38,0.10) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 0 0 1px rgba(33, 23, 21, 0.05),
-        4px 6px 14px rgba(0, 0, 0, 0.20);
+        inset 0 1px 0 rgba(255, 255, 255, 0.50),
+        inset 0 -1px 0 rgba(15, 28, 38, 0.10),
+        0 2px 4px rgba(15, 28, 38, 0.10),
+        0 6px 14px rgba(15, 28, 38, 0.12);
       max-width: 360px; font-size: 14px;
       animation: toastSlide 250ms ease;
     }
-    [data-theme="dark"] .toast {
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
-        4px 6px 14px rgba(0, 0, 0, 0.55);
+    .toast::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit;
+      z-index: -1;
+      background-image: var(--noise-bg);
+      background-size: var(--noise-bg-size);
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.06;
+      pointer-events: none;
     }
+    .toast > * { position: relative; z-index: 1; }
+    [data-theme="dark"] .toast {
+      background-image:
+        linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.10) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+        0 2px 6px rgba(0, 0, 0, 0.30),
+        0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+    [data-theme="dark"] .toast::after { opacity: 0.08; }
     @keyframes toastSlide { from { transform: translateY(20px); opacity: 0; } }
     .toast__icon { width: 20px; height: 20px; flex-shrink: 0; }
     .toast--success .toast__icon { color: var(--success); }

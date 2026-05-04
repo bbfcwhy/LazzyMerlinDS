@@ -13,3 +13,9 @@
 .idea/
 *.swp
 *.swo
+
+# Xcode (preview-ios 由 user 在 Xcode 自建 .xcodeproj，含 user-specific paths 不 commit)
+preview-ios/*.xcodeproj/
+preview-ios/**/xcuserdata/
+preview-ios/**/*.xcuserstate
+preview-ios/build/
