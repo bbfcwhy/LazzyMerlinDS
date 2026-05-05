@@ -10,7 +10,8 @@ struct ButtonsTunerView: View {
     // MARK: - BASE FILL
     @State private var fillDarken: Double = 0.10
 
-    // MARK: - 對角 GRADIENT (#1)
+    // MARK: - 對角 GRADIENT (#1) · CSS angle (0=up, 90=right, 180=down, 270=left, 135=top-left→bottom-right)
+    @State private var gradAngle: Double = 135
     @State private var gradWhiteTL: Double = 0.06
     @State private var gradBlackBR: Double = 0.30
 
@@ -96,10 +97,15 @@ struct ButtonsTunerView: View {
                 }
 
                 Section {
+                    sliderRow("角度 (°)",    value: $gradAngle,    in: 0...360,    step: 5,  fmt: "%.0f")
                     sliderRow("頂左 white",  value: $gradWhiteTL,  in: 0.0...0.20, step: 0.01)
                     sliderRow("底右 black",  value: $gradBlackBR,  in: 0.0...0.40, step: 0.01)
                 } header: {
-                    Text("對角 GRADIENT (135°)").sectionLabel()
+                    Text("對角 GRADIENT").sectionLabel()
+                } footer: {
+                    Text("CSS 角度語意：0° 從下到上、90° 從左到右、135° 從左上到右下（預設）、180° 從上到下、270° 從右到左")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
 
                 Section {
@@ -245,8 +251,8 @@ struct ButtonsTunerView: View {
                                 .clear,
                                 .black.opacity(gradBlackBR)
                             ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                        startPoint: gradientStartPoint,
+                        endPoint: gradientEndPoint
                     )
                     Rectangle()
                         .fill(ImagePaint(
@@ -306,6 +312,24 @@ struct ButtonsTunerView: View {
         }
     }
 
+    // MARK: - Gradient angle helper (CSS angle → SwiftUI UnitPoint)
+    // CSS: 0° = up, 90° = right, 180° = down, 270° = left, 135° = top-left → bottom-right
+    // direction vector: (sin θ, -cos θ) in SwiftUI coord (x→right, y→down)
+
+    private var gradientStartPoint: UnitPoint {
+        let radians = gradAngle * .pi / 180
+        let dx = sin(radians)
+        let dy = -cos(radians)
+        return UnitPoint(x: 0.5 - dx * 0.5, y: 0.5 - dy * 0.5)
+    }
+
+    private var gradientEndPoint: UnitPoint {
+        let radians = gradAngle * .pi / 180
+        let dx = sin(radians)
+        let dy = -cos(radians)
+        return UnitPoint(x: 0.5 + dx * 0.5, y: 0.5 + dy * 0.5)
+    }
+
     // MARK: - Reset
 
     private func resetDefaults() {
@@ -318,6 +342,7 @@ struct ButtonsTunerView: View {
 
     private func applyWebLightTarget() {
         fillDarken = 0.10
+        gradAngle = 135
         gradWhiteTL = 0.06
         gradBlackBR = 0.30
         strokeWhiteTop = 0.34
@@ -343,6 +368,7 @@ struct ButtonsTunerView: View {
 
     private func applyWebDarkTarget() {
         fillDarken = 0.06
+        gradAngle = 135
         gradWhiteTL = 0.04
         gradBlackBR = 0.30
         strokeWhiteTop = 0.15
@@ -397,7 +423,7 @@ struct ButtonsTunerView: View {
         // SwiftUI tactileRaised() params
         // ───────────────────────────────────────────────
         fill:        primaryBrand + black overlay \(f02(fillDarken))
-        gradient:    white \(f02(gradWhiteTL)) → clear → black \(f02(gradBlackBR))
+        gradient:    angle \(i(gradAngle))° · white \(f02(gradWhiteTL)) → clear → black \(f02(gradBlackBR))
         stroke:      top white \(f02(strokeWhiteTop)) → bottom black \(f02(strokeBlackBottom)),
                      width \(f1(strokeWidth))pt
         shadow #1:   opacity \(f02(shadowNearOpacity)), radius \(i(shadowNearRadius)), x \(i(shadowNearX)), y \(i(shadowNearY))
@@ -412,7 +438,7 @@ struct ButtonsTunerView: View {
         // ───────────────────────────────────────────────
         background-color: color-mix(in srgb, var(--primary) \(Int((1 - fillDarken) * 100))%, black);
         background-image:
-          linear-gradient(135deg,
+          linear-gradient(\(i(gradAngle))deg,
             rgba(255,255,255,\(f02(gradWhiteTL))) 0%,
             transparent 50%,
             rgba(0,0,0,\(f02(gradBlackBR))) 100%),
