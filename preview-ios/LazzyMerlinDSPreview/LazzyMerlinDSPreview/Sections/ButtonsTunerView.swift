@@ -141,7 +141,7 @@ struct ButtonsTunerView: View {
             // MARK: - Sticky preview area
             ZStack {
                 Color.bg
-                VStack(spacing: 14) {
+                VStack(spacing: 8) {
                     previewButton("送出 Primary", isPressed: isPreviewPressed)
                         .gesture(
                             DragGesture(minimumDistance: 0)
@@ -168,7 +168,7 @@ struct ButtonsTunerView: View {
                     .foregroundStyle(Color.inkMuted)
                 }
             }
-            .frame(height: 220)
+            .frame(height: 140)
 
             Divider()
 
