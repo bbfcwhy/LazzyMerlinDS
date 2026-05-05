@@ -144,12 +144,47 @@ struct ButtonsTunerView: View {
             // MARK: - Sliders Form
             Form {
                 Section {
-                    Picker("主色 token", selection: $baseFillChoice) {
-                        ForEach(BaseFillChoice.allCases) { c in
-                            Text(c.label).tag(c)
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("主色 token")
+                            .font(.subheadline)
+                            .foregroundStyle(Color.inkMuted)
+                        LazyVGrid(
+                            columns: [GridItem(.adaptive(minimum: 72), spacing: 10)],
+                            spacing: 14
+                        ) {
+                            ForEach(BaseFillChoice.allCases) { c in
+                                Button {
+                                    baseFillChoice = c
+                                } label: {
+                                    VStack(spacing: 6) {
+                                        ZStack {
+                                            Circle()
+                                                .fill(c.color(custom: baseFillCustom))
+                                                .frame(width: 38, height: 38)
+                                            Circle()
+                                                .strokeBorder(
+                                                    baseFillChoice == c
+                                                        ? Color.primaryBrand
+                                                        : Color.gray.opacity(0.25),
+                                                    lineWidth: baseFillChoice == c ? 2.5 : 1
+                                                )
+                                                .frame(width: 38, height: 38)
+                                        }
+                                        Text(c.label)
+                                            .font(.caption2)
+                                            .foregroundStyle(
+                                                baseFillChoice == c
+                                                    ? Color.primaryBrand
+                                                    : Color.secondary
+                                            )
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
-                    .pickerStyle(.menu)
+                    .padding(.vertical, 4)
 
                     if baseFillChoice == .custom {
                         ColorPicker("Custom 色", selection: $baseFillCustom, supportsOpacity: false)
@@ -159,7 +194,7 @@ struct ButtonsTunerView: View {
                 } header: {
                     Text("BASE FILL · 主色 + 暗化").sectionLabel()
                 } footer: {
-                    Text("切主色 token 看不同 brand 顏色（Primary / Deep / Earth Red / 等）在 Tactile 配方下的長相。Custom 開 ColorPicker 自選任何 hex。\nPrimary / Soft 兩 mode 互換 (#46647C ↔ #5E7A8D)、跨 light/dark 視覺差較小；其他 token 跨 mode 差異更明顯。")
+                    Text("切主色 token 看不同 brand 顏色（Primary / Deep / Earth Red / 等）在 Tactile 配方下的長相。色塊跟著 light/dark mode 自動翻轉。Custom 開 ColorPicker 自選任何 hex。\nPrimary / Soft 兩 mode 互換 (#46647C ↔ #5E7A8D)、跨 light/dark 視覺差較小；其他 token 跨 mode 差異更明顯。")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
