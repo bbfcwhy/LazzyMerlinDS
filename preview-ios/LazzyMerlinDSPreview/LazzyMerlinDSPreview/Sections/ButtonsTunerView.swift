@@ -15,9 +15,11 @@ struct ButtonsTunerView: View {
     @State private var gradWhiteTL: Double = 0.06
     @State private var gradBlackBR: Double = 0.30
 
-    // MARK: - 單層 STROKE (#2)
-    @State private var strokeWhiteTop: Double = 0.34
-    @State private var strokeBlackBottom: Double = 0.34
+    // MARK: - 單層 STROKE (#2) · default 頂亮(white)底暗(black) = raised 浮雕光源 convention
+    @State private var strokeTopColor: Color = .white
+    @State private var strokeTopOpacity: Double = 0.34
+    @State private var strokeBottomColor: Color = .black
+    @State private var strokeBottomOpacity: Double = 0.34
     @State private var strokeWidth: Double = 1.0
 
     // MARK: - DROP SHADOW 近層 (#3a)
@@ -109,11 +111,17 @@ struct ButtonsTunerView: View {
                 }
 
                 Section {
-                    sliderRow("頂緣 white",  value: $strokeWhiteTop,    in: 0.0...0.50, step: 0.01)
-                    sliderRow("底緣 black",  value: $strokeBlackBottom, in: 0.0...0.50, step: 0.01)
-                    sliderRow("線寬 (pt)",   value: $strokeWidth,       in: 0.5...3.0,  step: 0.1, fmt: "%.1f")
+                    ColorPicker("頂緣顏色", selection: $strokeTopColor, supportsOpacity: false)
+                    sliderRow("頂緣 opacity",  value: $strokeTopOpacity,    in: 0.0...1.0, step: 0.01)
+                    ColorPicker("底緣顏色", selection: $strokeBottomColor, supportsOpacity: false)
+                    sliderRow("底緣 opacity",  value: $strokeBottomOpacity, in: 0.0...1.0, step: 0.01)
+                    sliderRow("線寬 (pt)",     value: $strokeWidth,         in: 0.5...3.0, step: 0.1, fmt: "%.1f")
                 } header: {
-                    Text("單層 STROKE · 上亮下暗").sectionLabel()
+                    Text("單層 STROKE · 邊緣描色").sectionLabel()
+                } footer: {
+                    Text("光源 convention：頂亮 + 底暗 (default white/black) = raised 凸起浮雕；反之 (頂暗 + 底亮) = inset 凹陷感。可以照規矩、也可以亂玩同色 / 任意配色看效果。")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
 
                 Section {
@@ -274,12 +282,12 @@ struct ButtonsTunerView: View {
                         LinearGradient(
                             colors: isPressed
                                 ? [
-                                    .black.opacity(max(0.28, strokeBlackBottom)),
-                                    .white.opacity(max(0.10, strokeWhiteTop * 0.35))
+                                    strokeBottomColor.opacity(max(0.28, strokeBottomOpacity)),
+                                    strokeTopColor.opacity(max(0.10, strokeTopOpacity * 0.35))
                                 ]
                                 : [
-                                    .white.opacity(strokeWhiteTop),
-                                    .black.opacity(strokeBlackBottom)
+                                    strokeTopColor.opacity(strokeTopOpacity),
+                                    strokeBottomColor.opacity(strokeBottomOpacity)
                                 ],
                             startPoint: .top,
                             endPoint: .bottom
@@ -312,6 +320,38 @@ struct ButtonsTunerView: View {
                 isPreviewPressed = false
             }
         }
+    }
+
+    // MARK: - Color hex helpers (cross-platform)
+
+    private func rgbComponents(of color: Color) -> (r: Double, g: Double, b: Double)? {
+        #if os(iOS) || os(visionOS) || os(tvOS) || os(watchOS)
+        let ui = UIColor(color)
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        ui.getRed(&r, green: &g, blue: &b, alpha: &a)
+        return (Double(r), Double(g), Double(b))
+        #elseif os(macOS)
+        guard let ns = NSColor(color).usingColorSpace(.sRGB) else { return nil }
+        return (Double(ns.redComponent), Double(ns.greenComponent), Double(ns.blueComponent))
+        #else
+        return nil
+        #endif
+    }
+
+    private func hex(of color: Color) -> String {
+        guard let c = rgbComponents(of: color) else { return "—" }
+        return String(format: "#%02X%02X%02X",
+                      Int((c.r * 255).rounded()),
+                      Int((c.g * 255).rounded()),
+                      Int((c.b * 255).rounded()))
+    }
+
+    private func rgba(of color: Color, opacity: Double) -> String {
+        guard let c = rgbComponents(of: color) else { return "rgba(0,0,0,\(opacity))" }
+        let r = Int((c.r * 255).rounded())
+        let g = Int((c.g * 255).rounded())
+        let b = Int((c.b * 255).rounded())
+        return "rgba(\(r),\(g),\(b),\(String(format: "%.02f", opacity)))"
     }
 
     // MARK: - Gradient angle helper (CSS angle → SwiftUI UnitPoint)
@@ -347,8 +387,10 @@ struct ButtonsTunerView: View {
         gradAngle = 135
         gradWhiteTL = 0.06
         gradBlackBR = 0.30
-        strokeWhiteTop = 0.34
-        strokeBlackBottom = 0.34
+        strokeTopColor = .white
+        strokeTopOpacity = 0.34
+        strokeBottomColor = .black
+        strokeBottomOpacity = 0.34
         strokeWidth = 1.0
         shadowNearOpacity = 0.24
         shadowNearRadius = 5
@@ -373,8 +415,10 @@ struct ButtonsTunerView: View {
         gradAngle = 135
         gradWhiteTL = 0.04
         gradBlackBR = 0.30
-        strokeWhiteTop = 0.15
-        strokeBlackBottom = 0.40
+        strokeTopColor = .white
+        strokeTopOpacity = 0.15
+        strokeBottomColor = .black
+        strokeBottomOpacity = 0.40
         strokeWidth = 1.0
         shadowNearOpacity = 0.25
         shadowNearRadius = 6
@@ -426,7 +470,7 @@ struct ButtonsTunerView: View {
         // ───────────────────────────────────────────────
         fill:        primaryBrand + black overlay \(f02(fillDarken))
         gradient:    angle \(i(gradAngle))° · white \(f02(gradWhiteTL)) → clear → black \(f02(gradBlackBR))
-        stroke:      top white \(f02(strokeWhiteTop)) → bottom black \(f02(strokeBlackBottom)),
+        stroke:      top \(hex(of: strokeTopColor)) opacity \(f02(strokeTopOpacity)) → bottom \(hex(of: strokeBottomColor)) opacity \(f02(strokeBottomOpacity)),
                      width \(f1(strokeWidth))pt
         shadow #1:   opacity \(f02(shadowNearOpacity)), radius \(i(shadowNearRadius)), x \(i(shadowNearX)), y \(i(shadowNearY))
         shadow #2:   opacity \(f02(shadowFarOpacity)), radius \(i(shadowFarRadius)), x \(i(shadowFarX)), y \(i(shadowFarY))
@@ -448,8 +492,8 @@ struct ButtonsTunerView: View {
         background-size: auto, \(noiseSize)px \(noiseSize)px;
         background-blend-mode: normal, \(cssBlendName);
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,\(f02(strokeWhiteTop))),
-          inset 0 -1px 0 rgba(0,0,0,\(f02(strokeBlackBottom))),
+          inset 0 1px 0 \(rgba(of: strokeTopColor, opacity: strokeTopOpacity)),
+          inset 0 -1px 0 \(rgba(of: strokeBottomColor, opacity: strokeBottomOpacity)),
           \(i(shadowNearX))px \(i(shadowNearY))px \(i(shadowNearRadius))px rgba(15,28,38,\(f02(shadowNearOpacity))),
           \(i(shadowFarX))px \(i(shadowFarY))px \(i(shadowFarRadius))px rgba(15,28,38,\(f02(shadowFarOpacity)));
         border-radius: \(i(radius))px;
