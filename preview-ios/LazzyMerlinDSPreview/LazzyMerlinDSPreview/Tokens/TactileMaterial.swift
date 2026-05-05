@@ -11,7 +11,7 @@ struct TactileRaisedModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .foregroundStyle(Color.bg)
+            .foregroundStyle(Color.inkOnBrand)                  // §15.5.4 彩色底配米色字（不翻轉）
             .shadow(color: colorScheme == .dark
                     ? .black.opacity(0.40) : .black.opacity(0.30),
                     radius: 0, y: 1)                            // text shadow (#5)
@@ -154,7 +154,7 @@ struct TactilePressedModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .foregroundStyle(Color.bg)
+            .foregroundStyle(Color.inkOnBrand)                       // §15.5.4 彩色底配米色字（不翻轉）
             .shadow(color: .black.opacity(0.30), radius: 0, y: 1)    // text shadow
             .background {
                 ZStack {

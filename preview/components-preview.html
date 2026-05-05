@@ -76,6 +76,11 @@
       --sp-3xl: 48px;
       --sp-4xl: 64px;
 
+      /* §15.5.4 全 component 通用 · 彩色底文字（不翻轉、light + dark 都 Parchment）
+         Mid Petrol 配 Midnight Petrol 字（var(--bg) dark 值）對比 3.4:1 邊緣、Deep Petrol 1.7:1 不過 AA。
+         彩色底元件一律用 var(--ink-on-brand) 確保跨 mode 對比一致 ≥3:1 過 WCAG AA Large。 */
+      --ink-on-brand: #F5EFE4;
+
       /* 共用 Tactile noise overlay — v0.2.0 起改用跨平台共用 PNG tile (assets/tactile-noise.png 256×256 stitchable)
          取代原 SVG turbulence 雙層 inline data URI；iOS / macOS 用同一份 asset bundle。 */
       --noise-bg: url('../assets/tactile-noise.png');
@@ -395,7 +400,7 @@
 
     /* Variant: Primary (Tactile Raised · §5.4.1 共通六件配方) */
     .btn--primary {
-      background-color: var(--primary); color: var(--bg);
+      background-color: var(--primary); color: var(--ink-on-brand);
       background-image:
         linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%);
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.30);
@@ -433,11 +438,11 @@
     }
 
     /* Variant: Brand Deep */
-    .btn--deep { background-color: var(--primary-deep); color: var(--bg); }
+    .btn--deep { background-color: var(--primary-deep); color: var(--ink-on-brand); }
     .btn--deep:hover { transform: translate(-1px, -3px); }
 
     /* Variant: Destructive */
-    .btn--destructive { background-color: var(--error); color: var(--bg); }
+    .btn--destructive { background-color: var(--error); color: var(--ink-on-brand); }
 
     /* Variant: Secondary (Hybrid) */
     .btn--secondary {
@@ -563,7 +568,7 @@
     }
     .checkbox__mark { border-radius: 5px; }
     .radio__mark { border-radius: 50%; }
-    .checkbox__mark svg, .radio__mark svg { opacity: 0; transition: opacity 150ms ease; width: 12px; height: 12px; color: var(--bg); }
+    .checkbox__mark svg, .radio__mark svg { opacity: 0; transition: opacity 150ms ease; width: 12px; height: 12px; color: var(--ink-on-brand); }
     .checkbox input:checked ~ .checkbox__mark,
     .radio input:checked ~ .radio__mark {
       background: var(--primary);
@@ -833,16 +838,16 @@
     }
     .chip:hover { transform: translateY(-2px); }
     /* 彩色底（深 / 中）一律配米色字 + 黑 text-shadow（raised letter）；淺底 Tan 才配深字 + 白 text-shadow */
-    .chip--primary { background-color: var(--primary); color: var(--bg); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
-    .chip--soft { background-color: var(--primary-soft); color: var(--bg); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
-    .chip--stone { background-color: var(--stone); color: var(--bg); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
+    .chip--primary { background-color: var(--primary); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
+    .chip--soft { background-color: var(--primary-soft); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
+    .chip--stone { background-color: var(--stone); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
     .chip--selected {
       box-shadow:
         inset 3px 4px 8px rgba(0, 0, 0, 0.25),
         inset -1px -1px 4px rgba(255, 255, 255, 0.15);
     }
     /* dark mode chip--soft 跟 light mode 一致改用米色字 */
-    [data-theme="dark"] .chip--soft { color: var(--bg); }
+    [data-theme="dark"] .chip--soft { color: var(--ink-on-brand); }
 
     /* Badge — Tactile Raised 縮減版（小元件不能用太重的 shadow）*/
     .badge {
@@ -853,7 +858,7 @@
       background-image: linear-gradient(135deg,
         rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%,
         rgba(0,0,0,0.20) 100%);
-      color: var(--bg);
+      color: var(--ink-on-brand);
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
       font-family: 'Geist Mono', monospace; font-size: 10px; font-weight: 500;
       position: relative;
@@ -902,7 +907,7 @@
     /* Avatar — fallback 用首字母 + palette 三色循環，加 Tactile-Raised + noise */
     .avatar {
       display: inline-flex; align-items: center; justify-content: center;
-      border-radius: 50%; font-weight: 500; color: var(--bg);
+      border-radius: 50%; font-weight: 500; color: var(--ink-on-brand);
       font-family: 'Geist', sans-serif;
       flex-shrink: 0;
       background-image: linear-gradient(135deg,
@@ -981,6 +986,7 @@
     .tooltip-wrap [role="tooltip"] {
       position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
       padding: 8px 12px; border-radius: var(--radius-md);
+      /* tooltip 走 inverted bg pattern · bg/text 兩個都 mode-翻轉，不套 §15.5.4 ink-on-brand */
       background: var(--ink); color: var(--bg);
       font-size: 13px; white-space: nowrap;
       box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.20);
@@ -1213,7 +1219,7 @@
     .pagination .btn--primary {
       background-color: var(--primary);
       background-image: none;
-      color: var(--bg);
+      color: var(--ink-on-brand);
       box-shadow:
         inset 3px 4px 8px rgba(0, 0, 0, 0.30),
         inset -1px -1px 4px rgba(255, 255, 255, 0.18),
@@ -1915,7 +1921,7 @@
         <div class="sub-label">Chip variants</div>
         <div class="row">
           <button class="chip chip--primary">FEATURED</button>
-          <button class="chip" style="background-color: var(--earth-green); color: var(--bg); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);">SPELL</button>
+          <button class="chip" style="background-color: var(--earth-green); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);">SPELL</button>
           <button class="chip chip--stone">DRAFT</button>
           <button class="chip">UNSORTED</button>
           <button class="chip chip--primary chip--selected">SELECTED ✦</button>
@@ -2126,7 +2132,7 @@
               <tr>
                 <td><strong>專案 B</strong></td>
                 <td>Web · iOS</td>
-                <td><span class="chip" style="font-size: 9px; background-color: var(--earth-green); color: var(--bg); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);">BETA</span></td>
+                <td><span class="chip" style="font-size: 9px; background-color: var(--earth-green); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);">BETA</span></td>
                 <td class="num">512</td>
                 <td class="num">$890</td>
               </tr>

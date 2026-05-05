@@ -39,7 +39,7 @@ struct ChipsView: View {
                             .tracking(0.8)
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
-                            .foregroundStyle(Color.bg)
+                            .foregroundStyle(Color.inkOnBrand)
                             .background(Color.earthOchre)
                             .clipShape(Capsule())
 
@@ -49,7 +49,7 @@ struct ChipsView: View {
                             .tracking(0.8)
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
-                            .foregroundStyle(Color.bg)
+                            .foregroundStyle(Color.inkOnBrand)
                             .background(Color.primaryBrand)
                             .clipShape(Capsule())
 
@@ -80,7 +80,7 @@ struct ChipsView: View {
                 .padding(.vertical, 6)
                 .padding(.horizontal, 14)
         }
-        .foregroundStyle(selected ? Color.bg : color)
+        .foregroundStyle(selected ? Color.inkOnBrand : color)
         .background(selected ? color : color.opacity(0.10))
         .clipShape(Capsule())
         .overlay {

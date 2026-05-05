@@ -25,7 +25,7 @@ struct ModalView: View {
                     }
                     .padding(.vertical, 12)
                     .padding(.horizontal, 22)
-                    .foregroundStyle(Color.bg)
+                    .foregroundStyle(Color.inkOnBrand)
                     .background(Color.earthRed)
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .shadow(color: .black.opacity(0.15), radius: 4, y: 2)

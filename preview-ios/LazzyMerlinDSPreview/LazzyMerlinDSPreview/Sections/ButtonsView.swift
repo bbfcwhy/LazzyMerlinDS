@@ -32,7 +32,7 @@ struct ButtonsView: View {
                     Button("刪除") {}
                         .padding(.vertical, 12)
                         .padding(.horizontal, 22)
-                        .foregroundStyle(Color.bg)
+                        .foregroundStyle(Color.inkOnBrand)
                         .background(Color.earthRed)
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                         .overlay {

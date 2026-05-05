@@ -105,6 +105,13 @@
 | Ink Muted（次文字） | `#4E3029` Espresso | `#DECCA7` Tan |
 | Border | `rgba(15, 28, 38, 0.10)` | `rgba(245, 239, 228, 0.08)` |
 | Hairline（裝飾細線） | `rgba(150, 116, 89, 0.30)` | `rgba(94, 122, 141, 0.30)` |
+| **Ink on Brand**（彩色底文字） | `#F5EFE4` Parchment | `#F5EFE4` Parchment（**不翻轉**） |
+
+##### 為什麼 `--ink-on-brand` 不跟 mode 翻轉
+
+彩色底（brand 藍三層 / earth tone 三色）需要的文字反差是「**永遠米色**」，不是「跟著 page bg 翻轉」。理由：彩色 fill + 米色字 = 跨平台跨 mode 都過 WCAG AA Large（≥3:1）；如果用 `--bg` 走 mode 翻轉，dark mode 時 Mid Petrol `#5E7A8D` 底配 Midnight Petrol `#0F1C26` 字 = 對比 3.4:1（剛過 AA Large 但近邊緣），Deep Petrol `#334D5C` 底配 Midnight Petrol 字 = 1.7:1（**完全不過 AA**）。
+
+實作：`--ink-on-brand: #F5EFE4` 在 `:root` 跟 `[data-theme="dark"]` 都同值。所有彩色底元件（button primary / deep / destructive、chip 彩色 variant、avatar、badge、toast、modal action button 等）的 `color` 屬性一律 `var(--ink-on-brand)` 而不是 `var(--bg)`。詳見 §15.5.4。
 
 ##### Surface tier 規範（Card / Container 階層）
 
@@ -1921,21 +1928,26 @@ Avatar 是圓形不是 pill，球體感比 chip 更需要 inset rim 雕刻：
 
 §15.5 第一輪規範寫「不加 shadow」，把 chip / badge / avatar 視為純平面元件。實際落地時跟 button 對比視覺斷層 —— 元件高低不一致看起來不像同一塊木頭做的。2026-04-25 二度修訂：**所有純色填色元件都套 Tactile-Raised 縮減版**，按元件大小縮減 shadow 強度。例外仍是 Dot badge（< 10px）跟 Tooltip / Skeleton 等不適用浮雕的場景。
 
-#### 15.5.4 底色 × 字色 / text-shadow 配對規則
+#### 15.5.4 底色 × 字色 / text-shadow 配對規則（**全 component 通用**）
 
-加了 Tactile + noise 後，底色跟字色的搭配比純平面更敏感 —— 中藍底配深字（原本「對比反差」設計）會看起來像「字被染黑」。本規則是 §15.5.1 / §15.5.2 / §15.5.2.1 共通的字色決策：
+加了 Tactile + noise 後，底色跟字色的搭配比純平面更敏感 —— 中藍底配深字會看起來像「字被染黑」。**本規則 v0.2.0-rc.3 起 generalize 為全 component 通用**（不限 chip / avatar），涵蓋 Button / Chip / Badge / Avatar / Toast / Modal action / 任何 Tactile 彩色填色 fill。
 
 | 底色等級 | 字色 | text-shadow（raised letter）|
 |---|---|---|
-| **深底**（primary, primary-deep, stone, earth-red） | `var(--bg)` 米色 | `0 1px 0 rgba(0, 0, 0, 0.25)` 黑色 |
-| **中底**（primary-soft 中藍） | `var(--bg)` 米色 | `0 1px 0 rgba(0, 0, 0, 0.25)` 黑色 |
+| **深底**（primary, primary-deep, stone, earth-red, earth-green, earth-ochre） | `var(--ink-on-brand)` 米色 | `0 1px 0 rgba(0, 0, 0, 0.30)` 黑色 |
+| **中底**（primary-soft 中藍） | `var(--ink-on-brand)` 米色 | `0 1px 0 rgba(0, 0, 0, 0.25)` 黑色 |
 | **淺底**（bg-muted Tan） | `var(--ink)` 深 | `0 1px 0 rgba(255, 255, 255, 0.4)` 白色 |
+| **page surface**（bg / bg-raised 米色 light / Midnight Petrol dark）— 一般文字 | `var(--ink)` 跟著 mode 翻轉 | 視 Tactile 強度、可省略 |
 
-**重要：中底（primary-soft）配米色字而不是深字。**
-`primary-soft` 對 `var(--bg)` 米色的對比約 4.0:1（過 AA Large、邊緣過 AA Normal），加上 `0 1px 0 rgba(0,0,0,0.25)` 黑色 text-shadow 補強描邊，可讀性夠。配 `var(--ink)` 深字會在 Tactile 配方下顯得「悶」。
+**關鍵：`--ink-on-brand` ≠ `--bg`**
+
+`--ink-on-brand` **永遠是 Parchment `#F5EFE4`**（light + dark 都一樣、不翻轉）；`--bg` 是 page surface、會跟著 mode 翻轉（light Parchment / dark Midnight Petrol）。彩色底用 `--ink-on-brand` 確保跨 mode 對比度都過 WCAG AA Large（≥3:1），避免 dark mode 下 Mid Petrol 配 Midnight Petrol 字（3.4:1 邊緣）或 Deep Petrol 配 Midnight Petrol 字（**1.7:1 不過 AA**）的問題。詳見 §2.2.1。
 
 **例外：chip 預設變體（無 modifier）**
 chip default 走淺底（`bg-muted` Tan）規則：深字 + 白 text-shadow。
+
+**例外：button ghost / secondary（hairline / 透明底）**
+無 fill 的 button（`.btn--ghost` / `.btn--secondary`）走 page surface 規則：`var(--ink-muted)` 或 `var(--ink)` 深字，hover 時轉 `var(--primary)` 藍色。
 
 #### 15.5.5 currentColor 在 color rule 內的踩坑警告
 
@@ -2407,6 +2419,7 @@ Centered spinner layout：
 | 2026-04-28 | v0.1.3 release · og-template.html 升版 + §11.3 路徑修正 | 觸發點：使用者 2nd Brain（Obsidian vault）未來要做大量社群貼文 + IG 圖卡 + Notion 同步，會把 LazzyMerlin §11.3 OG template 當 reference。但 og-template.html 整檔仍用 v0.1.0 finalize 前的舊 palette（`#F7F2E8 / #416880 / #1C1410 / #5C5247`），跟現行 wood palette 不一致 —— 如果 2nd Brain 閻多比拿這檔當 reference 會學到錯的調色。修法：(1) **og-template.html palette 全面升版到 wood palette role tokens**（`#F5EFE4 Parchment / #0F1C26 Midnight Petrol / #46647C Petrol / #4E3029 Espresso / #967459 Stone / hairline `rgba(150,116,89,0.30)`），dark mode 同步（`#0F1C26 bg / #5E7A8D primary 互換 / #DECCA7 ink-muted`）。(2) **og-orb-2 暖色從 `oklch(0.65 0.06 65 / 0.2)` 換成 `var(--earth-ochre)`**（`#8E6E37` light / `#D4AB6E` dark 提亮），保留「左下暖調 vs 右上 Petrol 冷調」對比但對齊 §2.2 earth tone status extension。`◈` corner sigil 保留（跟左上 `✦` 上下呼應的有趣 detail）。(3) **§11.3 模板檔案路徑修正**：原本指 `~/.gstack/projects/LazzyMerlin/designs/design-system-20260422/v3/og-template.html`（指錯到 gstack 外部 designs 目錄），改成 repo 內實際路徑 `preview/og-template.html`，跟 §13.3 一致。(4) **不影響任何已生產的 OG image PNG**（那些是 static screenshots 不會自動 regen），僅 future regenerated OG image 才會套新 palette。 |
 | 2026-05-01 | v0.1.4 release · evidence-driven patch · QTL iOS 落地 13 條 gap 一次到位 | LazzyMerlin DS **第一個 evidence-driven patch release**：所有變更都來自 QuickTimeLapse iOS 子專案 2026-04-29 ~ 2026-05-01 落地累積的 17 條 gap report（落地 commit 範圍 `49526a2..5ced89e`、M0 → M5 + 2 個 polish）。13 條納入本 patch，4 條留 v0.2 主菜統一處理。**P0（1 條）**：(#1) §7.2 L819 iOS `accentColor` 從 `#416880 / #699FC5`（v0.1.0-pre 舊 palette legacy、跟 og-template.html / preview.html 同批殘留、v0.1.3 修 og-template 時漏掃到）改 `#46647C / #5E7A8D`，對齊 §1 wood palette + dark mode 互換規則。**P1（5 條）**：(#2) §2.2.1 + §7.2.2 加 `surface-1 / surface-2` card tier token（light luminance delta +1.5%、dark +5%）；(#3) §7.2.3 加 iOS spacing 對齊建議表（DS 4px scale ↔ HIG 8pt grid）；(#10) §7.2.9 加 iOS noise opacity 0.05-0.08 或 opt-out（避免 Retina 高 DPI 認知為「螢幕髒」）；(#11) §2.2.1 + §14.3 補 surface vs card luminance delta 規範 + border 在 surface 上對比度 SC 1.4.11 標準；(#13) §7.2.4 加 iOS Type Scale 對照表（DS web px → iOS pt）。**P2（3 條）**：(#4) §7.2.7 補 `RoundedRectangle(cornerRadius:, style: .continuous)`；(#5) §7.2.8 加 dark mode 偏好（跟系統 + 三態 override）；(#8) §7.2.6 補 SwiftUI section label 範例（`.textCase(.uppercase) + tracking`）。**P3（4 條）**：(#7) landing-checklist title v0.1.1 → v0.1.4；(#12) landing-checklist + §16 註記 WebFetch summarize bias 警告（QTL M1 Tactile 強度只到 spec 1/4-1/8、M3.5 重做才修正，根因是 WebFetch 漏掉 §5.4.1 完整 box-shadow + §10.3 完整文案，用 curl raw 才完整）；(#16) landing-checklist 補 iOS 18 / Xcode 16 PBXFileSystemSynchronizedRootGroup Info.plist 須在 source folder 外的 specific note；(#17) §8.3.2 補 AI 生 icon prompt template + 雙層輪廓警告（AI 默認帶 rounded square 底會跟 iOS mask 疊成「框中框」）。**v0.2 留 4 條主菜**：#6 + #14 Tactile material iOS 等價 reference impl（需要完整章節 + reference QTL `TactileMaterial.swift`，太大顆）、#9 brand signature placement iOS（場景判斷需再想）、#15 text-shadow iOS 沒原生（跟 #6+#14 同主題、併入 Tactile iOS 章節）。回流報告 ref：`~/Projects/QuickTimeLapse/docs/lazzymerlin-ds-feedback.md`。本 patch 不含 token 結構變更（§17.6 第 2 條觀察期延續 v0.1.1 起點 2026-04-27）。 |
 | 2026-05-04 | **Tactile 配方收斂為跨平台最大公約數**（v0.2.0 主菜）| 觸發點：使用者反思 LazzyMerlin DS 的核心問題 ——「web 端 Tactile-Heavy 在 SwiftUI 跑不出來，QTL / 未來 iOS 子專案永遠落地不到位」。技術根因：CSS 的 `inset` shadow + SVG turbulence + `mix-blend-mode` 是 web pipeline 獨有，SwiftUI 無等價，硬模擬出來只到 50% 像。三個策略方向（A 降規格全平台 Tactile-Lite / B 分層等價維護兩套 spec / C 退為氣質方向 Tactile 限 web-only）討論後使用者明確選 **方向 D · 兩平台都做 Tactile，但只做 SwiftUI 也能對齊的部分**——比 C 更嚴格，要求視覺氣質「分不太出來」。修法：(1) **§5.4 Tactile 重新定義為「跨平台共通六件配方」**：對角微暗化 / 上亮下暗單層 stroke（取代雙層 inset rim）/ 2 層 drop shadow（從 4 層降到 2 層）/ PNG noise tile（取代 SVG turbulence dynamic）/ text shadow / continuous radius —— 六件每件都 web + SwiftUI 等價可實作。(2) **§5.4.1 四態材質重寫**：Base / Raised / Inset / Pressed 仍是四態語意，但每態用六件 building blocks 組合，CSS 規格大幅簡化（drop shadow 4→2 層、雙層 inset rim → 單層 stroke、SVG turbulence → PNG tile）。(3) **§5.4.2 dark mode** 同步降規格 + 新增「dark 上 noise opacity 0.10-0.12（要稍強才看見）」。(4) **§5.7 Material 對照表加 platform column**：Web class ↔ SwiftUI ViewModifier 對照，明訂 SwiftUI 原生元件優先（Toggle / Slider / Checkbox 用 `.tint(.accent)` 不重造輪子）。(5) **§7.2.9 重寫**（v0.1.4 補的「iOS noise opt-out / 0.05-0.08 克制」**作廢**）改為「Tactile material 跨平台等價」附完整 `tactileRaised()` ViewModifier reference impl。(6) **§7.3 macOS** 沿用 §7.2 SwiftUI ViewModifier 同份 code。(7) **新增 [`assets/tactile-noise.png`](assets/tactile-noise.png)**：256×256 RGBA PNG，從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` 用 `rsvg-convert` render，stitchable 無縫，跨平台共用。**Trade-off**：web 端 Tactile 視覺強度約 -30%（雙層 inset rim → 單層 stroke 雕刻感弱、4 層 drop shadow → 2 層浮起感弱、SVG turbulence dynamic → PNG tile static），換得 iOS / macOS / web 三端視覺氣質「分不太出來」+ iOS 子專案有完整 reference impl 可 copy-paste。**v1.0 路徑加新條件第 6 條**：「跨平台 Tactile 等價 reference impl 落地驗證 ✓（建 preview-ios/ + components 6 個 MVP 截圖比對）」，作為 v0.2.0 主菜的下一步（階段 2）。 |
+| 2026-05-05 | **新增 `--ink-on-brand` token · §15.5.4 generalize 為全 component 通用**（v0.2.0-rc.3）| 觸發點：使用者在 preview-ios buttons gallery dark mode 截圖觀察到藍色系按鈕（Primary / Brand Deep）內的文字「跟 light mode 反差不夠大」。技術根因：v0.1.x 起所有彩色底元件（button / chip / avatar / badge）都用 `color: var(--bg)` —— light mode `--bg = Parchment #F5EFE4` 米色字 ✓ OK，但 dark mode `--bg = Midnight Petrol #0F1C26` 深藍字 ⚠️：Mid Petrol `#5E7A8D` 底配 Midnight Petrol 字 = 對比 3.4:1（剛過 AA Large 但邊緣），Deep Petrol `#334D5C` 底配 Midnight Petrol 字 = **1.7:1 完全不過 AA**。§15.5.4「彩色底配米色字」原則 v0.1.0 已存在但只規範 chip / avatar，未 generalize 到 button，且實作上用 `var(--bg)` 而非「永遠米色」。修法：(1) **§2.2.1 加 `--ink-on-brand` token**：`#F5EFE4` Parchment 在 light + dark 都同值（**不翻轉**）。明確區分 `--bg`（page surface 翻轉）vs `--ink-on-brand`（彩色底文字不翻轉）。(2) **§15.5.4 重寫 generalize 為全 component 通用**：button / chip / badge / avatar / toast / modal action 任何 Tactile 彩色 fill 文字一律 `var(--ink-on-brand)`，例外只剩淺底（`bg-muted` Tan）走深字 + ghost / secondary 透明底走 page surface 規則。(3) **`tokens/color.json` 加 `ink-on-brand`** + (4) **components-preview.html `:root` + `[data-theme="dark"]` 加 `--ink-on-brand: #F5EFE4`**，所有彩色 button / chip 變體 `color` 改 `var(--ink-on-brand)`。(5) **新增 `InkOnBrand.colorset`**（light + dark 同 `#F5EFE4`），iOS auto-gen `Color.inkOnBrand`。(6) **iOS source files**（TactileMaterial.swift / ButtonsView / ChipsView / ButtonsTunerView）內彩色 fill 文字 `Color.bg` → `Color.inkOnBrand`，page background 用法（`Color.bg.ignoresSafeArea` 等）保持 `Color.bg` 不動。對比驗證：所有彩色底配 Parchment 字跨 light / dark 對比一致（Mid Petrol 5.4:1、Deep Petrol 7.5:1、Earth Red 5.3:1），全過 AA Large。 |
 
 ---
 
