@@ -14,12 +14,9 @@
     },
     "earth": {
       "$description": "Status Extension（§2.2）· 大地色系，跟 wood palette 同 saturation 量級。Status-only 不擴 brand core。",
-      "terracotta-light": { "$value": "#9E5949", "$type": "color", "$description": "Light mode error / destructive · Terracotta 陶土紅" },
-      "terracotta-dark":  { "$value": "#C58775", "$type": "color", "$description": "Dark mode error / destructive · 提亮版陶土" },
-      "sage-light":       { "$value": "#6A7A60", "$type": "color", "$description": "Light mode success · Sage / Moss 苔蘚綠" },
-      "sage-dark":        { "$value": "#A8B898", "$type": "color", "$description": "Dark mode success · 提亮版 sage" },
-      "ochre-light":      { "$value": "#8E6E37", "$type": "color", "$description": "Light mode warning · Burnt Ochre 赭石黃" },
-      "ochre-dark":       { "$value": "#D4AB6E", "$type": "color", "$description": "Dark mode warning · 提亮版赭" }
+      "terracotta": { "$value": "#9E5949", "$type": "color", "$description": "Error / destructive · Terracotta 陶土紅 · 跨 mode 同 hex (v0.2.0-rc.4 起收斂)" },
+      "sage":       { "$value": "#596751", "$type": "color", "$description": "Success · Sage / Moss 苔蘚綠 · 跨 mode 同 hex · ⚠️ dark surface 上對比 ~2.7:1 邊緣不過 AA Large、僅適合 status icon / chip / dot 小面積" },
+      "ochre":      { "$value": "#CB9B52", "$type": "color", "$description": "Warning · Burnt Ochre 赭石黃 · 跨 mode 同 hex · ⚠️ light surface 上對比 ~2.2:1 不過 AA、僅適合 status icon / chip 小面積、不作大 button fill" }
     },
     "light": {
       "$description": "Light mode role tokens · 所有 light mode CSS 用這層",
@@ -34,13 +31,13 @@
       "primary-deep":  { "$value": "{color.wood.primary-deep}",    "$type": "color" },
       "stone":         { "$value": "{color.wood.stone}",           "$type": "color" },
       "info":          { "$value": "{color.wood.primary}",         "$type": "color" },
-      "success":       { "$value": "{color.earth.sage-light}",     "$type": "color" },
-      "warning":       { "$value": "{color.earth.ochre-light}",    "$type": "color" },
-      "error":         { "$value": "{color.earth.terracotta-light}", "$type": "color" },
-      "destructive":   { "$value": "{color.earth.terracotta-light}", "$type": "color" }
+      "success":       { "$value": "{color.earth.sage}",       "$type": "color" },
+      "warning":       { "$value": "{color.earth.ochre}",      "$type": "color" },
+      "error":         { "$value": "{color.earth.terracotta}", "$type": "color" },
+      "destructive":   { "$value": "{color.earth.terracotta}", "$type": "color" }
     },
     "dark": {
-      "$description": "Dark mode role tokens · primary ↔ primary-soft 互換、ink ↔ bg 互換 · ink-on-brand 不翻轉",
+      "$description": "Dark mode role tokens · primary ↔ primary-soft 互換、ink ↔ bg 互換 · ink-on-brand + earth tone 不翻轉",
       "bg":            { "$value": "{color.wood.midnight-petrol}", "$type": "color" },
       "bg-raised":     { "$value": "{color.wood.midnight-petrol}", "$type": "color" },
       "bg-muted":      { "$value": "{color.wood.espresso}",        "$type": "color" },
@@ -52,10 +49,10 @@
       "primary-deep":  { "$value": "{color.wood.primary-deep}",    "$type": "color" },
       "stone":         { "$value": "{color.wood.stone}",           "$type": "color" },
       "info":          { "$value": "{color.wood.mid-petrol}",      "$type": "color" },
-      "success":       { "$value": "{color.earth.sage-dark}",      "$type": "color" },
-      "warning":       { "$value": "{color.earth.ochre-dark}",     "$type": "color" },
-      "error":         { "$value": "{color.earth.terracotta-dark}", "$type": "color" },
-      "destructive":   { "$value": "{color.earth.terracotta-dark}", "$type": "color" }
+      "success":       { "$value": "{color.earth.sage}",       "$type": "color", "$description": "Earth tone 跨 mode 同 hex (v0.2.0-rc.4 起)" },
+      "warning":       { "$value": "{color.earth.ochre}",      "$type": "color" },
+      "error":         { "$value": "{color.earth.terracotta}", "$type": "color" },
+      "destructive":   { "$value": "{color.earth.terracotta}", "$type": "color" }
     },
     "transparent": {
       "$description": "rgba 透明度層（hairline / border / focus ring 等）",

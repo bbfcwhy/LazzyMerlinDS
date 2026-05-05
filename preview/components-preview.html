@@ -25,9 +25,12 @@
       --shadow-ink: rgba(33, 23, 21, 0.70);
 
       /* Earth tone Status Extension（§2.2）— 大地色系，跟 wood palette 同調 */
+      /* Earth Tone v0.2.0-rc.4 收斂為 3 hex 跨 mode 同值 (主人選定)
+         ⚠️ Ochre 對 light surface 對比 ~2:1 不過 AA、僅適合 status icon / chip 小面積、
+         不作大 button fill (詳見 §2.2.2 + §14.3) */
       --earth-red:   #9E5949;  /* Terracotta · error / destructive */
-      --earth-green: #6A7A60;  /* Sage · success */
-      --earth-ochre: #8E6E37;  /* Burnt Ochre · warning */
+      --earth-green: #596751;  /* Sage · success · ⚠️ dark surface 對比 2.7:1 邊緣 */
+      --earth-ochre: #CB9B52;  /* Burnt Ochre · warning · ⚠️ light surface 對比 2.2:1 不過 AA */
 
       /* Semantic alias — 用 earth tone 表達 status，不用鮮豔紅綠黃 */
       --info: var(--primary);
@@ -101,11 +104,9 @@
       --border: rgba(245, 239, 228, 0.08);
       --shadow-ink: rgba(6, 12, 18, 0.70);
 
-      /* Earth tone 提亮版 — 在 Midnight Petrol 深底上需要拉亮 */
-      --earth-red:   #C58775;
-      --earth-green: #A8B898;
-      --earth-ochre: #D4AB6E;
-      /* Semantic alias 不重寫 — var() 動態 resolve 跟著 earth-* / primary 自動切 */
+      /* Earth tone v0.2.0-rc.4 起跨 mode 同 hex、不在 dark mode 重寫 (主人決定收斂為 3 hex)
+         之前 dark 提亮版 (#C58775 / #A8B898 / #D4AB6E) 廢棄、保留 git 歷史
+         Semantic alias 不重寫 — var() 動態 resolve 跟著 :root earth-* / primary 自動切 */
 
       --shadow-soft-sm:
         6px 6px 12px rgba(0, 0, 0, 0.45),
@@ -1435,7 +1436,7 @@
       <section class="demo" id="colors">
         <div class="section-kicker">§ 2 · COLOR</div>
         <h2>Color Palette · 色票</h2>
-        <p class="section-note">8 色 wood palette（兩 mode 共用 raw values）+ light / dark role tokens（<code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">primary ↔ primary-soft</code> 兩 mode 互換）+ earth tone status extension（terracotta / sage / ochre 提亮對照）+ 透明度層（hairline / border）。所有規範值對應 <code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">tokens/color.json</code>。</p>
+        <p class="section-note">8 色 wood palette（兩 mode 共用 raw values）+ light / dark role tokens（<code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">primary ↔ primary-soft</code> 兩 mode 互換）+ earth tone status extension（terracotta / sage / ochre 3 hex 跨 mode 同值）+ 透明度層（hairline / border）。所有規範值對應 <code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">tokens/color.json</code>。</p>
 
         <!-- Wood palette · 8 raw values shared between modes -->
         <div class="swatch-group">
@@ -1589,56 +1590,28 @@
           </div>
         </div>
 
-        <!-- Earth tone Status · Light vs Dark -->
+        <!-- Earth tone Status · v0.2.0-rc.4 收斂 3 hex 跨 mode 同值 -->
         <div class="swatch-group">
-          <div class="swatch-group__label">Earth Tone Status Extension · Light → Dark 提亮對照（不用鮮豔紅綠黃）</div>
-          <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light">
-              <div class="swatch-compare__label">Light Mode</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#9E5949"></div>
-                  <div class="swatch__name">error / destructive</div>
-                  <div class="swatch__hex">#9E5949</div>
-                  <div class="swatch__role">Terracotta 陶土紅</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#6A7A60"></div>
-                  <div class="swatch__name">success</div>
-                  <div class="swatch__hex">#6A7A60</div>
-                  <div class="swatch__role">Sage / Moss 苔蘚綠</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#8E6E37"></div>
-                  <div class="swatch__name">warning</div>
-                  <div class="swatch__hex">#8E6E37</div>
-                  <div class="swatch__role">Burnt Ochre 赭石黃</div>
-                </article>
-              </div>
-            </div>
-            <div class="swatch-compare__col swatch-compare__col--dark">
-              <div class="swatch-compare__label">Dark Mode（提亮）</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#C58775"></div>
-                  <div class="swatch__name">error / destructive</div>
-                  <div class="swatch__hex">#C58775</div>
-                  <div class="swatch__role">提亮版陶土</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#A8B898"></div>
-                  <div class="swatch__name">success</div>
-                  <div class="swatch__hex">#A8B898</div>
-                  <div class="swatch__role">提亮版 sage</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#D4AB6E"></div>
-                  <div class="swatch__name">warning</div>
-                  <div class="swatch__hex">#D4AB6E</div>
-                  <div class="swatch__role">提亮版赭</div>
-                </article>
-              </div>
-            </div>
+          <div class="swatch-group__label">Earth Tone Status Extension · 3 hex 跨 mode 同值（v0.2.0-rc.4 收斂、不再 light/dark 對照）</div>
+          <div class="swatches">
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#9E5949"></div>
+              <div class="swatch__name">error / destructive</div>
+              <div class="swatch__hex">#9E5949</div>
+              <div class="swatch__role">Terracotta 陶土紅</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#596751"></div>
+              <div class="swatch__name">success</div>
+              <div class="swatch__hex">#596751</div>
+              <div class="swatch__role">Sage 苔蘚綠 · ⚠️ dark 對比 2.7:1</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#CB9B52"></div>
+              <div class="swatch__name">warning</div>
+              <div class="swatch__hex">#CB9B52</div>
+              <div class="swatch__role">Burnt Ochre 赭石黃 · ⚠️ light 對比 2.2:1</div>
+            </article>
           </div>
         </div>
 

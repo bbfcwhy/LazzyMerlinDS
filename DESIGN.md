@@ -128,24 +128,47 @@ iOS 平台對應規範見 §7.2 「Card surface tier」。
 
 #### 2.2.2 Status Extension（Earth Tone 三色擴充）
 
-Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone Extension** 表達。Extension 跟 wood palette 同調（同 saturation 量級、同 light value），不是鮮豔紅綠黃，而是大地色系：
+Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone Extension** 表達。Extension 跟 wood palette 同調（同 saturation 量級、同 light value），不是鮮豔紅綠黃，而是大地色系。
 
-| Token | Light | Dark | 對 surface 對比度 |
+**v0.2.0-rc.4 起 3 hex 跨 mode 同值（不再有 light / dark 提亮對照）：**
+
+| Token | Hex（跨 mode 共用）| Light surface 對比 | Dark surface 對比 |
 |---|---|---|---|
-| **Earth Red** Terracotta | `#9E5949` | `#C58775` | Light ~5.3:1 / Dark ~6.5:1 ✓ AA |
-| **Earth Green** Sage / Moss | `#6A7A60` | `#A8B898` | Light ~5.0:1 / Dark ~8.0:1 ✓ AA |
-| **Earth Ochre** Burnt Ochre | `#8E6E37` | `#D4AB6E` | Light ~5.5:1 / Dark ~7.5:1 ✓ AA |
+| **Earth Red** Terracotta | `#9E5949` | ~5.3:1 ✓ AA | ~3.4:1 邊緣 AA Large |
+| **Earth Green** Sage / Moss | `#6A7A60` | ~5.0:1 ✓ AA | ~4.0:1 ✓ AA Large |
+| **Earth Ochre** Burnt Ochre | `#D4AB6E` | **~2.0:1 ⚠️ 不過 AA** | ~7.5:1 ✓ AA |
 
 **為什麼是大地色不是鮮色：**
 - 跟 wood palette 同調 —— 跟 Stone `#967459` 同 saturation 量級，同個畫面不會跳出來
 - 跟「冷面笑匠 / 反美式紅綠燈情緒對比」tone 一致 —— 「壞了」用陶土紅比刺眼正紅更耐看
 - 仍可單眼識別 success / warning / error —— 色相確實不同（綠 / 黃 / 紅），但飽和度壓低
 
+**為什麼 v0.2.0-rc.4 收斂為 3 hex 不分 mode：**
+- 主人 review tuner 11 swatch 後決定簡化規範、單一 hex 跨 mode 視覺一致
+- 移除 6 個變體 token、減少維護負擔（原本 light/dark 各 3 個 = 6 個 colorset / CSS var）
+- Earth tone 是 status accent、不是 surface 主色 —— 對比度標準應對應「accent / icon / chip 小面積」WCAG SC 1.4.11 ≥ 3:1 而非 SC 1.4.3 文字 4.5:1
+
+**Sage `#596751` + Ochre `#CB9B52` 對比度 trade-off（v0.2.0-rc.4 主人 confirm A 方案接受）：**
+
+主人選定 3 hex 跨 mode 同值，視覺上跟 wood palette 同調，但 sage 在 dark mode、ochre 在 light mode 都不過 AA Large：
+
+| 用法 | 是否合 spec |
+|---|---|
+| Status icon + 文字 ✓ | OK · icon stroke + 文字另用 `--ink` / `--ink-muted` 確保可讀 |
+| Chip / badge / dot 小面積 fill ✓ | OK · 小面積對比要求寬鬆（SC 1.4.11 3:1） |
+| Toast / alert background tint（10-15% opacity）✓ | OK · 不作 fill 主體 |
+| **大面積 button fill** ✗ | **不建議** · sage 在 dark mode 對比 2.7:1 / ochre 在 light mode 對比 2.2:1，文字（即使 ink-on-brand 米白）都讀不清楚 |
+| Form validation error text ✗ | **不建議** · 建議用 `--earth-red` 而非 sage / ochre |
+| Destructive button fill ✓ | 用 `--earth-red` `#9E5949`（兩 mode 對比都 ≥ 3.4:1 過 AA Large、唯一適合大面積 fill 的 earth tone） |
+
+實作時遇到 sage / ochre 大面積 fill 場景，請改用 0.10-0.15 opacity 的 surface tint（背景變淡綠 / 淡黃）+ 獨立 ochre / sage icon、不要直接整片填色。
+
 **定位：Status-only Extension**
 - ❌ 不擴充進 Brand Core 8 色
 - ❌ 不當 hero / CTA fill 主色
 - ❌ 不當 illustration accent
 - ✅ 只用於 status 訊號：alert / toast / form validation / stat trend / destructive button / badge
+- ⚠️ 只有 `--earth-red` 適合大面積 fill（destructive button），sage / ochre 大面積 fill 場景見上表
 
 #### 2.2.3 Semantic 角色映射
 
@@ -2420,6 +2443,7 @@ Centered spinner layout：
 | 2026-05-01 | v0.1.4 release · evidence-driven patch · QTL iOS 落地 13 條 gap 一次到位 | LazzyMerlin DS **第一個 evidence-driven patch release**：所有變更都來自 QuickTimeLapse iOS 子專案 2026-04-29 ~ 2026-05-01 落地累積的 17 條 gap report（落地 commit 範圍 `49526a2..5ced89e`、M0 → M5 + 2 個 polish）。13 條納入本 patch，4 條留 v0.2 主菜統一處理。**P0（1 條）**：(#1) §7.2 L819 iOS `accentColor` 從 `#416880 / #699FC5`（v0.1.0-pre 舊 palette legacy、跟 og-template.html / preview.html 同批殘留、v0.1.3 修 og-template 時漏掃到）改 `#46647C / #5E7A8D`，對齊 §1 wood palette + dark mode 互換規則。**P1（5 條）**：(#2) §2.2.1 + §7.2.2 加 `surface-1 / surface-2` card tier token（light luminance delta +1.5%、dark +5%）；(#3) §7.2.3 加 iOS spacing 對齊建議表（DS 4px scale ↔ HIG 8pt grid）；(#10) §7.2.9 加 iOS noise opacity 0.05-0.08 或 opt-out（避免 Retina 高 DPI 認知為「螢幕髒」）；(#11) §2.2.1 + §14.3 補 surface vs card luminance delta 規範 + border 在 surface 上對比度 SC 1.4.11 標準；(#13) §7.2.4 加 iOS Type Scale 對照表（DS web px → iOS pt）。**P2（3 條）**：(#4) §7.2.7 補 `RoundedRectangle(cornerRadius:, style: .continuous)`；(#5) §7.2.8 加 dark mode 偏好（跟系統 + 三態 override）；(#8) §7.2.6 補 SwiftUI section label 範例（`.textCase(.uppercase) + tracking`）。**P3（4 條）**：(#7) landing-checklist title v0.1.1 → v0.1.4；(#12) landing-checklist + §16 註記 WebFetch summarize bias 警告（QTL M1 Tactile 強度只到 spec 1/4-1/8、M3.5 重做才修正，根因是 WebFetch 漏掉 §5.4.1 完整 box-shadow + §10.3 完整文案，用 curl raw 才完整）；(#16) landing-checklist 補 iOS 18 / Xcode 16 PBXFileSystemSynchronizedRootGroup Info.plist 須在 source folder 外的 specific note；(#17) §8.3.2 補 AI 生 icon prompt template + 雙層輪廓警告（AI 默認帶 rounded square 底會跟 iOS mask 疊成「框中框」）。**v0.2 留 4 條主菜**：#6 + #14 Tactile material iOS 等價 reference impl（需要完整章節 + reference QTL `TactileMaterial.swift`，太大顆）、#9 brand signature placement iOS（場景判斷需再想）、#15 text-shadow iOS 沒原生（跟 #6+#14 同主題、併入 Tactile iOS 章節）。回流報告 ref：`~/Projects/QuickTimeLapse/docs/lazzymerlin-ds-feedback.md`。本 patch 不含 token 結構變更（§17.6 第 2 條觀察期延續 v0.1.1 起點 2026-04-27）。 |
 | 2026-05-04 | **Tactile 配方收斂為跨平台最大公約數**（v0.2.0 主菜）| 觸發點：使用者反思 LazzyMerlin DS 的核心問題 ——「web 端 Tactile-Heavy 在 SwiftUI 跑不出來，QTL / 未來 iOS 子專案永遠落地不到位」。技術根因：CSS 的 `inset` shadow + SVG turbulence + `mix-blend-mode` 是 web pipeline 獨有，SwiftUI 無等價，硬模擬出來只到 50% 像。三個策略方向（A 降規格全平台 Tactile-Lite / B 分層等價維護兩套 spec / C 退為氣質方向 Tactile 限 web-only）討論後使用者明確選 **方向 D · 兩平台都做 Tactile，但只做 SwiftUI 也能對齊的部分**——比 C 更嚴格，要求視覺氣質「分不太出來」。修法：(1) **§5.4 Tactile 重新定義為「跨平台共通六件配方」**：對角微暗化 / 上亮下暗單層 stroke（取代雙層 inset rim）/ 2 層 drop shadow（從 4 層降到 2 層）/ PNG noise tile（取代 SVG turbulence dynamic）/ text shadow / continuous radius —— 六件每件都 web + SwiftUI 等價可實作。(2) **§5.4.1 四態材質重寫**：Base / Raised / Inset / Pressed 仍是四態語意，但每態用六件 building blocks 組合，CSS 規格大幅簡化（drop shadow 4→2 層、雙層 inset rim → 單層 stroke、SVG turbulence → PNG tile）。(3) **§5.4.2 dark mode** 同步降規格 + 新增「dark 上 noise opacity 0.10-0.12（要稍強才看見）」。(4) **§5.7 Material 對照表加 platform column**：Web class ↔ SwiftUI ViewModifier 對照，明訂 SwiftUI 原生元件優先（Toggle / Slider / Checkbox 用 `.tint(.accent)` 不重造輪子）。(5) **§7.2.9 重寫**（v0.1.4 補的「iOS noise opt-out / 0.05-0.08 克制」**作廢**）改為「Tactile material 跨平台等價」附完整 `tactileRaised()` ViewModifier reference impl。(6) **§7.3 macOS** 沿用 §7.2 SwiftUI ViewModifier 同份 code。(7) **新增 [`assets/tactile-noise.png`](assets/tactile-noise.png)**：256×256 RGBA PNG，從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` 用 `rsvg-convert` render，stitchable 無縫，跨平台共用。**Trade-off**：web 端 Tactile 視覺強度約 -30%（雙層 inset rim → 單層 stroke 雕刻感弱、4 層 drop shadow → 2 層浮起感弱、SVG turbulence dynamic → PNG tile static），換得 iOS / macOS / web 三端視覺氣質「分不太出來」+ iOS 子專案有完整 reference impl 可 copy-paste。**v1.0 路徑加新條件第 6 條**：「跨平台 Tactile 等價 reference impl 落地驗證 ✓（建 preview-ios/ + components 6 個 MVP 截圖比對）」，作為 v0.2.0 主菜的下一步（階段 2）。 |
 | 2026-05-05 | **新增 `--ink-on-brand` token · §15.5.4 generalize 為全 component 通用**（v0.2.0-rc.3）| 觸發點：使用者在 preview-ios buttons gallery dark mode 截圖觀察到藍色系按鈕（Primary / Brand Deep）內的文字「跟 light mode 反差不夠大」。技術根因：v0.1.x 起所有彩色底元件（button / chip / avatar / badge）都用 `color: var(--bg)` —— light mode `--bg = Parchment #F5EFE4` 米色字 ✓ OK，但 dark mode `--bg = Midnight Petrol #0F1C26` 深藍字 ⚠️：Mid Petrol `#5E7A8D` 底配 Midnight Petrol 字 = 對比 3.4:1（剛過 AA Large 但邊緣），Deep Petrol `#334D5C` 底配 Midnight Petrol 字 = **1.7:1 完全不過 AA**。§15.5.4「彩色底配米色字」原則 v0.1.0 已存在但只規範 chip / avatar，未 generalize 到 button，且實作上用 `var(--bg)` 而非「永遠米色」。修法：(1) **§2.2.1 加 `--ink-on-brand` token**：`#F5EFE4` Parchment 在 light + dark 都同值（**不翻轉**）。明確區分 `--bg`（page surface 翻轉）vs `--ink-on-brand`（彩色底文字不翻轉）。(2) **§15.5.4 重寫 generalize 為全 component 通用**：button / chip / badge / avatar / toast / modal action 任何 Tactile 彩色 fill 文字一律 `var(--ink-on-brand)`，例外只剩淺底（`bg-muted` Tan）走深字 + ghost / secondary 透明底走 page surface 規則。(3) **`tokens/color.json` 加 `ink-on-brand`** + (4) **components-preview.html `:root` + `[data-theme="dark"]` 加 `--ink-on-brand: #F5EFE4`**，所有彩色 button / chip 變體 `color` 改 `var(--ink-on-brand)`。(5) **新增 `InkOnBrand.colorset`**（light + dark 同 `#F5EFE4`），iOS auto-gen `Color.inkOnBrand`。(6) **iOS source files**（TactileMaterial.swift / ButtonsView / ChipsView / ButtonsTunerView）內彩色 fill 文字 `Color.bg` → `Color.inkOnBrand`，page background 用法（`Color.bg.ignoresSafeArea` 等）保持 `Color.bg` 不動。對比驗證：所有彩色底配 Parchment 字跨 light / dark 對比一致（Mid Petrol 5.4:1、Deep Petrol 7.5:1、Earth Red 5.3:1），全過 AA Large。 |
+| 2026-05-05 | **§2.2.2 Earth Tone 收斂為 3 hex 跨 mode 同值**（v0.2.0-rc.4）| 觸發點：使用者在 ButtonsTunerView 內加 BaseFillChoice picker 顯示 §2.1 完整 8 wood + earth tone 預覽時，看到「6 個變體（earth-red light/dark / sage light/dark / ochre light/dark）太多了，只想保留 3 個 hex」並逐次指定 (a) 初版 `#9E5949` terracotta + `#6A7A60` sage + `#D4AB6E` ochre (b) 進一步調整為 sage `#596751`（更深綠）+ ochre `#CB9B52`（更深黃）。決策方向 A 接受 trade-off：sage 在 dark mode 對比 2.7:1 邊緣不過 AA Large，ochre 在 light mode 對比 2.2:1 不過 AA。**最終 3 hex**：terracotta `#9E5949` (cross-mode L 5.3:1 / D 3.4:1)、sage `#596751` (L 5.3:1 / **D 2.7:1 ⚠️**)、ochre `#CB9B52` (**L 2.2:1 ⚠️** / D 6.6:1)。修法：(1) **`tokens/color.json` color.earth** 從 6 變體（terracotta-light/dark, sage-light/dark, ochre-light/dark）收斂為 3 token（terracotta, sage, ochre）跨 mode 同 hex。(2) **semantic.dark** success / warning / error / destructive 改 reference 同一個 earth.* token（不再 reference -dark 版）。(3) **`EarthRed/EarthGreen/EarthOchre.colorset`** light + dark Contents.json 改成同 hex（最終值 9E5949 / 596751 / CB9B52）。(4) **`components-preview.html` `:root`** ochre 從 `#8E6E37` 改 `#CB9B52`、green `#6A7A60` 改 `#596751`、`[data-theme="dark"]` earth tone 提亮 override 整段砍除；色票卡 section 砍掉 Light → Dark 提亮對照、改單一 3 hex 排展示。(5) **§2.2.2 重寫**：移除 light/dark 提亮對照表、改 3 hex 跨 mode 同值表 + 補完整對比度數據（含 sage / ochre 兩 mode 對比警告）+ Trade-off 表格（status icon / chip / dot / 小面積 OK，大面積 button fill / form error text ✗）+ 「sage / ochre 大面積場景」guidance（用 0.10-0.15 opacity tint + icon 取代直接 fill；只 earth-red 適合大面積 destructive button fill）。(6) **`ButtonsTunerView` BaseFillChoice** earth tone 同 3 hex hardcode 對齊。**下游影響**：v0.1.x destructive / success / warning components 跨 mode 視覺從「light 深 / dark 淺提亮」改成「跨 mode 同 hex」，子專案落地時要 review status indicator 對比度（特別是 dark mode sage 跟 light mode ochre 大面積 fill 場景），sage / ochre 改用 surface tint + icon 取代直接 fill。 |
 
 ---
 

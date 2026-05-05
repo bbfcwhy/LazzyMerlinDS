@@ -45,8 +45,8 @@ enum BaseFillChoice: String, CaseIterable, Identifiable {
         case .primaryBrand: return "#46647C"
         case .primarySoft:  return "#5E7A8D"
         case .earthRed:     return "#9E5949"
-        case .earthGreen:   return "#6A7A60"
-        case .earthOchre:   return "#D4AB6E"
+        case .earthGreen:   return "#596751"
+        case .earthOchre:   return "#CB9B52"
         }
     }
 
@@ -79,8 +79,8 @@ enum BaseFillChoice: String, CaseIterable, Identifiable {
         case .primarySoft:  return Color(red: 0x5E/255, green: 0x7A/255, blue: 0x8D/255)
         // Earth Tone 3 色 (主人選定、跨 mode 同 hex)
         case .earthRed:     return Color(red: 0x9E/255, green: 0x59/255, blue: 0x49/255)
-        case .earthGreen:   return Color(red: 0x6A/255, green: 0x7A/255, blue: 0x60/255)
-        case .earthOchre:   return Color(red: 0xD4/255, green: 0xAB/255, blue: 0x6E/255)
+        case .earthGreen:   return Color(red: 0x59/255, green: 0x67/255, blue: 0x51/255)
+        case .earthOchre:   return Color(red: 0xCB/255, green: 0x9B/255, blue: 0x52/255)
         }
     }
 }
