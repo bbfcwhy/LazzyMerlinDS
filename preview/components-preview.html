@@ -260,6 +260,10 @@
       position: relative;
       overflow: hidden;
     }
+    /* Dark backdrop 下 chip border 改米色透明，否則 BG/BG-RAISED 同色 chip 在 dark col 看不到輪廓 */
+    .swatch-compare__col--dark .swatch__chip {
+      border-color: rgba(245, 239, 228, 0.15);
+    }
     .swatch__chip--alpha-inner {
       position: absolute; inset: 10px;
       border-radius: 4px;
