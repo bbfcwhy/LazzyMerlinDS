@@ -194,6 +194,8 @@ struct ButtonsTunerView: View {
         }
         .navigationTitle("Buttons Tuner")
         #if os(iOS)
+        .toolbarBackground(Color.bg, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .sheet(isPresented: $showSpec) {
@@ -466,9 +468,7 @@ struct ButtonsTunerView: View {
                     .textSelection(.enabled)
             }
             .navigationTitle("Spec 數值")
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
+            .brandPage()
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("關閉") { showSpec = false }

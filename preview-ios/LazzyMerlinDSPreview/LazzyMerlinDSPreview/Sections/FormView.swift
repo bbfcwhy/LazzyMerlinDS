@@ -74,11 +74,8 @@ struct FormView: View {
             }
             .padding(20)
         }
-        .background(Color.bg.ignoresSafeArea())
         .navigationTitle("Form")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
+        .brandPage()
     }
 
     @ViewBuilder

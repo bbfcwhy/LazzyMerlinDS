@@ -45,11 +45,8 @@ struct ModalView: View {
             }
             .padding(20)
         }
-        .background(Color.bg.ignoresSafeArea())
         .navigationTitle("Modal")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
+        .brandPage()
         .sheet(isPresented: $showSheet) {
             sheetContent
                 #if os(macOS)

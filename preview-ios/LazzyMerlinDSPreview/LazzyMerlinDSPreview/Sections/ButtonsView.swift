@@ -73,11 +73,8 @@ struct ButtonsView: View {
             }
             .padding(20)
         }
-        .background(Color.bg.ignoresSafeArea())
         .navigationTitle("Buttons")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
+        .brandPage()
     }
 
     @ViewBuilder

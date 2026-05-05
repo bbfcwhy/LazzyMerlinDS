@@ -55,11 +55,8 @@ struct FeedbackView: View {
             }
             .padding(20)
         }
-        .background(Color.bg.ignoresSafeArea())
         .navigationTitle("Feedback")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
+        .brandPage()
     }
 
     @ViewBuilder

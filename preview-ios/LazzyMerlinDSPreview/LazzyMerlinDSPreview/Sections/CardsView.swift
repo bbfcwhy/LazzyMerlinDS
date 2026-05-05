@@ -64,11 +64,8 @@ struct CardsView: View {
             }
             .padding(20)
         }
-        .background(Color.bg.ignoresSafeArea())
         .navigationTitle("Cards")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
+        .brandPage()
     }
 
     @ViewBuilder
