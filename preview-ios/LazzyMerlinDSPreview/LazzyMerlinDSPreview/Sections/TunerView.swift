@@ -101,6 +101,16 @@ enum PreviewComponent: String, CaseIterable, Identifiable {
         case .toast:  return "Toast"
         }
     }
+
+    /// 是否 interactive (按下去有 pressed state)。
+    /// Modal preview 顯示 panel 本身 (不是 trigger button)、toast 是 transient notification、
+    /// 都 non-interactive、不該 demo pressed effect (§15.6.3 toast spec)。
+    var isInteractive: Bool {
+        switch self {
+        case .button, .card, .chip: return true
+        case .modal, .toast:        return false
+        }
+    }
 }
 
 // MARK: - Appearance override (system / light / dark) for live preview
@@ -325,11 +335,12 @@ struct TunerView: View {
                 ZStack {
                     Color.bg
                     VStack(spacing: 8) {
-                        previewBody(isPressed: isPreviewPressed)
+                        previewBody(isPressed: previewComponent.isInteractive ? isPreviewPressed : false)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged { _ in
-                                        guard !isPreviewPressed else { return }
+                                        guard previewComponent.isInteractive,
+                                              !isPreviewPressed else { return }
                                         withAnimation(.easeOut(duration: 0.08)) {
                                             isPreviewPressed = true
                                         }
@@ -341,14 +352,20 @@ struct TunerView: View {
                                     }
                             )
 
-                        Button {
-                            playPressAnimation()
-                        } label: {
-                            Label("播放按下動畫", systemImage: "play.fill")
+                        if previewComponent.isInteractive {
+                            Button {
+                                playPressAnimation()
+                            } label: {
+                                Label("播放按下動畫", systemImage: "play.fill")
+                                    .font(.lmCaption)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(Color.inkMuted)
+                        } else {
+                            Text("Non-interactive · 不 demo pressed state")
                                 .font(.lmCaption)
+                                .foregroundStyle(Color.inkMuted.opacity(0.6))
                         }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(Color.inkMuted)
                     }
                 }
                 .frame(height: 160)
@@ -701,6 +718,7 @@ struct TunerView: View {
     }
 
     private func playPressAnimation() {
+        guard previewComponent.isInteractive else { return }
         withAnimation(.easeOut(duration: 0.08)) {
             isPreviewPressed = true
         }
