@@ -9,7 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;600&family=LXGW+WenKai+TC:wght@400&display=swap" rel="stylesheet">
   <style>
     /* ===== Tokens (palette + radius + spacing + shadow + z-index) ===== */
-    :root {
+    /* :root + [data-theme="light"] 共用 light mode tokens
+       讓 swatch-compare__col--light 等 explicit light-scope 容器不管 page 在哪 mode 都 force light tokens */
+    :root,
+    [data-theme="light"] {
       /* Wood palette 8 (same as v5-morandi) */
       --bg: #F5EFE4;
       --bg-raised: #F5EFE4;
@@ -1491,7 +1494,7 @@
         <div class="swatch-group">
           <div class="swatch-group__label">Role Tokens · Light ↔ Dark 兩 mode 對照（primary / primary-soft 互換、ink / bg 互換）</div>
           <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light">
+            <div class="swatch-compare__col swatch-compare__col--light" data-theme="light">
               <div class="swatch-compare__label">Light Mode</div>
               <div class="swatches">
                 <article class="swatch">
@@ -1588,7 +1591,7 @@
         <div class="swatch-group">
           <div class="swatch-group__label">Earth Tone Status Extension · 3 hex 跨 mode 同值（同色在 Light / Dark surface 上看視覺差）</div>
           <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light">
+            <div class="swatch-compare__col swatch-compare__col--light" data-theme="light">
               <div class="swatch-compare__label">Light Surface 上看</div>
               <div class="swatches">
                 <article class="swatch">
@@ -1641,7 +1644,7 @@
         <div class="swatch-group">
           <div class="swatch-group__label">Transparent · 透明度層（hairline / border / focus ring 用，alpha 在 mode backdrop 上實際呈現）</div>
           <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light">
+            <div class="swatch-compare__col swatch-compare__col--light" data-theme="light">
               <div class="swatch-compare__label">Light Mode</div>
               <div class="swatches">
                 <article class="swatch">
