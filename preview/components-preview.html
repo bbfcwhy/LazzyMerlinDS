@@ -256,13 +256,9 @@
       height: 80px;
       border-radius: var(--radius-sm);
       margin-bottom: 12px;
-      border: 1px solid rgba(15, 28, 38, 0.08);
+      border: 1px solid var(--border);
       position: relative;
       overflow: hidden;
-    }
-    /* Dark backdrop 下 chip border 改米色透明，否則 BG/BG-RAISED 同色 chip 在 dark col 看不到輪廓 */
-    .swatch-compare__col--dark .swatch__chip {
-      border-color: rgba(245, 239, 228, 0.15);
     }
     .swatch__chip--alpha-inner {
       position: absolute; inset: 10px;
@@ -285,7 +281,9 @@
       margin-top: 4px; line-height: 1.4;
     }
 
-    /* Two-column compare panels (Light vs Dark static reference, ignores theme toggle) */
+    /* Two-column compare panels (Light vs Dark static reference, ignores theme toggle)
+       dark col 套 data-theme="dark" attribute、內部所有 var() 自動 resolve dark mode value
+       single source of truth — 不再 hardcode hex */
     .swatch-compare {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -295,35 +293,27 @@
     .swatch-compare__col {
       padding: 20px;
       border-radius: var(--radius-md);
-      border: 1px solid rgba(15, 28, 38, 0.10);
+      background: var(--bg);
+      border: 1px solid var(--border);
     }
-    .swatch-compare__col--light { background: #F5EFE4; }
-    .swatch-compare__col--dark { background: #0F1C26; border-color: rgba(245, 239, 228, 0.08); }
     .swatch-compare__label {
       font-family: 'Geist Mono', monospace;
       font-size: 11px; letter-spacing: 0.18em;
       text-transform: uppercase;
       margin-bottom: 14px;
+      color: var(--ink-muted);
     }
-    .swatch-compare__col--light .swatch-compare__label { color: #4E3029; }
-    .swatch-compare__col--dark .swatch-compare__label { color: #DECCA7; }
 
-    /* Inside compare panels: lock swatch styling to the panel's mode */
+    /* Inside compare panels: swatch frame + text 都跟著 col 的 mode token */
     .swatch-compare .swatches { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     .swatch-compare .swatch {
       background: transparent;
-      border: 1px solid rgba(150, 116, 89, 0.20);
+      border: 1px solid var(--hairline);
       box-shadow: none;
     }
-    .swatch-compare__col--dark .swatch {
-      border-color: rgba(245, 239, 228, 0.10);
-    }
-    .swatch-compare__col--light .swatch__name { color: #0F1C26; }
-    .swatch-compare__col--light .swatch__hex,
-    .swatch-compare__col--light .swatch__role { color: #4E3029; }
-    .swatch-compare__col--dark .swatch__name { color: #F5EFE4; }
-    .swatch-compare__col--dark .swatch__hex,
-    .swatch-compare__col--dark .swatch__role { color: #DECCA7; }
+    .swatch-compare .swatch__name { color: var(--ink); }
+    .swatch-compare .swatch__hex,
+    .swatch-compare .swatch__role { color: var(--ink-muted); }
 
     /* ===== Theme toggle (§2.4 / §15) — Tactile Base simplified ===== */
     .theme-toggle {
@@ -1546,7 +1536,7 @@
                 </article>
               </div>
             </div>
-            <div class="swatch-compare__col swatch-compare__col--dark">
+            <div class="swatch-compare__col swatch-compare__col--dark" data-theme="dark">
               <div class="swatch-compare__label">Dark Mode</div>
               <div class="swatches">
                 <article class="swatch">
@@ -1621,7 +1611,7 @@
                 </article>
               </div>
             </div>
-            <div class="swatch-compare__col swatch-compare__col--dark">
+            <div class="swatch-compare__col swatch-compare__col--dark" data-theme="dark">
               <div class="swatch-compare__label">Dark Surface 上看（hex 不變）</div>
               <div class="swatches">
                 <article class="swatch">
@@ -1672,7 +1662,7 @@
                 </article>
               </div>
             </div>
-            <div class="swatch-compare__col swatch-compare__col--dark">
+            <div class="swatch-compare__col swatch-compare__col--dark" data-theme="dark">
               <div class="swatch-compare__label">Dark Mode</div>
               <div class="swatches">
                 <article class="swatch">
