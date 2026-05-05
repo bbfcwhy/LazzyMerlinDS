@@ -5,11 +5,13 @@ import SwiftUI
 // 校好後按「查看 spec 數值」，把數值寫回 spec + components-preview.html + TactileMaterial.swift
 
 // MARK: - Base fill color choice
+// 嚴格 §1 wood palette + §2.2.2 earth tone extension · 不開放 custom hex
+// (任何超出 7 個 token 的選色都會違反「不引入新 hex」核心 brand DNA · §12 反面教材)
 
 enum BaseFillChoice: String, CaseIterable, Identifiable {
     case primaryBrand, primaryDeep, primarySoft
+    case stone
     case earthRed, earthGreen, earthOchre
-    case stone, custom
 
     var id: Self { self }
 
@@ -18,11 +20,10 @@ enum BaseFillChoice: String, CaseIterable, Identifiable {
         case .primaryBrand: return "Primary"
         case .primaryDeep:  return "Deep"
         case .primarySoft:  return "Soft"
+        case .stone:        return "Stone"
         case .earthRed:     return "Red"
         case .earthGreen:   return "Green"
         case .earthOchre:   return "Ochre"
-        case .stone:        return "Stone"
-        case .custom:       return "Custom"
         }
     }
 
@@ -31,24 +32,22 @@ enum BaseFillChoice: String, CaseIterable, Identifiable {
         case .primaryBrand: return "var(--primary)"
         case .primaryDeep:  return "var(--primary-deep)"
         case .primarySoft:  return "var(--primary-soft)"
+        case .stone:        return "var(--stone)"
         case .earthRed:     return "var(--earth-red)"
         case .earthGreen:   return "var(--earth-green)"
         case .earthOchre:   return "var(--earth-ochre)"
-        case .stone:        return "var(--stone)"
-        case .custom:       return "(custom hex)"
         }
     }
 
-    func color(custom: Color) -> Color {
+    var color: Color {
         switch self {
         case .primaryBrand: return .primaryBrand
         case .primaryDeep:  return .primaryDeep
         case .primarySoft:  return .primarySoft
+        case .stone:        return .stone
         case .earthRed:     return .earthRed
         case .earthGreen:   return .earthGreen
         case .earthOchre:   return .earthOchre
-        case .stone:        return .stone
-        case .custom:       return custom
         }
     }
 }
@@ -58,7 +57,6 @@ struct ButtonsTunerView: View {
 
     // MARK: - BASE FILL
     @State private var baseFillChoice: BaseFillChoice = .primaryBrand
-    @State private var baseFillCustom: Color = Color(red: 0.27, green: 0.39, blue: 0.49)  // default = primary
     @State private var fillDarken: Double = 0.10
 
     // MARK: - 對角 GRADIENT (#1) · CSS angle (0=up, 90=right, 180=down, 270=left, 135=top-left→bottom-right)
@@ -159,7 +157,7 @@ struct ButtonsTunerView: View {
                                     VStack(spacing: 6) {
                                         ZStack {
                                             Circle()
-                                                .fill(c.color(custom: baseFillCustom))
+                                                .fill(c.color)
                                                 .frame(width: 38, height: 38)
                                             Circle()
                                                 .strokeBorder(
@@ -186,15 +184,11 @@ struct ButtonsTunerView: View {
                     }
                     .padding(.vertical, 4)
 
-                    if baseFillChoice == .custom {
-                        ColorPicker("Custom 色", selection: $baseFillCustom, supportsOpacity: false)
-                    }
-
                     sliderRow("black overlay", value: $fillDarken, in: 0.0...0.50, step: 0.01)
                 } header: {
                     Text("BASE FILL · 主色 + 暗化").sectionLabel()
                 } footer: {
-                    Text("切主色 token 看不同 brand 顏色（Primary / Deep / Earth Red / 等）在 Tactile 配方下的長相。色塊跟著 light/dark mode 自動翻轉。Custom 開 ColorPicker 自選任何 hex。\nPrimary / Soft 兩 mode 互換 (#46647C ↔ #5E7A8D)、跨 light/dark 視覺差較小；其他 token 跨 mode 差異更明顯。")
+                    Text("嚴格 §1 wood palette 7 token (3 色 Petrol + Stone + 3 色 Earth Tone)。色塊跟著 light/dark mode 自動翻轉。\nPrimary / Soft 兩 mode 互換 (#46647C ↔ #5E7A8D)、跨 light/dark 視覺差較小；其他 token 跨 mode 差異更明顯。")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -348,7 +342,7 @@ struct ButtonsTunerView: View {
                     radius: 0, y: textShadowY)
             .background {
                 ZStack {
-                    baseFillChoice.color(custom: baseFillCustom)
+                    baseFillChoice.color
                     Color.black.opacity(fillDarken + (isPressed ? 0.04 : 0.0))
                     LinearGradient(
                         colors: isPressed
@@ -571,7 +565,7 @@ struct ButtonsTunerView: View {
         // ───────────────────────────────────────────────
         // SwiftUI tactileRaised() params
         // ───────────────────────────────────────────────
-        fill:        \(baseFillChoice.label)\(baseFillChoice == .custom ? " \(hex(of: baseFillCustom))" : "") + black overlay \(f02(fillDarken))
+        fill:        \(baseFillChoice.label) (\(baseFillChoice.token)) + black overlay \(f02(fillDarken))
         gradient:    angle \(i(gradAngle))° · white \(f02(gradWhiteTL)) → clear → black \(f02(gradBlackBR))
         stroke:      top \(hex(of: strokeTopColor)) opacity \(f02(strokeTopOpacity)) → bottom \(hex(of: strokeBottomColor)) opacity \(f02(strokeBottomOpacity)),
                      width \(f1(strokeWidth))pt
@@ -585,7 +579,7 @@ struct ButtonsTunerView: View {
         // ───────────────────────────────────────────────
         // CSS 等價 (web 端 .btn--primary)
         // ───────────────────────────────────────────────
-        background-color: color-mix(in srgb, \(baseFillChoice == .custom ? hex(of: baseFillCustom) : baseFillChoice.token) \(Int((1 - fillDarken) * 100))%, black);
+        background-color: color-mix(in srgb, \(baseFillChoice.token) \(Int((1 - fillDarken) * 100))%, black);
         background-image:
           linear-gradient(\(i(gradAngle))deg,
             rgba(255,255,255,\(f02(gradWhiteTL))) 0%,
