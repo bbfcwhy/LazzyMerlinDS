@@ -5,49 +5,82 @@ import SwiftUI
 // 校好後按「查看 spec 數值」，把數值寫回 spec + components-preview.html + TactileMaterial.swift
 
 // MARK: - Base fill color choice
-// 嚴格 §1 wood palette + §2.2.2 earth tone extension · 不開放 custom hex
-// (任何超出 7 個 token 的選色都會違反「不引入新 hex」核心 brand DNA · §12 反面教材)
+// §2.1 Wood Palette 8 色 RAW VALUES (兩 mode 共用、不翻轉)
+// + 主人選定 3 色 Earth Tone (#9E5949 / #6A7A60 / #D4AB6E、跨 mode 同 hex)
+// Tuner 用固定 hex 不從 asset 翻轉，方便看每色在 light/dark surface 上各別效果
 
 enum BaseFillChoice: String, CaseIterable, Identifiable {
-    case primaryBrand, primaryDeep, primarySoft
-    case stone
+    // Wood Palette 8 色 (§2.1)
+    case parchment, tan, stone, espresso
+    case midnight, primaryDeep, primaryBrand, primarySoft
+    // Earth Tone 3 色 (主人 v0.2.0-rc 選定)
     case earthRed, earthGreen, earthOchre
 
     var id: Self { self }
 
     var label: String {
         switch self {
-        case .primaryBrand: return "Primary"
-        case .primaryDeep:  return "Deep"
-        case .primarySoft:  return "Soft"
+        case .parchment:    return "Parchment"
+        case .tan:          return "Tan"
         case .stone:        return "Stone"
+        case .espresso:     return "Espresso"
+        case .midnight:     return "Midnight"
+        case .primaryDeep:  return "Deep"
+        case .primaryBrand: return "Primary"
+        case .primarySoft:  return "Soft"
         case .earthRed:     return "Red"
         case .earthGreen:   return "Green"
         case .earthOchre:   return "Ochre"
         }
     }
 
-    var token: String {
+    var hexCSS: String {
         switch self {
-        case .primaryBrand: return "var(--primary)"
-        case .primaryDeep:  return "var(--primary-deep)"
-        case .primarySoft:  return "var(--primary-soft)"
-        case .stone:        return "var(--stone)"
-        case .earthRed:     return "var(--earth-red)"
-        case .earthGreen:   return "var(--earth-green)"
-        case .earthOchre:   return "var(--earth-ochre)"
+        case .parchment:    return "#F5EFE4"
+        case .tan:          return "#DECCA7"
+        case .stone:        return "#967459"
+        case .espresso:     return "#4E3029"
+        case .midnight:     return "#0F1C26"
+        case .primaryDeep:  return "#334D5C"
+        case .primaryBrand: return "#46647C"
+        case .primarySoft:  return "#5E7A8D"
+        case .earthRed:     return "#9E5949"
+        case .earthGreen:   return "#6A7A60"
+        case .earthOchre:   return "#D4AB6E"
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .parchment:    return "Parchment"
+        case .tan:          return "Tan"
+        case .stone:        return "Stone"
+        case .espresso:     return "Espresso"
+        case .midnight:     return "Midnight Petrol"
+        case .primaryDeep:  return "Deep Petrol"
+        case .primaryBrand: return "Petrol"
+        case .primarySoft:  return "Mid Petrol"
+        case .earthRed:     return "Terracotta"
+        case .earthGreen:   return "Sage"
+        case .earthOchre:   return "Ochre"
         }
     }
 
     var color: Color {
         switch self {
-        case .primaryBrand: return .primaryBrand
-        case .primaryDeep:  return .primaryDeep
-        case .primarySoft:  return .primarySoft
-        case .stone:        return .stone
-        case .earthRed:     return .earthRed
-        case .earthGreen:   return .earthGreen
-        case .earthOchre:   return .earthOchre
+        // Wood Palette 8 色 raw hex (跨 mode 共用)
+        case .parchment:    return Color(red: 0xF5/255, green: 0xEF/255, blue: 0xE4/255)
+        case .tan:          return Color(red: 0xDE/255, green: 0xCC/255, blue: 0xA7/255)
+        case .stone:        return Color(red: 0x96/255, green: 0x74/255, blue: 0x59/255)
+        case .espresso:     return Color(red: 0x4E/255, green: 0x30/255, blue: 0x29/255)
+        case .midnight:     return Color(red: 0x0F/255, green: 0x1C/255, blue: 0x26/255)
+        case .primaryDeep:  return Color(red: 0x33/255, green: 0x4D/255, blue: 0x5C/255)
+        case .primaryBrand: return Color(red: 0x46/255, green: 0x64/255, blue: 0x7C/255)
+        case .primarySoft:  return Color(red: 0x5E/255, green: 0x7A/255, blue: 0x8D/255)
+        // Earth Tone 3 色 (主人選定、跨 mode 同 hex)
+        case .earthRed:     return Color(red: 0x9E/255, green: 0x59/255, blue: 0x49/255)
+        case .earthGreen:   return Color(red: 0x6A/255, green: 0x7A/255, blue: 0x60/255)
+        case .earthOchre:   return Color(red: 0xD4/255, green: 0xAB/255, blue: 0x6E/255)
         }
     }
 }
@@ -188,7 +221,7 @@ struct ButtonsTunerView: View {
                 } header: {
                     Text("BASE FILL · 主色 + 暗化").sectionLabel()
                 } footer: {
-                    Text("嚴格 §1 wood palette 7 token (3 色 Petrol + Stone + 3 色 Earth Tone)。色塊跟著 light/dark mode 自動翻轉。\nPrimary / Soft 兩 mode 互換 (#46647C ↔ #5E7A8D)、跨 light/dark 視覺差較小；其他 token 跨 mode 差異更明顯。")
+                    Text("§2.1 Wood Palette 8 色 RAW VALUES (跨 mode 共用、不翻轉) + 3 色 Earth Tone (#9E5949 / #6A7A60 / #D4AB6E)。\n⚠️ Ochre #D4AB6E 在 light surface 上對比 ~2:1 不過 WCAG AA、僅適合 status icon / chip 小面積、不建議大面積 button fill。\n⚠️ Parchment / Tan 通常作 surface 用、作 fill 看起來像 hollow button。Midnight / Espresso 是 dark 版深色、light mode 上看起來會很重。")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -565,7 +598,7 @@ struct ButtonsTunerView: View {
         // ───────────────────────────────────────────────
         // SwiftUI tactileRaised() params
         // ───────────────────────────────────────────────
-        fill:        \(baseFillChoice.label) (\(baseFillChoice.token)) + black overlay \(f02(fillDarken))
+        fill:        \(baseFillChoice.hexCSS) \(baseFillChoice.displayName) + black overlay \(f02(fillDarken))
         gradient:    angle \(i(gradAngle))° · white \(f02(gradWhiteTL)) → clear → black \(f02(gradBlackBR))
         stroke:      top \(hex(of: strokeTopColor)) opacity \(f02(strokeTopOpacity)) → bottom \(hex(of: strokeBottomColor)) opacity \(f02(strokeBottomOpacity)),
                      width \(f1(strokeWidth))pt
@@ -579,7 +612,7 @@ struct ButtonsTunerView: View {
         // ───────────────────────────────────────────────
         // CSS 等價 (web 端 .btn--primary)
         // ───────────────────────────────────────────────
-        background-color: color-mix(in srgb, \(baseFillChoice.token) \(Int((1 - fillDarken) * 100))%, black);
+        background-color: color-mix(in srgb, \(baseFillChoice.hexCSS) \(Int((1 - fillDarken) * 100))%, black);
         background-image:
           linear-gradient(\(i(gradAngle))deg,
             rgba(255,255,255,\(f02(gradWhiteTL))) 0%,
