@@ -1590,28 +1590,56 @@
           </div>
         </div>
 
-        <!-- Earth tone Status · v0.2.0-rc.4 收斂 3 hex 跨 mode 同值 -->
+        <!-- Earth tone Status · v0.2.0-rc.4 收斂 3 hex 跨 mode 同值 (兩 col 同 hex、demo backdrop 視覺差) -->
         <div class="swatch-group">
-          <div class="swatch-group__label">Earth Tone Status Extension · 3 hex 跨 mode 同值（v0.2.0-rc.4 收斂、不再 light/dark 對照）</div>
-          <div class="swatches">
-            <article class="swatch">
-              <div class="swatch__chip" style="background:#9E5949"></div>
-              <div class="swatch__name">error / destructive</div>
-              <div class="swatch__hex">#9E5949</div>
-              <div class="swatch__role">Terracotta 陶土紅</div>
-            </article>
-            <article class="swatch">
-              <div class="swatch__chip" style="background:#596751"></div>
-              <div class="swatch__name">success</div>
-              <div class="swatch__hex">#596751</div>
-              <div class="swatch__role">Sage 苔蘚綠 · ⚠️ dark 對比 2.7:1</div>
-            </article>
-            <article class="swatch">
-              <div class="swatch__chip" style="background:#CB9B52"></div>
-              <div class="swatch__name">warning</div>
-              <div class="swatch__hex">#CB9B52</div>
-              <div class="swatch__role">Burnt Ochre 赭石黃 · ⚠️ light 對比 2.2:1</div>
-            </article>
+          <div class="swatch-group__label">Earth Tone Status Extension · 3 hex 跨 mode 同值（同色在 Light / Dark surface 上看視覺差）</div>
+          <div class="swatch-compare">
+            <div class="swatch-compare__col swatch-compare__col--light">
+              <div class="swatch-compare__label">Light Surface 上看</div>
+              <div class="swatches">
+                <article class="swatch">
+                  <div class="swatch__chip" style="background:#9E5949"></div>
+                  <div class="swatch__name">error / destructive</div>
+                  <div class="swatch__hex">#9E5949</div>
+                  <div class="swatch__role">Terracotta · 對比 5.3:1 ✓ AA</div>
+                </article>
+                <article class="swatch">
+                  <div class="swatch__chip" style="background:#596751"></div>
+                  <div class="swatch__name">success</div>
+                  <div class="swatch__hex">#596751</div>
+                  <div class="swatch__role">Sage · 對比 5.3:1 ✓ AA</div>
+                </article>
+                <article class="swatch">
+                  <div class="swatch__chip" style="background:#CB9B52"></div>
+                  <div class="swatch__name">warning</div>
+                  <div class="swatch__hex">#CB9B52</div>
+                  <div class="swatch__role">Ochre · ⚠️ 對比 2.2:1 不過 AA</div>
+                </article>
+              </div>
+            </div>
+            <div class="swatch-compare__col swatch-compare__col--dark">
+              <div class="swatch-compare__label">Dark Surface 上看（hex 不變）</div>
+              <div class="swatches">
+                <article class="swatch">
+                  <div class="swatch__chip" style="background:#9E5949"></div>
+                  <div class="swatch__name">error / destructive</div>
+                  <div class="swatch__hex">#9E5949</div>
+                  <div class="swatch__role">Terracotta · 對比 3.4:1 邊緣 AA Large</div>
+                </article>
+                <article class="swatch">
+                  <div class="swatch__chip" style="background:#596751"></div>
+                  <div class="swatch__name">success</div>
+                  <div class="swatch__hex">#596751</div>
+                  <div class="swatch__role">Sage · ⚠️ 對比 2.7:1 不過 AA Large</div>
+                </article>
+                <article class="swatch">
+                  <div class="swatch__chip" style="background:#CB9B52"></div>
+                  <div class="swatch__name">warning</div>
+                  <div class="swatch__hex">#CB9B52</div>
+                  <div class="swatch__role">Ochre · 對比 6.6:1 ✓ AA</div>
+                </article>
+              </div>
+            </div>
           </div>
         </div>
 
