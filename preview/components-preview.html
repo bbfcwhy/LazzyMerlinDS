@@ -1372,6 +1372,43 @@
       letter-spacing: 0.14em; color: var(--ink-muted); text-transform: uppercase;
     }
     footer .brand { color: var(--primary); }
+
+    /* Primary Button Tuner Reference (read-only inspector) */
+    .tuner-ref-details {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+    }
+    .tuner-ref-details summary {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 0;
+    }
+    .tuner-ref-details[open] summary {
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--hairline);
+      padding-bottom: 10px;
+    }
+    .tuner-ref-output {
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ink);
+      background: transparent;
+      margin: 0;
+      padding: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      user-select: text;
+    }
+    .tuner-ref-output .key { color: var(--primary); }
+    .tuner-ref-output .comment { color: var(--ink-muted); opacity: 0.75; }
   </style>
 </head>
 <body>
@@ -1738,6 +1775,30 @@
           <button class="btn btn--primary btn--md" data-state="loading">處理中</button>
           <button class="btn btn--primary btn--md" disabled>已停用</button>
         </div>
+      </section>
+
+      <!-- =========================================================
+           PRIMARY BUTTON · TUNER REFERENCE (read-only inspector)
+           getComputedStyle 讀當前 .btn--primary apply 的所有 CSS
+           跟 iOS Tuner spec sheet 同 format、給主人對照 web vs SwiftUI 差異
+           ========================================================= -->
+      <section class="demo" id="primary-tuner-reference">
+        <div class="section-kicker">PRIMARY BUTTON · TUNER REFERENCE</div>
+        <h2>當前套用參數</h2>
+        <p class="section-note">Read-only inspector · 即時讀 <code>.btn--primary</code> 在當前 mode 下實際 render 的 CSS。切 light/dark mode 自動 refresh。對照 iOS Tuner spec sheet 看 web vs SwiftUI 差異。</p>
+
+        <div class="row" style="margin-bottom: 16px; align-items: flex-end; gap: 16px;">
+          <button class="btn btn--primary btn--md" id="tuner-ref-button">送出 Primary</button>
+          <button class="btn btn--secondary btn--sm" id="tuner-ref-refresh" type="button" aria-label="Refresh spec readout">
+            <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.36L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.36L3 16"/><path d="M3 21v-5h5"/></svg>
+            重新讀
+          </button>
+        </div>
+
+        <details class="tuner-ref-details" open>
+          <summary>當前 CSS 數值（getComputedStyle）</summary>
+          <pre id="tuner-ref-output" class="tuner-ref-output">讀取中…</pre>
+        </details>
       </section>
 
       <!-- =========================================================
@@ -2313,6 +2374,57 @@
         });
       });
     });
+
+    // ===== Primary Button Tuner Reference (read-only inspector) =====
+    // 讀 .btn--primary 當前 render 的 CSS、format 跟 iOS Tuner spec sheet 同調
+    (function setupTunerReference() {
+      const btn = document.getElementById('tuner-ref-button');
+      const out = document.getElementById('tuner-ref-output');
+      const refreshBtn = document.getElementById('tuner-ref-refresh');
+      if (!btn || !out) return;
+
+      function fmtShadowList(s) {
+        // box-shadow 多層用 ", " 分割、每層獨立一行縮排
+        return s.split(/,(?![^\(]*\))/).map(layer => '  ' + layer.trim()).join(',\n');
+      }
+
+      function dump() {
+        const cs = window.getComputedStyle(btn);
+        const mode = document.documentElement.dataset.theme || 'light';
+        const lines = [
+          `// ─────────────────────────────────────────────────`,
+          `// Web .btn--primary 當前 apply 參數  (mode: ${mode})`,
+          `// ─────────────────────────────────────────────────`,
+          ``,
+          `background-color: ${cs.backgroundColor};`,
+          ``,
+          `background-image:`,
+          fmtShadowList(cs.backgroundImage) + ';',
+          ``,
+          `box-shadow:`,
+          fmtShadowList(cs.boxShadow) + ';',
+          ``,
+          `text-shadow: ${cs.textShadow};`,
+          `color: ${cs.color};`,
+          ``,
+          `border-radius: ${cs.borderRadius};`,
+          `padding: ${cs.padding};`,
+          `font: ${cs.font};`,
+          ``,
+          `// width: ${cs.width} · height: ${cs.height}`,
+        ];
+        out.textContent = lines.join('\n');
+      }
+
+      // 初始 + refresh button + theme 切換自動 dump
+      dump();
+      refreshBtn?.addEventListener('click', dump);
+      const themeObserver = new MutationObserver(() => {
+        // delay 一拍讓 CSS var 套好
+        requestAnimationFrame(dump);
+      });
+      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    })();
   </script>
 </body>
 </html>
