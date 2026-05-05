@@ -8,6 +8,21 @@ struct ContentView: View {
         NavigationStack {
             List {
                 Section {
+                    NavigationLink {
+                        ButtonsTunerView()
+                    } label: {
+                        Label("Buttons Tuner ✦", systemImage: "slider.horizontal.3")
+                    }
+                } header: {
+                    Text("LIVE TUNER")
+                        .sectionLabel()
+                } footer: {
+                    Text("即時拖拉 slider 調整 §5.4.1 共通六件配方所有參數，肉眼校到「分不太出來」。校好後在 sheet 內看 spec 數值。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section {
                     NavigationLink("Buttons", destination: ButtonsView())
                     NavigationLink("Cards", destination: CardsView())
                     NavigationLink("Chips", destination: ChipsView())
