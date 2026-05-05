@@ -98,8 +98,8 @@ struct ButtonsTunerView: View {
 
                 Section {
                     sliderRow("角度 (°)",    value: $gradAngle,    in: 0...360,    step: 5,  fmt: "%.0f")
-                    sliderRow("頂左 white",  value: $gradWhiteTL,  in: 0.0...0.20, step: 0.01)
-                    sliderRow("底右 black",  value: $gradBlackBR,  in: 0.0...0.40, step: 0.01)
+                    sliderRow("頂左 white",  value: $gradWhiteTL,  in: 0.0...0.50, step: 0.01)
+                    sliderRow("底右 black",  value: $gradBlackBR,  in: 0.0...0.50, step: 0.01)
                 } header: {
                     Text("對角 GRADIENT").sectionLabel()
                 } footer: {
@@ -126,7 +126,7 @@ struct ButtonsTunerView: View {
                 }
 
                 Section {
-                    sliderRow("opacity",     value: $shadowFarOpacity, in: 0.0...0.40, step: 0.01)
+                    sliderRow("opacity",     value: $shadowFarOpacity, in: 0.0...0.50, step: 0.01)
                     sliderRow("radius (pt)", value: $shadowFarRadius,  in: 0...30,     step: 1, fmt: "%.0f")
                     sliderRow("x (pt)",      value: $shadowFarX,       in: -12...12,   step: 1, fmt: "%.0f")
                     sliderRow("y (pt)",      value: $shadowFarY,       in: 0...16,     step: 1, fmt: "%.0f")
