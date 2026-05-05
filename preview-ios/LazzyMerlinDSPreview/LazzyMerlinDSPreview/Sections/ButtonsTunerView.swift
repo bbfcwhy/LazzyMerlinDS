@@ -85,55 +85,159 @@ enum BaseFillChoice: String, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - BlendMode wrapper (RawRepresentable String for @AppStorage)
+
+enum BlendModeChoice: String, CaseIterable, Identifiable {
+    case softLight, overlay, multiply, normal
+
+    var id: Self { self }
+
+    var blendMode: BlendMode {
+        switch self {
+        case .softLight: return .softLight
+        case .overlay:   return .overlay
+        case .multiply:  return .multiply
+        case .normal:    return .normal
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .softLight: return "soft"
+        case .overlay:   return "overlay"
+        case .multiply:  return "multiply"
+        case .normal:    return "normal"
+        }
+    }
+
+    var swiftName: String {
+        switch self {
+        case .softLight: return ".softLight"
+        case .overlay:   return ".overlay"
+        case .multiply:  return ".multiply"
+        case .normal:    return ".normal"
+        }
+    }
+
+    var cssName: String {
+        switch self {
+        case .softLight: return "soft-light"
+        case .overlay:   return "overlay"
+        case .multiply:  return "multiply"
+        case .normal:    return "normal"
+        }
+    }
+}
+
+// MARK: - Color hex serialization (for @AppStorage Color persistence)
+
+extension Color {
+    init(hexString: String) {
+        var s = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
+        if s.hasPrefix("#") { s.removeFirst() }
+        var v: UInt64 = 0
+        Scanner(string: s).scanHexInt64(&v)
+        let r = Double((v >> 16) & 0xFF) / 255
+        let g = Double((v >> 8) & 0xFF) / 255
+        let b = Double(v & 0xFF) / 255
+        self.init(red: r, green: g, blue: b)
+    }
+
+    func toHexString() -> String {
+        #if os(iOS) || os(visionOS) || os(tvOS) || os(watchOS)
+        let ui = UIColor(self)
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        ui.getRed(&r, green: &g, blue: &b, alpha: &a)
+        return String(format: "%02X%02X%02X",
+                      Int((r * 255).rounded()),
+                      Int((g * 255).rounded()),
+                      Int((b * 255).rounded()))
+        #elseif os(macOS)
+        guard let ns = NSColor(self).usingColorSpace(.sRGB) else { return "FFFFFF" }
+        return String(format: "%02X%02X%02X",
+                      Int((ns.redComponent * 255).rounded()),
+                      Int((ns.greenComponent * 255).rounded()),
+                      Int((ns.blueComponent * 255).rounded()))
+        #else
+        return "FFFFFF"
+        #endif
+    }
+}
+
 struct ButtonsTunerView: View {
     @Environment(\.colorScheme) private var colorScheme
 
-    // MARK: - BASE FILL
-    @State private var baseFillChoice: BaseFillChoice = .primaryBrand
-    @State private var fillDarken: Double = 0.10
+    // MARK: - BASE FILL  (@AppStorage 持久化跨 navigate / app launch)
+    @AppStorage("tuner_baseFillChoice") private var baseFillChoice: BaseFillChoice = .primaryBrand
+    @AppStorage("tuner_fillDarken") private var fillDarken: Double = 0.10
 
     // MARK: - 對角 GRADIENT (#1) · CSS angle (0=up, 90=right, 180=down, 270=left, 135=top-left→bottom-right)
-    @State private var gradAngle: Double = 135
-    @State private var gradWhiteTL: Double = 0.06
-    @State private var gradBlackBR: Double = 0.30
+    @AppStorage("tuner_gradAngle") private var gradAngle: Double = 135
+    @AppStorage("tuner_gradWhiteTL") private var gradWhiteTL: Double = 0.06
+    @AppStorage("tuner_gradBlackBR") private var gradBlackBR: Double = 0.30
 
-    // MARK: - 單層 STROKE (#2) · default 頂亮(white)底暗(black) = raised 浮雕光源 convention
-    @State private var strokeTopColor: Color = .white
-    @State private var strokeTopOpacity: Double = 0.34
-    @State private var strokeBottomColor: Color = .black
-    @State private var strokeBottomOpacity: Double = 0.34
-    @State private var strokeWidth: Double = 1.0
+    // MARK: - 單層 STROKE (#2) · Color 用 hex string @AppStorage + Binding wrapper
+    @AppStorage("tuner_strokeTopColorHex") private var strokeTopColorHex: String = "FFFFFF"
+    @AppStorage("tuner_strokeTopOpacity") private var strokeTopOpacity: Double = 0.34
+    @AppStorage("tuner_strokeBottomColorHex") private var strokeBottomColorHex: String = "000000"
+    @AppStorage("tuner_strokeBottomOpacity") private var strokeBottomOpacity: Double = 0.34
+    @AppStorage("tuner_strokeWidth") private var strokeWidth: Double = 1.0
 
     // MARK: - DROP SHADOW 近層 (#3a)
-    @State private var shadowNearOpacity: Double = 0.24
-    @State private var shadowNearRadius: Double = 5
-    @State private var shadowNearX: Double = 0
-    @State private var shadowNearY: Double = 3
+    @AppStorage("tuner_shadowNearOpacity") private var shadowNearOpacity: Double = 0.24
+    @AppStorage("tuner_shadowNearRadius") private var shadowNearRadius: Double = 5
+    @AppStorage("tuner_shadowNearX") private var shadowNearX: Double = 0
+    @AppStorage("tuner_shadowNearY") private var shadowNearY: Double = 3
 
     // MARK: - DROP SHADOW 遠層 (#3b)
-    @State private var shadowFarOpacity: Double = 0.18
-    @State private var shadowFarRadius: Double = 14
-    @State private var shadowFarX: Double = 0
-    @State private var shadowFarY: Double = 9
+    @AppStorage("tuner_shadowFarOpacity") private var shadowFarOpacity: Double = 0.18
+    @AppStorage("tuner_shadowFarRadius") private var shadowFarRadius: Double = 14
+    @AppStorage("tuner_shadowFarX") private var shadowFarX: Double = 0
+    @AppStorage("tuner_shadowFarY") private var shadowFarY: Double = 9
 
-    // MARK: - PNG NOISE (#4)
-    @State private var noiseOpacity: Double = 0.20
-    @State private var noiseScale: Double = 0.55
-    @State private var noiseBlend: BlendMode = .overlay
+    // MARK: - PNG NOISE (#4) · BlendMode 用 BlendModeChoice wrapper enum
+    @AppStorage("tuner_noiseOpacity") private var noiseOpacity: Double = 0.20
+    @AppStorage("tuner_noiseScale") private var noiseScale: Double = 0.55
+    @AppStorage("tuner_noiseBlend") private var noiseBlendChoice: BlendModeChoice = .overlay
 
     // MARK: - TEXT SHADOW (#5)
-    @State private var textShadowOpacity: Double = 0.42
-    @State private var textShadowY: Double = 1
+    @AppStorage("tuner_textShadowOpacity") private var textShadowOpacity: Double = 0.42
+    @AppStorage("tuner_textShadowY") private var textShadowY: Double = 1
 
     // MARK: - CONTINUOUS RADIUS (#6)
-    @State private var radius: Double = 12
+    @AppStorage("tuner_radius") private var radius: Double = 12
 
     // MARK: - PADDING
-    @State private var paddingV: Double = 12
-    @State private var paddingH: Double = 22
+    @AppStorage("tuner_paddingV") private var paddingV: Double = 12
+    @AppStorage("tuner_paddingH") private var paddingH: Double = 22
 
+    // Runtime-only state (不持久化)
     @State private var showSpec: Bool = false
     @State private var isPreviewPressed: Bool = false
+
+    // MARK: - Color computed bindings (wrap @AppStorage hex string for ColorPicker)
+
+    private var strokeTopColor: Color {
+        Color(hexString: strokeTopColorHex)
+    }
+    private var strokeBottomColor: Color {
+        Color(hexString: strokeBottomColorHex)
+    }
+    private var strokeTopColorBinding: Binding<Color> {
+        Binding(
+            get: { Color(hexString: strokeTopColorHex) },
+            set: { strokeTopColorHex = $0.toHexString() }
+        )
+    }
+    private var strokeBottomColorBinding: Binding<Color> {
+        Binding(
+            get: { Color(hexString: strokeBottomColorHex) },
+            set: { strokeBottomColorHex = $0.toHexString() }
+        )
+    }
+    private var noiseBlend: BlendMode {
+        noiseBlendChoice.blendMode
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -239,9 +343,9 @@ struct ButtonsTunerView: View {
                 }
 
                 Section {
-                    ColorPicker("頂緣顏色", selection: $strokeTopColor, supportsOpacity: false)
+                    ColorPicker("頂緣顏色", selection: strokeTopColorBinding, supportsOpacity: false)
                     sliderRow("頂緣 opacity",  value: $strokeTopOpacity,    in: 0.0...1.0, step: 0.01)
-                    ColorPicker("底緣顏色", selection: $strokeBottomColor, supportsOpacity: false)
+                    ColorPicker("底緣顏色", selection: strokeBottomColorBinding, supportsOpacity: false)
                     sliderRow("底緣 opacity",  value: $strokeBottomOpacity, in: 0.0...1.0, step: 0.01)
                     sliderRow("線寬 (pt)",     value: $strokeWidth,         in: 0.5...3.0, step: 0.1, fmt: "%.1f")
                 } header: {
@@ -273,11 +377,10 @@ struct ButtonsTunerView: View {
                 Section {
                     sliderRow("opacity", value: $noiseOpacity, in: 0.0...0.30, step: 0.01)
                     sliderRow("scale", value: $noiseScale, in: 0.30...1.20, step: 0.05)
-                    Picker("blend mode", selection: $noiseBlend) {
-                        Text("soft").tag(BlendMode.softLight)
-                        Text("overlay").tag(BlendMode.overlay)
-                        Text("multiply").tag(BlendMode.multiply)
-                        Text("normal").tag(BlendMode.normal)
+                    Picker("blend mode", selection: $noiseBlendChoice) {
+                        ForEach(BlendModeChoice.allCases) { c in
+                            Text(c.label).tag(c)
+                        }
                     }
                     .pickerStyle(.segmented)
                 } header: {
@@ -516,9 +619,9 @@ struct ButtonsTunerView: View {
         gradAngle = 135
         gradWhiteTL = 0.06
         gradBlackBR = 0.30
-        strokeTopColor = .white
+        strokeTopColorHex = "FFFFFF"
         strokeTopOpacity = 0.34
-        strokeBottomColor = .black
+        strokeBottomColorHex = "000000"
         strokeBottomOpacity = 0.34
         strokeWidth = 1.0
         shadowNearOpacity = 0.24
@@ -531,7 +634,7 @@ struct ButtonsTunerView: View {
         shadowFarY = 9
         noiseOpacity = 0.20
         noiseScale = 0.55
-        noiseBlend = .overlay
+        noiseBlendChoice = .overlay
         textShadowOpacity = 0.42
         textShadowY = 1
         radius = 12
@@ -545,9 +648,9 @@ struct ButtonsTunerView: View {
         gradAngle = 135
         gradWhiteTL = 0.04
         gradBlackBR = 0.30
-        strokeTopColor = .white
+        strokeTopColorHex = "FFFFFF"
         strokeTopOpacity = 0.15
-        strokeBottomColor = .black
+        strokeBottomColorHex = "000000"
         strokeBottomOpacity = 0.40
         strokeWidth = 1.0
         shadowNearOpacity = 0.25
@@ -560,7 +663,7 @@ struct ButtonsTunerView: View {
         shadowFarY = 8
         noiseOpacity = 0.10
         noiseScale = 0.55
-        noiseBlend = .softLight
+        noiseBlendChoice = .softLight
         textShadowOpacity = 0.40
         textShadowY = 1
         radius = 12
@@ -570,23 +673,8 @@ struct ButtonsTunerView: View {
 
     // MARK: - Spec sheet
 
-    private var blendName: String {
-        switch noiseBlend {
-        case .softLight: return ".softLight"
-        case .overlay:   return ".overlay"
-        case .multiply:  return ".multiply"
-        default:         return ".normal"
-        }
-    }
-
-    private var cssBlendName: String {
-        switch noiseBlend {
-        case .softLight: return "soft-light"
-        case .overlay:   return "overlay"
-        case .multiply:  return "multiply"
-        default:         return "normal"
-        }
-    }
+    private var blendName: String { noiseBlendChoice.swiftName }
+    private var cssBlendName: String { noiseBlendChoice.cssName }
 
     private var specText: String {
         let f02: (Double) -> String = { String(format: "%.02f", $0) }
