@@ -15,7 +15,8 @@ struct ButtonsTunerView: View {
     @State private var gradWhiteTL: Double = 0.06
     @State private var gradBlackBR: Double = 0.30
 
-    // MARK: - 單層 STROKE (#2) · default 頂亮(white)底暗(black) = raised 浮雕光源 convention
+    // MARK: - 單層 STROKE (#2) · default 頂亮(white)底暗(black) 180° vertical = raised 浮雕光源 convention
+    @State private var strokeAngle: Double = 180
     @State private var strokeTopColor: Color = .white
     @State private var strokeTopOpacity: Double = 0.34
     @State private var strokeBottomColor: Color = .black
@@ -111,15 +112,16 @@ struct ButtonsTunerView: View {
                 }
 
                 Section {
-                    ColorPicker("頂緣顏色", selection: $strokeTopColor, supportsOpacity: false)
-                    sliderRow("頂緣 opacity",  value: $strokeTopOpacity,    in: 0.0...1.0, step: 0.01)
-                    ColorPicker("底緣顏色", selection: $strokeBottomColor, supportsOpacity: false)
-                    sliderRow("底緣 opacity",  value: $strokeBottomOpacity, in: 0.0...1.0, step: 0.01)
-                    sliderRow("線寬 (pt)",     value: $strokeWidth,         in: 0.5...3.0, step: 0.1, fmt: "%.1f")
+                    sliderRow("角度 (°)",     value: $strokeAngle,         in: 0...360, step: 5, fmt: "%.0f")
+                    ColorPicker("起點顏色", selection: $strokeTopColor, supportsOpacity: false)
+                    sliderRow("起點 opacity", value: $strokeTopOpacity,    in: 0.0...1.0, step: 0.01)
+                    ColorPicker("終點顏色", selection: $strokeBottomColor, supportsOpacity: false)
+                    sliderRow("終點 opacity", value: $strokeBottomOpacity, in: 0.0...1.0, step: 0.01)
+                    sliderRow("線寬 (pt)",   value: $strokeWidth,         in: 0.5...3.0, step: 0.1, fmt: "%.1f")
                 } header: {
                     Text("單層 STROKE · 邊緣描色").sectionLabel()
                 } footer: {
-                    Text("光源 convention：頂亮 + 底暗 (default white/black) = raised 凸起浮雕；反之 (頂暗 + 底亮) = inset 凹陷感。可以照規矩、也可以亂玩同色 / 任意配色看效果。")
+                    Text("光源 convention：起點亮 + 終點暗 (default white/black, 180° 純垂直 top→bottom) = raised 凸起浮雕；反之 = inset 凹陷感；135° 左上→右下對齊 GRADIENT 角度。\n⚠️ Web 端 CSS box-shadow inset 不支援 angle (只能 vertical)、跨平台對齊建議用 180° 或 0°，靠顏色換 raised / inset 感。")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -289,8 +291,8 @@ struct ButtonsTunerView: View {
                                     strokeTopColor.opacity(strokeTopOpacity),
                                     strokeBottomColor.opacity(strokeBottomOpacity)
                                 ],
-                            startPoint: .top,
-                            endPoint: .bottom
+                            startPoint: strokeStartPoint,
+                            endPoint: strokeEndPoint
                         ),
                         lineWidth: strokeWidth
                     )
@@ -354,23 +356,24 @@ struct ButtonsTunerView: View {
         return "rgba(\(r),\(g),\(b),\(String(format: "%.02f", opacity)))"
     }
 
-    // MARK: - Gradient angle helper (CSS angle → SwiftUI UnitPoint)
+    // MARK: - CSS angle → SwiftUI UnitPoint helpers
     // CSS: 0° = up, 90° = right, 180° = down, 270° = left, 135° = top-left → bottom-right
     // direction vector: (sin θ, -cos θ) in SwiftUI coord (x→right, y→down)
 
-    private var gradientStartPoint: UnitPoint {
-        let radians = gradAngle * .pi / 180
-        let dx = sin(radians)
-        let dy = -cos(radians)
-        return UnitPoint(x: 0.5 - dx * 0.5, y: 0.5 - dy * 0.5)
+    private func startPoint(for cssAngle: Double) -> UnitPoint {
+        let r = cssAngle * .pi / 180
+        return UnitPoint(x: 0.5 - sin(r) * 0.5, y: 0.5 + cos(r) * 0.5)
     }
 
-    private var gradientEndPoint: UnitPoint {
-        let radians = gradAngle * .pi / 180
-        let dx = sin(radians)
-        let dy = -cos(radians)
-        return UnitPoint(x: 0.5 + dx * 0.5, y: 0.5 + dy * 0.5)
+    private func endPoint(for cssAngle: Double) -> UnitPoint {
+        let r = cssAngle * .pi / 180
+        return UnitPoint(x: 0.5 + sin(r) * 0.5, y: 0.5 - cos(r) * 0.5)
     }
+
+    private var gradientStartPoint: UnitPoint { startPoint(for: gradAngle) }
+    private var gradientEndPoint: UnitPoint { endPoint(for: gradAngle) }
+    private var strokeStartPoint: UnitPoint { startPoint(for: strokeAngle) }
+    private var strokeEndPoint: UnitPoint { endPoint(for: strokeAngle) }
 
     // MARK: - Reset
 
@@ -387,6 +390,7 @@ struct ButtonsTunerView: View {
         gradAngle = 135
         gradWhiteTL = 0.06
         gradBlackBR = 0.30
+        strokeAngle = 180
         strokeTopColor = .white
         strokeTopOpacity = 0.34
         strokeBottomColor = .black
@@ -415,6 +419,7 @@ struct ButtonsTunerView: View {
         gradAngle = 135
         gradWhiteTL = 0.04
         gradBlackBR = 0.30
+        strokeAngle = 180
         strokeTopColor = .white
         strokeTopOpacity = 0.15
         strokeBottomColor = .black
@@ -470,7 +475,7 @@ struct ButtonsTunerView: View {
         // ───────────────────────────────────────────────
         fill:        primaryBrand + black overlay \(f02(fillDarken))
         gradient:    angle \(i(gradAngle))° · white \(f02(gradWhiteTL)) → clear → black \(f02(gradBlackBR))
-        stroke:      top \(hex(of: strokeTopColor)) opacity \(f02(strokeTopOpacity)) → bottom \(hex(of: strokeBottomColor)) opacity \(f02(strokeBottomOpacity)),
+        stroke:      angle \(i(strokeAngle))° · start \(hex(of: strokeTopColor)) opacity \(f02(strokeTopOpacity)) → end \(hex(of: strokeBottomColor)) opacity \(f02(strokeBottomOpacity)),
                      width \(f1(strokeWidth))pt
         shadow #1:   opacity \(f02(shadowNearOpacity)), radius \(i(shadowNearRadius)), x \(i(shadowNearX)), y \(i(shadowNearY))
         shadow #2:   opacity \(f02(shadowFarOpacity)), radius \(i(shadowFarRadius)), x \(i(shadowFarX)), y \(i(shadowFarY))
