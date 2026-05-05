@@ -85,6 +85,56 @@ enum BaseFillChoice: String, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Preview component switcher (button / card / chip / modal / toast)
+
+enum PreviewComponent: String, CaseIterable, Identifiable {
+    case button, card, chip, modal, toast
+
+    var id: Self { self }
+
+    var label: String {
+        switch self {
+        case .button: return "Button"
+        case .card:   return "Card"
+        case .chip:   return "Chip"
+        case .modal:  return "Modal"
+        case .toast:  return "Toast"
+        }
+    }
+}
+
+// MARK: - Appearance override (system / light / dark) for live preview
+
+enum AppearanceOverride: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    var id: Self { self }
+
+    var icon: String {
+        switch self {
+        case .system: return "circle.lefthalf.filled"
+        case .light:  return "sun.max"
+        case .dark:   return "moon"
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .system: return "系統"
+        case .light:  return "淺色"
+        case .dark:   return "深色"
+        }
+    }
+
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light:  return .light
+        case .dark:   return .dark
+        }
+    }
+}
+
 // MARK: - BlendMode wrapper (RawRepresentable String for @AppStorage)
 
 enum BlendModeChoice: String, CaseIterable, Identifiable {
@@ -211,6 +261,10 @@ struct ButtonsTunerView: View {
     @AppStorage("tuner_paddingV") private var paddingV: Double = 12
     @AppStorage("tuner_paddingH") private var paddingH: Double = 22
 
+    // MARK: - Preview switcher (component + appearance · 也持久化跨 navigate)
+    @AppStorage("tuner_previewComponent") private var previewComponent: PreviewComponent = .button
+    @AppStorage("tuner_previewMode") private var previewMode: AppearanceOverride = .system
+
     // Runtime-only state (不持久化)
     @State private var showSpec: Bool = false
     @State private var isPreviewPressed: Bool = false
@@ -242,37 +296,64 @@ struct ButtonsTunerView: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            // MARK: - Sticky preview area
-            ZStack {
-                Color.bg
-                VStack(spacing: 8) {
-                    previewButton("送出 Primary", isPressed: isPreviewPressed)
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .onChanged { _ in
-                                    guard !isPreviewPressed else { return }
-                                    withAnimation(.easeOut(duration: 0.08)) {
-                                        isPreviewPressed = true
-                                    }
-                                }
-                                .onEnded { _ in
-                                    withAnimation(.spring(response: 0.24, dampingFraction: 0.72)) {
-                                        isPreviewPressed = false
-                                    }
-                                }
-                        )
-
-                    Button {
-                        playPressAnimation()
-                    } label: {
-                        Label("播放按下動畫", systemImage: "play.fill")
-                            .font(.lmCaption)
+            // MARK: - Sticky preview area (component + mode toolbar + preview body)
+            VStack(spacing: 0) {
+                // Toolbar: component menu picker + appearance segmented
+                HStack(spacing: 12) {
+                    Picker("元件", selection: $previewComponent) {
+                        ForEach(PreviewComponent.allCases) { c in
+                            Text(c.label).tag(c)
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(Color.inkMuted)
+                    .pickerStyle(.menu)
+                    .tint(Color.primaryBrand)
+
+                    Spacer()
+
+                    Picker("外觀", selection: $previewMode) {
+                        ForEach(AppearanceOverride.allCases) { m in
+                            Image(systemName: m.icon).tag(m)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(maxWidth: 130)
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 6)
+
+                // Preview body (套 §5.4 配方、跟著 component 變 layout)
+                ZStack {
+                    Color.bg
+                    VStack(spacing: 8) {
+                        previewBody(isPressed: isPreviewPressed)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { _ in
+                                        guard !isPreviewPressed else { return }
+                                        withAnimation(.easeOut(duration: 0.08)) {
+                                            isPreviewPressed = true
+                                        }
+                                    }
+                                    .onEnded { _ in
+                                        withAnimation(.spring(response: 0.24, dampingFraction: 0.72)) {
+                                            isPreviewPressed = false
+                                        }
+                                    }
+                            )
+
+                        Button {
+                            playPressAnimation()
+                        } label: {
+                            Label("播放按下動畫", systemImage: "play.fill")
+                                .font(.lmCaption)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(Color.inkMuted)
+                    }
+                }
+                .frame(height: 160)
+                .environment(\.colorScheme, previewMode.colorScheme ?? colorScheme)
             }
-            .frame(height: 140)
 
             Divider()
 
@@ -465,14 +546,91 @@ struct ButtonsTunerView: View {
         }
     }
 
-    // MARK: - Preview button
+    // MARK: - Preview body dispatch (5 component variants)
 
     @ViewBuilder
-    private func previewButton(_ title: String, isPressed: Bool) -> some View {
-        Text(title)
-            .font(.system(.body, design: .default).weight(.semibold))
-            .padding(.vertical, paddingV)
-            .padding(.horizontal, paddingH)
+    private func previewBody(isPressed: Bool) -> some View {
+        switch previewComponent {
+        case .button:
+            tactileLook(
+                paddingV: paddingV, paddingH: paddingH,
+                shape: AnyShape(RoundedRectangle(cornerRadius: radius, style: .continuous)),
+                isPressed: isPressed
+            ) {
+                Text("送出 Primary")
+                    .font(.system(.body, design: .default).weight(.semibold))
+            }
+        case .card:
+            tactileLook(
+                paddingV: 18, paddingH: 22,
+                shape: AnyShape(RoundedRectangle(cornerRadius: max(radius, 12), style: .continuous)),
+                isPressed: isPressed
+            ) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("MMXXVI · CHAPTER I")
+                        .font(.system(.caption2, design: .monospaced))
+                        .tracking(1.2)
+                        .opacity(0.75)
+                    Text("Shine, lazily and steadily.")
+                        .font(.system(.subheadline, design: .default).weight(.semibold))
+                }
+                .frame(maxWidth: 220, alignment: .leading)
+            }
+        case .chip:
+            tactileLook(
+                paddingV: 5, paddingH: 12,
+                shape: AnyShape(Capsule()),
+                isPressed: isPressed
+            ) {
+                Text("BETA")
+                    .font(.system(.caption2, design: .monospaced))
+                    .tracking(1.2)
+                    .textCase(.uppercase)
+            }
+        case .modal:
+            tactileLook(
+                paddingV: 20, paddingH: 24,
+                shape: AnyShape(RoundedRectangle(cornerRadius: max(radius, 16), style: .continuous)),
+                isPressed: isPressed
+            ) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("壞了。")
+                        .font(.system(.headline))
+                    Text("可能是我沒做對，再試試看 ↻")
+                        .font(.system(.footnote))
+                        .opacity(0.85)
+                }
+                .frame(maxWidth: 240, alignment: .leading)
+            }
+        case .toast:
+            tactileLook(
+                paddingV: 10, paddingH: 14,
+                shape: AnyShape(RoundedRectangle(cornerRadius: max(radius, 10), style: .continuous)),
+                isPressed: isPressed
+            ) {
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(.footnote))
+                    Text("好了 ✦")
+                        .font(.system(.footnote).weight(.medium))
+                }
+            }
+        }
+    }
+
+    // MARK: - Tactile look (shared §5.4 配方·跨 component 共用)
+
+    @ViewBuilder
+    private func tactileLook<Content: View>(
+        paddingV pV: Double,
+        paddingH pH: Double,
+        shape: AnyShape,
+        isPressed: Bool,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        content()
+            .padding(.vertical, pV)
+            .padding(.horizontal, pH)
             .foregroundStyle(Color.inkOnBrand)
             .shadow(color: .black.opacity(textShadowOpacity),
                     radius: 0, y: textShadowY)
@@ -506,10 +664,10 @@ struct ButtonsTunerView: View {
                         .allowsHitTesting(false)
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+            .clipShape(shape)
             .overlay {
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .strokeBorder(
+                shape
+                    .stroke(
                         LinearGradient(
                             colors: isPressed
                                 ? [
