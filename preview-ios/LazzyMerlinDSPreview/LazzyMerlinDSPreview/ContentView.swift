@@ -9,9 +9,9 @@ struct ContentView: View {
             List {
                 Section {
                     NavigationLink {
-                        ButtonsTunerView()
+                        TunerView()
                     } label: {
-                        Label("Buttons Tuner ✦", systemImage: "slider.horizontal.3")
+                        Label("Tuner ✦", systemImage: "slider.horizontal.3")
                     }
                 } header: {
                     Text("LIVE TUNER")

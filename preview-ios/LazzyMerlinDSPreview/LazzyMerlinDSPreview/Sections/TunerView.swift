@@ -214,7 +214,7 @@ extension Color {
     }
 }
 
-struct ButtonsTunerView: View {
+struct TunerView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     // MARK: - BASE FILL  (@AppStorage 持久化跨 navigate / app launch)
@@ -512,7 +512,7 @@ struct ButtonsTunerView: View {
                 }
             }
         }
-        .navigationTitle("Buttons Tuner")
+        .navigationTitle("Tuner")
         #if os(iOS)
         .toolbarBackground(Color.bg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
@@ -900,6 +900,6 @@ struct ButtonsTunerView: View {
 
 #Preview {
     NavigationStack {
-        ButtonsTunerView()
+        TunerView()
     }
 }
