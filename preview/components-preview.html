@@ -9,10 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;600&family=LXGW+WenKai+TC:wght@400&display=swap" rel="stylesheet">
   <style>
     /* ===== Tokens (palette + radius + spacing + shadow + z-index) ===== */
-    /* :root + [data-theme="light"] 共用 light mode tokens
-       讓 swatch-compare__col--light 等 explicit light-scope 容器不管 page 在哪 mode 都 force light tokens */
-    :root,
-    [data-theme="light"] {
+    :root {
       /* Wood palette 8 (same as v5-morandi) */
       --bg: #F5EFE4;
       --bg-raised: #F5EFE4;
@@ -27,13 +24,14 @@
       --border: rgba(15, 28, 38, 0.10);
       --shadow-ink: rgba(33, 23, 21, 0.70);
 
-      /* Earth tone Status Extension（§2.2）— 大地色系，跟 wood palette 同調 */
-      /* Earth Tone v0.2.0-rc.4 收斂為 3 hex 跨 mode 同值 (主人選定)
-         ⚠️ Ochre 對 light surface 對比 ~2:1 不過 AA、僅適合 status icon / chip 小面積、
-         不作大 button fill (詳見 §2.2.2 + §14.3) */
-      --earth-red:   #9E5949;  /* Terracotta · error / destructive */
-      --earth-green: #596751;  /* Sage · success · ⚠️ dark surface 對比 2.7:1 邊緣 */
-      --earth-ochre: #CB9B52;  /* Burnt Ochre · warning · ⚠️ light surface 對比 2.2:1 不過 AA */
+      /* Earth Tone v0.2.0-rc.4 主人選定 3 hex 跨 mode 同值 (sage 596751 / ochre CB9B52)
+         ⚠️ Ochre 對 light surface 對比 ~2.2:1、Sage 對 dark surface 對比 ~2.7:1、僅適合 status icon / chip / dot 小面積 */
+      --earth-red:   #9E5949;
+      --earth-green: #596751;
+      --earth-ochre: #CB9B52;
+
+      /* §15.5.4 ink-on-brand · 彩色底文字不翻轉、light + dark 都 Parchment */
+      --ink-on-brand: #F5EFE4;
 
       /* Semantic alias — 用 earth tone 表達 status，不用鮮豔紅綠黃 */
       --info: var(--primary);
@@ -82,16 +80,12 @@
       --sp-3xl: 48px;
       --sp-4xl: 64px;
 
-      /* §15.5.4 全 component 通用 · 彩色底文字（不翻轉、light + dark 都 Parchment）
-         Mid Petrol 配 Midnight Petrol 字（var(--bg) dark 值）對比 3.4:1 邊緣、Deep Petrol 1.7:1 不過 AA。
-         彩色底元件一律用 var(--ink-on-brand) 確保跨 mode 對比一致 ≥3:1 過 WCAG AA Large。 */
-      --ink-on-brand: #F5EFE4;
-
-      /* 共用 Tactile noise overlay — v0.2.0 起改用跨平台共用 PNG tile (assets/tactile-noise.png 256×256 stitchable)
-         取代原 SVG turbulence 雙層 inline data URI；iOS / macOS 用同一份 asset bundle。 */
-      --noise-bg: url('../assets/tactile-noise.png');
-      --noise-bg-size: 256px 256px;
-      --noise-bg-blend: soft-light;
+      /* 共用 Tactile noise overlay — 給 background-image 用（給 ::after 偽元素用的內聯版仍在各元件 CSS 內）*/
+      --noise-bg:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nz1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nz1)'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='nz2'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23nz2)'/%3E%3C/svg%3E");
+      --noise-bg-size: 90px 90px, 220px 220px;
+      --noise-bg-blend: overlay, overlay;
     }
     [data-theme="dark"] {
       --bg: #0F1C26;
@@ -107,9 +101,12 @@
       --border: rgba(245, 239, 228, 0.08);
       --shadow-ink: rgba(6, 12, 18, 0.70);
 
-      /* Earth tone v0.2.0-rc.4 起跨 mode 同 hex、不在 dark mode 重寫 (主人決定收斂為 3 hex)
+      /* Earth tone v0.2.0-rc.4 跨 mode 同 hex、不在 dark 重寫 (主人決定收斂為 3 hex)
          之前 dark 提亮版 (#C58775 / #A8B898 / #D4AB6E) 廢棄、保留 git 歷史
          Semantic alias 不重寫 — var() 動態 resolve 跟著 :root earth-* / primary 自動切 */
+
+      /* Dark mode noise blend mode — overlay 在深底會過曝，改 soft-light */
+      --noise-bg-blend: soft-light, soft-light;
 
       --shadow-soft-sm:
         6px 6px 12px rgba(0, 0, 0, 0.45),
@@ -259,7 +256,7 @@
       height: 80px;
       border-radius: var(--radius-sm);
       margin-bottom: 12px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(15, 28, 38, 0.08);
       position: relative;
       overflow: hidden;
     }
@@ -284,9 +281,7 @@
       margin-top: 4px; line-height: 1.4;
     }
 
-    /* Two-column compare panels (Light vs Dark static reference, ignores theme toggle)
-       dark col 套 data-theme="dark" attribute、內部所有 var() 自動 resolve dark mode value
-       single source of truth — 不再 hardcode hex */
+    /* Two-column compare panels (Light vs Dark static reference, ignores theme toggle) */
     .swatch-compare {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -296,27 +291,35 @@
     .swatch-compare__col {
       padding: 20px;
       border-radius: var(--radius-md);
-      background: var(--bg);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(15, 28, 38, 0.10);
     }
+    .swatch-compare__col--light { background: #F5EFE4; }
+    .swatch-compare__col--dark { background: #0F1C26; border-color: rgba(245, 239, 228, 0.08); }
     .swatch-compare__label {
       font-family: 'Geist Mono', monospace;
       font-size: 11px; letter-spacing: 0.18em;
       text-transform: uppercase;
       margin-bottom: 14px;
-      color: var(--ink-muted);
     }
+    .swatch-compare__col--light .swatch-compare__label { color: #4E3029; }
+    .swatch-compare__col--dark .swatch-compare__label { color: #DECCA7; }
 
-    /* Inside compare panels: swatch frame + text 都跟著 col 的 mode token */
+    /* Inside compare panels: lock swatch styling to the panel's mode */
     .swatch-compare .swatches { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     .swatch-compare .swatch {
       background: transparent;
-      border: 1px solid var(--hairline);
+      border: 1px solid rgba(150, 116, 89, 0.20);
       box-shadow: none;
     }
-    .swatch-compare .swatch__name { color: var(--ink); }
-    .swatch-compare .swatch__hex,
-    .swatch-compare .swatch__role { color: var(--ink-muted); }
+    .swatch-compare__col--dark .swatch {
+      border-color: rgba(245, 239, 228, 0.10);
+    }
+    .swatch-compare__col--light .swatch__name { color: #0F1C26; }
+    .swatch-compare__col--light .swatch__hex,
+    .swatch-compare__col--light .swatch__role { color: #4E3029; }
+    .swatch-compare__col--dark .swatch__name { color: #F5EFE4; }
+    .swatch-compare__col--dark .swatch__hex,
+    .swatch-compare__col--dark .swatch__role { color: #DECCA7; }
 
     /* ===== Theme toggle (§2.4 / §15) — Tactile Base simplified ===== */
     .theme-toggle {
@@ -379,60 +382,62 @@
     .btn--sm .btn__icon { width: 16px; height: 16px; }
     .btn--lg .btn__icon { width: 20px; height: 20px; }
 
-    /* Tactile noise overlay — v0.2.0 起用 PNG tile + 統一 soft-light blend，跨平台共用 */
+    /* Tactile noise overlay — 所有 material button 統一觸感（Tactile-Raised + Hybrid Secondary）*/
+    /* z-index: -1 + isolation 把 noise 推到 background 之上、內容之下，避免染深文字 */
     .btn--primary, .btn--deep, .btn--destructive, .btn--secondary { isolation: isolate; }
     .btn--primary::after, .btn--deep::after, .btn--destructive::after, .btn--secondary::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
       z-index: -1;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: var(--noise-bg-blend); opacity: 0.08;
+      mix-blend-mode: overlay; opacity: 0.6;
       pointer-events: none;
     }
+    /* Secondary 淺底，noise 強度稍低 */
+    .btn--secondary::after { opacity: 0.55; }
     [data-theme="dark"] .btn--primary::after,
     [data-theme="dark"] .btn--deep::after,
     [data-theme="dark"] .btn--destructive::after,
     [data-theme="dark"] .btn--secondary::after {
-      opacity: 0.10;
+      mix-blend-mode: soft-light; opacity: 0.85;
     }
+    [data-theme="dark"] .btn--secondary::after { opacity: 0.7; }
 
-    /* Variant: Primary (Tactile Raised · §5.4.1 共通六件配方) */
+    /* Variant: Primary (Tactile Raised, --primary) */
     .btn--primary {
       background-color: var(--primary); color: var(--ink-on-brand);
       background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%);
-      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.30);
+        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%);
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.30),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.20),
-        0 2px 4px rgba(15, 28, 38, 0.15),
-        0 6px 12px rgba(15, 28, 38, 0.10);
+        inset 0 2px 1px rgba(255, 255, 255, 0.35),
+        inset 2px 0 1px rgba(255, 255, 255, 0.18),
+        inset 0 -2px 1px rgba(0, 0, 0, 0.32),
+        inset -2px 0 1px rgba(0, 0, 0, 0.20),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+        3px 4px 6px rgba(15, 28, 38, 0.18),
+        8px 12px 18px rgba(15, 28, 38, 0.22),
+        20px 28px 40px rgba(15, 28, 38, 0.20);
     }
     .btn--primary:hover {
       transform: translate(-1px, -3px);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.35),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.22),
-        0 4px 8px rgba(15, 28, 38, 0.18),
-        0 10px 18px rgba(15, 28, 38, 0.12);
+        inset 0 2px 1px rgba(255, 255, 255, 0.40),
+        inset 2px 0 1px rgba(255, 255, 255, 0.22),
+        inset 0 -2px 1px rgba(0, 0, 0, 0.34),
+        inset -2px 0 1px rgba(0, 0, 0, 0.22),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        4px 6px 10px rgba(15, 28, 38, 0.20),
+        10px 14px 24px rgba(15, 28, 38, 0.26),
+        24px 34px 50px rgba(15, 28, 38, 0.26);
     }
     .btn--primary:active {
       transform: translateY(2px);
       transition: transform 80ms ease, box-shadow 80ms ease;
       box-shadow:
-        inset 0 2px 4px rgba(0, 0, 0, 0.25),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.10),
-        0 1px 2px rgba(15, 28, 38, 0.08);
-    }
-    [data-theme="dark"] .btn--primary {
-      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.40);
-      background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 100%);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.40),
-        0 2px 6px rgba(0, 0, 0, 0.25),
-        0 8px 16px rgba(0, 0, 0, 0.20);
+        inset 3px 4px 10px rgba(0, 0, 0, 0.30),
+        inset -1px -1px 4px rgba(255, 255, 255, 0.18),
+        1px 1px 2px rgba(15, 28, 38, 0.10);
     }
 
     /* Variant: Brand Deep */
@@ -715,43 +720,39 @@
       transition: transform 250ms ease, box-shadow 250ms ease;
     }
 
-    /* Editorial / Link tile — Tactile Base · §5.4.1 共通六件配方 */
+    /* Editorial / Link tile — Tactile Base */
     .card--editorial {
-      isolation: isolate;
-      background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(15,28,38,0.10) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.50),
-        inset 0 -1px 0 rgba(15, 28, 38, 0.10),
-        0 2px 4px rgba(15, 28, 38, 0.10),
-        0 4px 8px rgba(15, 28, 38, 0.06);
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(33, 23, 21, 0.10),
+        inset 0 0 0 1px rgba(33, 23, 21, 0.05),
+        4px 6px 14px rgba(33, 23, 21, 0.12);
     }
     [data-theme="dark"] .card--editorial {
-      background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.10) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.10),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.30),
-        0 2px 6px rgba(0, 0, 0, 0.20),
-        0 4px 10px rgba(0, 0, 0, 0.15);
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        4px 6px 14px rgba(0, 0, 0, 0.45);
     }
     .card--editorial::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
-      z-index: -1;
-      background-image: var(--noise-bg);
-      background-size: var(--noise-bg-size);
-      mix-blend-mode: var(--noise-bg-blend); opacity: 0.06;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='c1a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='6'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23c1a)'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='c1b'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='1'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23c1b)'/%3E%3C/svg%3E");
+      background-size: 90px 90px, 220px 220px;
+      mix-blend-mode: overlay; opacity: 0.55;
       pointer-events: none;
     }
-    [data-theme="dark"] .card--editorial::after { opacity: 0.08; }
+    [data-theme="dark"] .card--editorial::after { mix-blend-mode: soft-light; opacity: 0.75; }
     .card > * { position: relative; z-index: 1; }
     .card--editorial:hover {
       transform: translateY(-3px);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.55),
-        inset 0 -1px 0 rgba(15, 28, 38, 0.12),
-        0 4px 8px rgba(15, 28, 38, 0.14),
-        0 8px 16px rgba(15, 28, 38, 0.08);
+        inset 0 -1px 0 rgba(33, 23, 21, 0.12),
+        inset 0 0 0 1px rgba(33, 23, 21, 0.06),
+        8px 12px 22px rgba(33, 23, 21, 0.18);
     }
 
     /* Plain card — Hybrid */
@@ -805,12 +806,13 @@
       position: relative;
       isolation: isolate;
       overflow: hidden;
-      /* §5.4.1 共通六件配方：單層 stroke + 2 層 drop shadow */
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
         inset 0 -1px 0 rgba(15, 28, 38, 0.18),
-        0 1px 2px rgba(15, 28, 38, 0.12),
-        0 2px 5px rgba(15, 28, 38, 0.08);
+        inset 0 0 0 1px rgba(15, 28, 38, 0.06),
+        1px 2px 3px rgba(15, 28, 38, 0.14),
+        3px 5px 8px rgba(15, 28, 38, 0.14),
+        6px 10px 16px rgba(15, 28, 38, 0.10);
     }
     .chip::after {
       content: '';
@@ -819,20 +821,23 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: var(--noise-bg-blend);
-      opacity: 0.08;
+      mix-blend-mode: overlay;
+      opacity: 0.55;
       pointer-events: none;
     }
     [data-theme="dark"] .chip {
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.10),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-        0 1px 2px rgba(0, 0, 0, 0.30),
-        0 2px 5px rgba(0, 0, 0, 0.25);
+        inset 0 -1px 0 rgba(0, 0, 0, 0.40),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        1px 2px 3px rgba(0, 0, 0, 0.40),
+        3px 5px 8px rgba(0, 0, 0, 0.45),
+        6px 10px 16px rgba(0, 0, 0, 0.30);
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
     }
     [data-theme="dark"] .chip::after {
-      opacity: 0.10;
+      mix-blend-mode: soft-light;
+      opacity: 0.75;
     }
     .chip:hover { transform: translateY(-2px); }
     /* 彩色底（深 / 中）一律配米色字 + 黑 text-shadow（raised letter）；淺底 Tan 才配深字 + 白 text-shadow */
@@ -1016,30 +1021,29 @@
       background: var(--bg-raised); color: var(--ink);
       border-radius: var(--radius-xl);
       overflow: hidden;
-      isolation: isolate;
-      /* §5.4.1 共通六件配方 · modal 浮在 backdrop 上、drop shadow 拉強讓「浮起」明顯 */
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.50),
-        inset 0 -1px 0 rgba(15, 28, 38, 0.10),
-        0 8px 16px rgba(15, 28, 38, 0.20),
-        0 16px 40px rgba(15, 28, 38, 0.18);
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(33, 23, 21, 0.10),
+        inset 0 0 0 1px rgba(33, 23, 21, 0.05),
+        12px 24px 60px rgba(0, 0, 0, 0.30);
     }
     [data-theme="dark"] .modal {
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
         inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-        0 8px 20px rgba(0, 0, 0, 0.45),
-        0 16px 50px rgba(0, 0, 0, 0.55);
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        12px 24px 60px rgba(0, 0, 0, 0.65);
     }
     .modal::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
-      z-index: -1;
-      background-image: var(--noise-bg);
-      background-size: var(--noise-bg-size);
-      mix-blend-mode: var(--noise-bg-blend); opacity: 0.06;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='m1a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='6'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23m1a)'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='m1b'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='1'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23m1b)'/%3E%3C/svg%3E");
+      background-size: 90px 90px, 220px 220px;
+      mix-blend-mode: overlay; opacity: 0.55;
       pointer-events: none;
     }
-    [data-theme="dark"] .modal::after { opacity: 0.08; }
+    [data-theme="dark"] .modal::after { mix-blend-mode: soft-light; opacity: 0.75; }
     .modal > * { position: relative; z-index: 1; }
     .modal__title { font-family: 'LXGW WenKai TC', serif; font-size: 24px; margin-bottom: 8px; }
     .modal__body { color: var(--ink-muted); font-size: 14px; margin-bottom: 24px; }
@@ -1061,41 +1065,22 @@
     }
     .toast {
       pointer-events: auto;
-      position: relative;
-      isolation: isolate;
       display: flex; align-items: center; gap: 10px;
       padding: 12px 16px; border-radius: var(--radius-lg);
       background: var(--bg-raised); color: var(--ink);
-      /* §5.4.1 共通六件配方 · 跟 card--editorial 對齊 */
-      background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(15,28,38,0.10) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.50),
-        inset 0 -1px 0 rgba(15, 28, 38, 0.10),
-        0 2px 4px rgba(15, 28, 38, 0.10),
-        0 6px 14px rgba(15, 28, 38, 0.12);
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 0 0 1px rgba(33, 23, 21, 0.05),
+        4px 6px 14px rgba(0, 0, 0, 0.20);
       max-width: 360px; font-size: 14px;
       animation: toastSlide 250ms ease;
     }
-    .toast::after {
-      content: ''; position: absolute; inset: 0; border-radius: inherit;
-      z-index: -1;
-      background-image: var(--noise-bg);
-      background-size: var(--noise-bg-size);
-      mix-blend-mode: var(--noise-bg-blend); opacity: 0.06;
-      pointer-events: none;
-    }
-    .toast > * { position: relative; z-index: 1; }
     [data-theme="dark"] .toast {
-      background-image:
-        linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.10) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.10),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.30),
-        0 2px 6px rgba(0, 0, 0, 0.30),
-        0 6px 16px rgba(0, 0, 0, 0.35);
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        4px 6px 14px rgba(0, 0, 0, 0.55);
     }
-    [data-theme="dark"] .toast::after { opacity: 0.08; }
     @keyframes toastSlide { from { transform: translateY(20px); opacity: 0; } }
     .toast__icon { width: 20px; height: 20px; flex-shrink: 0; }
     .toast--success .toast__icon { color: var(--success); }
@@ -1433,7 +1418,7 @@
       <section class="demo" id="colors">
         <div class="section-kicker">§ 2 · COLOR</div>
         <h2>Color Palette · 色票</h2>
-        <p class="section-note">8 色 wood palette（兩 mode 共用 raw values）+ light / dark role tokens（<code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">primary ↔ primary-soft</code> 兩 mode 互換）+ earth tone status extension（terracotta / sage / ochre 3 hex 跨 mode 同值）+ 透明度層（hairline / border）。所有規範值對應 <code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">tokens/color.json</code>。</p>
+        <p class="section-note">8 色 wood palette（兩 mode 共用 raw values）+ light / dark role tokens（<code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">primary ↔ primary-soft</code> 兩 mode 互換）+ earth tone status extension（terracotta / sage / ochre 提亮對照）+ 透明度層（hairline / border）。所有規範值對應 <code style="font-family:'Geist Mono',monospace;font-size:13px;color:var(--ink)">tokens/color.json</code>。</p>
 
         <!-- Wood palette · 8 raw values shared between modes -->
         <div class="swatch-group">
@@ -1494,7 +1479,7 @@
         <div class="swatch-group">
           <div class="swatch-group__label">Role Tokens · Light ↔ Dark 兩 mode 對照（primary / primary-soft 互換、ink / bg 互換）</div>
           <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light" data-theme="light">
+            <div class="swatch-compare__col swatch-compare__col--light">
               <div class="swatch-compare__label">Light Mode</div>
               <div class="swatches">
                 <article class="swatch">
@@ -1539,7 +1524,7 @@
                 </article>
               </div>
             </div>
-            <div class="swatch-compare__col swatch-compare__col--dark" data-theme="dark">
+            <div class="swatch-compare__col swatch-compare__col--dark">
               <div class="swatch-compare__label">Dark Mode</div>
               <div class="swatches">
                 <article class="swatch">
@@ -1587,53 +1572,53 @@
           </div>
         </div>
 
-        <!-- Earth tone Status · v0.2.0-rc.4 收斂 3 hex 跨 mode 同值 (兩 col 同 hex、demo backdrop 視覺差) -->
+        <!-- Earth tone Status · Light vs Dark -->
         <div class="swatch-group">
-          <div class="swatch-group__label">Earth Tone Status Extension · 3 hex 跨 mode 同值（同色在 Light / Dark surface 上看視覺差）</div>
+          <div class="swatch-group__label">Earth Tone Status Extension · Light → Dark 提亮對照（不用鮮豔紅綠黃）</div>
           <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light" data-theme="light">
-              <div class="swatch-compare__label">Light Surface 上看</div>
+            <div class="swatch-compare__col swatch-compare__col--light">
+              <div class="swatch-compare__label">Light Mode</div>
               <div class="swatches">
                 <article class="swatch">
                   <div class="swatch__chip" style="background:#9E5949"></div>
                   <div class="swatch__name">error / destructive</div>
                   <div class="swatch__hex">#9E5949</div>
-                  <div class="swatch__role">Terracotta · 對比 5.3:1 ✓ AA</div>
+                  <div class="swatch__role">Terracotta 陶土紅</div>
                 </article>
                 <article class="swatch">
-                  <div class="swatch__chip" style="background:#596751"></div>
+                  <div class="swatch__chip" style="background:#6A7A60"></div>
                   <div class="swatch__name">success</div>
-                  <div class="swatch__hex">#596751</div>
-                  <div class="swatch__role">Sage · 對比 5.3:1 ✓ AA</div>
+                  <div class="swatch__hex">#6A7A60</div>
+                  <div class="swatch__role">Sage / Moss 苔蘚綠</div>
                 </article>
                 <article class="swatch">
-                  <div class="swatch__chip" style="background:#CB9B52"></div>
+                  <div class="swatch__chip" style="background:#8E6E37"></div>
                   <div class="swatch__name">warning</div>
-                  <div class="swatch__hex">#CB9B52</div>
-                  <div class="swatch__role">Ochre · ⚠️ 對比 2.2:1 不過 AA</div>
+                  <div class="swatch__hex">#8E6E37</div>
+                  <div class="swatch__role">Burnt Ochre 赭石黃</div>
                 </article>
               </div>
             </div>
-            <div class="swatch-compare__col swatch-compare__col--dark" data-theme="dark">
-              <div class="swatch-compare__label">Dark Surface 上看（hex 不變）</div>
+            <div class="swatch-compare__col swatch-compare__col--dark">
+              <div class="swatch-compare__label">Dark Mode（提亮）</div>
               <div class="swatches">
                 <article class="swatch">
-                  <div class="swatch__chip" style="background:#9E5949"></div>
+                  <div class="swatch__chip" style="background:#C58775"></div>
                   <div class="swatch__name">error / destructive</div>
-                  <div class="swatch__hex">#9E5949</div>
-                  <div class="swatch__role">Terracotta · 對比 3.4:1 邊緣 AA Large</div>
+                  <div class="swatch__hex">#C58775</div>
+                  <div class="swatch__role">提亮版陶土</div>
                 </article>
                 <article class="swatch">
-                  <div class="swatch__chip" style="background:#596751"></div>
+                  <div class="swatch__chip" style="background:#A8B898"></div>
                   <div class="swatch__name">success</div>
-                  <div class="swatch__hex">#596751</div>
-                  <div class="swatch__role">Sage · ⚠️ 對比 2.7:1 不過 AA Large</div>
+                  <div class="swatch__hex">#A8B898</div>
+                  <div class="swatch__role">提亮版 sage</div>
                 </article>
                 <article class="swatch">
-                  <div class="swatch__chip" style="background:#CB9B52"></div>
+                  <div class="swatch__chip" style="background:#D4AB6E"></div>
                   <div class="swatch__name">warning</div>
-                  <div class="swatch__hex">#CB9B52</div>
-                  <div class="swatch__role">Ochre · 對比 6.6:1 ✓ AA</div>
+                  <div class="swatch__hex">#D4AB6E</div>
+                  <div class="swatch__role">提亮版赭</div>
                 </article>
               </div>
             </div>
@@ -1644,7 +1629,7 @@
         <div class="swatch-group">
           <div class="swatch-group__label">Transparent · 透明度層（hairline / border / focus ring 用，alpha 在 mode backdrop 上實際呈現）</div>
           <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light" data-theme="light">
+            <div class="swatch-compare__col swatch-compare__col--light">
               <div class="swatch-compare__label">Light Mode</div>
               <div class="swatches">
                 <article class="swatch">
@@ -1665,7 +1650,7 @@
                 </article>
               </div>
             </div>
-            <div class="swatch-compare__col swatch-compare__col--dark" data-theme="dark">
+            <div class="swatch-compare__col swatch-compare__col--dark">
               <div class="swatch-compare__label">Dark Mode</div>
               <div class="swatches">
                 <article class="swatch">
