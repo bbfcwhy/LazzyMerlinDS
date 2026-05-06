@@ -1,52 +1,96 @@
 import SwiftUI
 
 // LazzyMerlin DS §3 字體 + §7.2.4 iOS Type Scale
-// iOS body 用 SF Pro + PingFang TC（系統預設、Dynamic Type 自動跟）
-// Display / heading 用 LXGW WenKai TC（已 bundle、由 LMFontLoader 註冊）
-// Mono 用 LXGW WenKai Mono TC
+//
+// 3-tier 字體規則:
+//   Display tier  (≥ 20pt): LXGW WenKai TC Medium · brand 個性
+//   Numeric tier  (數字對齊): LXGW WenKai Mono TC Medium · 等寬數字
+//   UI tier       (≤ 17pt 操作): SF Pro / PingFang TC · 系統字符合 HIG
+//
+// Dev toggle: LMFontMode.useAllLXGW · TypographyView 內可切換、讓 UI tier 也用 LXGW、體驗看看。
+
+// MARK: - Dev mode toggle
+
+enum LMFontMode {
+    /// Debug / preview only · TypographyView 提供 toggle
+    /// 開啟時、UI tier (body/caption/button/control) 全切到 LXGW、可體感「全 LXGW」是否怪
+    static var useAllLXGW: Bool {
+        UserDefaults.standard.bool(forKey: "lm_dev_useAllLXGW")
+    }
+}
 
 extension Font {
 
-    // MARK: - LXGW Brand font names (PostScript names · LMFontLoader 註冊)
+    // MARK: - LXGW Brand font names (PostScript · LMFontLoader 註冊)
 
-    /// LXGW WenKai TC Light · 細
-    static let lmBrandFontLight   = "LXGWWenKaiTC-Light"
-    /// LXGW WenKai TC Regular · 一般
-    static let lmBrandFontRegular = "LXGWWenKaiTC-Regular"
-    /// LXGW WenKai TC Medium · 中粗
-    static let lmBrandFontMedium  = "LXGWWenKaiTC-Medium"
-    /// LXGW WenKai Mono TC Regular · 等寬版 (給 code / numeric 用)
-    static let lmBrandFontMono    = "LXGWWenKaiMonoTC-Regular"
+    static let lmBrandFontLight        = "LXGWWenKaiTC-Light"
+    static let lmBrandFontRegular      = "LXGWWenKaiTC-Regular"
+    static let lmBrandFontMedium       = "LXGWWenKaiTC-Medium"
+    static let lmBrandFontMono         = "LXGWWenKaiMonoTC-Regular"
+    static let lmBrandFontMonoMedium   = "LXGWWenKaiMonoTC-Medium"
 
-    // MARK: - Display & Heading · 使用 LXGW WenKai TC
+    // MARK: - Display tier · 永遠 LXGW WenKai TC
 
-    static let lmDisplayXL    = Font.custom(lmBrandFontMedium,  size: 56)  // 56pt 文楷 medium
-    static let lmDisplayLarge = Font.custom(lmBrandFontMedium,  size: 48)  // 48pt 文楷 medium (404 / hero)
-    static let lmDisplay      = Font.custom(lmBrandFontMedium,  size: 40)  // 40pt 文楷 medium (display 一般)
-    static let lmH1           = Font.custom(lmBrandFontMedium,  size: 28)  // 28pt
-    static let lmH2           = Font.custom(lmBrandFontMedium,  size: 22)  // 22pt
-    static let lmH3           = Font.custom(lmBrandFontMedium,  size: 20)  // 20pt
+    static let lmDisplayXL    = Font.custom(lmBrandFontMedium, size: 56)
+    static let lmDisplayLarge = Font.custom(lmBrandFontMedium, size: 48)
+    static let lmDisplay      = Font.custom(lmBrandFontMedium, size: 40)
+    static let lmH1           = Font.custom(lmBrandFontMedium, size: 28)
+    static let lmH2           = Font.custom(lmBrandFontMedium, size: 22)
+    static let lmH3           = Font.custom(lmBrandFontMedium, size: 20)
+    static let lmEmptyVisual  = Font.custom(lmBrandFontMedium, size: 52)  // hero ✦ / large icon
+    static let lmEmptyCode    = Font.custom(lmBrandFontMedium, size: 48)  // 404 / 大字 code
 
-    // MARK: - Body
+    // MARK: - Numeric tier · 永遠 LXGW Mono (等寬數字對齊)
 
-    static let lmBodyLarge = Font.system(.body, design: .default)                          // 17pt
-    static let lmBody      = Font.system(.body, design: .default)                          // 17pt (HIG 標準)
-    static let lmBodySmall = Font.system(.subheadline, design: .default)                   // 15pt
+    static let lmStatNumber = Font.custom(lmBrandFontMonoMedium, size: 40)
 
-    // MARK: - Caption / Label
+    // MARK: - UI tier · 預設 system、dev toggle 可切到 LXGW
 
-    static let lmCaption   = Font.system(.caption, design: .default)                       // 12pt
-    static let lmLabel     = Font.system(.caption2, design: .monospaced)                   // 12pt mono
-
-    // MARK: - Component-specific utility styles
-
-    static let lmButtonSmall  = Font.system(size: 13, weight: .semibold, design: .default)
-    static let lmButtonMedium = Font.system(size: 14, weight: .semibold, design: .default)
-    static let lmButtonLarge  = Font.system(size: 16, weight: .semibold, design: .default)
-    static let lmControlLabel = Font.system(size: 14, weight: .medium, design: .default)
-    static let lmEmptyVisual  = Font.system(size: 52, weight: .semibold, design: .serif)
-    static let lmEmptyCode    = Font.system(size: 48, weight: .semibold, design: .serif)
-    static let lmStatNumber   = Font.system(size: 40, weight: .bold, design: .default)  // stat 數據卡片數字
+    static var lmBodyLarge: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontRegular, size: 17)
+            : Font.system(.body, design: .default)
+    }
+    static var lmBody: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontRegular, size: 17)
+            : Font.system(.body, design: .default)
+    }
+    static var lmBodySmall: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontRegular, size: 15)
+            : Font.system(.subheadline, design: .default)
+    }
+    static var lmCaption: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontRegular, size: 12)
+            : Font.system(.caption, design: .default)
+    }
+    static var lmLabel: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMono, size: 12)
+            : Font.system(.caption2, design: .monospaced)
+    }
+    static var lmButtonSmall: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMedium, size: 13)
+            : Font.system(size: 13, weight: .semibold, design: .default)
+    }
+    static var lmButtonMedium: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMedium, size: 14)
+            : Font.system(size: 14, weight: .semibold, design: .default)
+    }
+    static var lmButtonLarge: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMedium, size: 16)
+            : Font.system(size: 16, weight: .semibold, design: .default)
+    }
+    static var lmControlLabel: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontRegular, size: 14)
+            : Font.system(size: 14, weight: .medium, design: .default)
+    }
 }
 
 // MARK: - Tracking (字距 · uppercase 英文 label 用)

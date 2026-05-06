@@ -8,9 +8,28 @@ struct TypographyView: View {
     private let displayLine = "Aa 永 LazzyMerlin"
     private let bodyLine = "懶人魔法師慵懶地閃耀著。Lazy magic is real magic."
 
+    @AppStorage("lm_dev_useAllLXGW") private var useAllLXGW: Bool = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: LMSpacing.section) {
+
+                // Dev toggle · 全 LXGW 體驗開關 (預設關、開啟後 UI tier 切到 LXGW)
+                LMSection("DEV TOGGLE · UI tier 字體") {
+                    Toggle(isOn: $useAllLXGW) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(useAllLXGW ? "全 LXGW WenKai · 體驗中" : "3-tier 標準 (預設)")
+                                .font(.lmBodySmall.weight(.semibold))
+                                .foregroundStyle(Color.ink)
+                            Text("ON = body / caption / button / control 也用 LXGW · OFF = 系統字 (SF Pro / PingFang TC)")
+                                .font(.lmCaption)
+                                .foregroundStyle(Color.inkMutedSubdued)
+                        }
+                    }
+                    .toggleStyle(.lmSwitch)
+                    .padding(LMSpacing.lg)
+                    .tactileBase(radius: LMRadius.card)
+                }
 
                 LMSection("DISPLAY & HEADING") {
                     VStack(alignment: .leading, spacing: LMSpacing.lg) {
