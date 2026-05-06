@@ -46,6 +46,7 @@ extension Font {
     static let lmControlLabel = Font.system(size: 14, weight: .medium, design: .default)
     static let lmEmptyVisual  = Font.system(size: 52, weight: .semibold, design: .serif)
     static let lmEmptyCode    = Font.system(size: 48, weight: .semibold, design: .serif)
+    static let lmStatNumber   = Font.system(size: 40, weight: .bold, design: .default)  // stat 數據卡片數字
 }
 
 // MARK: - Tracking (字距 · uppercase 英文 label 用)

@@ -48,12 +48,23 @@ struct ContentView: View {
                         )
                     }
 
+                    // MARK: Design tokens (visual reference)
+                    LMListSection(header: "DESIGN TOKENS") {
+                        catalogRow("Colors",     icon: "paintpalette",       destination: ColorsView())
+                        LMListDivider()
+                        catalogRow("Logos",      icon: "moon.stars",         destination: LogosView())
+                        LMListDivider()
+                        catalogRow("Typography", icon: "textformat",         destination: TypographyView())
+                        LMListDivider()
+                        catalogRow("Spacing",    icon: "arrow.left.and.right", destination: SpacingView())
+                        LMListDivider()
+                        catalogRow("Radius",     icon: "square.dashed",      destination: RadiusView())
+                        LMListDivider()
+                        catalogRow("Motion",     icon: "wand.and.rays",      destination: MotionView())
+                    }
+
                     // MARK: Component catalog
                     LMListSection(header: "COMPONENT CATALOG") {
-                        catalogRow("Colors",            icon: "paintpalette",      destination: ColorsView())
-                        LMListDivider()
-                        catalogRow("Logos",             icon: "moon.stars",         destination: LogosView())
-                        LMListDivider()
                         catalogRow("Buttons",           icon: "rectangle",          destination: ButtonsView())
                         LMListDivider()
                         catalogRow("Cards",             icon: "rectangle.stack",    destination: CardsView())
