@@ -31,21 +31,31 @@ struct TypographyView: View {
                     .tactileBase(radius: LMRadius.card)
                 }
 
-                LMSection("DISPLAY & HEADING") {
+                LMSection("BRAND IDENTITY · 永遠 LXGW") {
                     VStack(alignment: .leading, spacing: LMSpacing.lg) {
                         sample(name: "lmDisplayXL · 56pt",    text: displayLine, font: .lmDisplayXL)
                         sample(name: "lmDisplayLarge · 48pt", text: displayLine, font: .lmDisplayLarge)
                         sample(name: "lmDisplay · 40pt",      text: displayLine, font: .lmDisplay)
-                        sample(name: "lmH1 · 28pt",           text: displayLine, font: .lmH1)
-                        sample(name: "lmH2 · 22pt",           text: displayLine, font: .lmH2)
-                        sample(name: "lmH3 · 20pt",           text: displayLine, font: .lmH3)
+                        sample(name: "lmEmptyVisual · 52pt",  text: "✦", font: .lmEmptyVisual)
+                        sample(name: "lmEmptyCode · 48pt",    text: "404", font: .lmEmptyCode)
                     }
                     .padding(LMSpacing.card)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .tactileBase(radius: LMRadius.card)
                 }
 
-                LMSection("BODY") {
+                LMSection("HEADING · 系統字 (toggle 可切 LXGW)") {
+                    VStack(alignment: .leading, spacing: LMSpacing.md) {
+                        sample(name: "lmH1 · 28pt", text: displayLine, font: .lmH1)
+                        sample(name: "lmH2 · 22pt", text: displayLine, font: .lmH2)
+                        sample(name: "lmH3 · 20pt", text: displayLine, font: .lmH3)
+                    }
+                    .padding(LMSpacing.card)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .tactileBase(radius: LMRadius.card)
+                }
+
+                LMSection("BODY · 系統字") {
                     VStack(alignment: .leading, spacing: LMSpacing.md) {
                         sample(name: "lmBodyLarge · 17pt", text: bodyLine, font: .lmBodyLarge)
                         sample(name: "lmBody · 17pt",      text: bodyLine, font: .lmBody)
@@ -56,17 +66,15 @@ struct TypographyView: View {
                     .tactileBase(radius: LMRadius.card)
                 }
 
-                LMSection("CAPTION · LABEL · COMPONENT") {
+                LMSection("CAPTION · LABEL · STAT · COMPONENT") {
                     VStack(alignment: .leading, spacing: LMSpacing.md) {
-                        sample(name: "lmCaption · 12pt",        text: bodyLine, font: .lmCaption)
-                        sample(name: "lmLabel · 12pt mono",     text: "ABC123 lmLabel mono", font: .lmLabel)
-                        sample(name: "lmStatNumber · 40pt",     text: "1,284", font: .lmStatNumber)
-                        sample(name: "lmButtonLarge · 16pt sb", text: "Button Large", font: .lmButtonLarge)
+                        sample(name: "lmCaption · 12pt",         text: bodyLine, font: .lmCaption)
+                        sample(name: "lmLabel · 12pt mono",      text: "ABC123 lmLabel mono", font: .lmLabel)
+                        sample(name: "lmStatNumber · 40pt mono", text: "1,284", font: .lmStatNumber)
+                        sample(name: "lmButtonLarge · 16pt sb",  text: "Button Large", font: .lmButtonLarge)
                         sample(name: "lmButtonMedium · 14pt sb", text: "Button Medium", font: .lmButtonMedium)
-                        sample(name: "lmButtonSmall · 13pt sb", text: "Button Small", font: .lmButtonSmall)
+                        sample(name: "lmButtonSmall · 13pt sb",  text: "Button Small", font: .lmButtonSmall)
                         sample(name: "lmControlLabel · 14pt md", text: "Control Label", font: .lmControlLabel)
-                        sample(name: "lmEmptyVisual · 52pt",    text: "✦", font: .lmEmptyVisual)
-                        sample(name: "lmEmptyCode · 48pt",      text: "404", font: .lmEmptyCode)
                     }
                     .padding(LMSpacing.card)
                     .frame(maxWidth: .infinity, alignment: .leading)

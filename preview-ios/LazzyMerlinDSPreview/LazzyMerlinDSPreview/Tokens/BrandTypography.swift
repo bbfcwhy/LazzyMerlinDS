@@ -2,18 +2,27 @@ import SwiftUI
 
 // LazzyMerlin DS §3 字體 + §7.2.4 iOS Type Scale
 //
-// 3-tier 字體規則:
-//   Display tier  (≥ 20pt): LXGW WenKai TC Medium · brand 個性
-//   Numeric tier  (數字對齊): LXGW WenKai Mono TC Medium · 等寬數字
-//   UI tier       (≤ 17pt 操作): SF Pro / PingFang TC · 系統字符合 HIG
+// 2-tier 字體規則 (brand vs functional · 跨 iOS / macOS / Web 三平台)
 //
-// Dev toggle: LMFontMode.useAllLXGW · TypographyView 內可切換、讓 UI tier 也用 LXGW、體驗看看。
+//   Brand identity tier  → LXGW WenKai TC Medium · 永遠 LXGW
+//     · 用在 brand 聲量時刻：hero display / wordmark / empty state ✦ / 404 / about
+//     · 對應 token: lmDisplayXL / lmDisplayLarge / lmDisplay / lmEmptyVisual / lmEmptyCode
+//
+//   Functional UI tier   → 系統字 (SF Pro / PingFang TC)、dev toggle 可切到 LXGW
+//     · 用在閱讀 / 操作：page heading / body / caption / button / form / stat
+//     · 對應 token: lmH1-H3 / lmBody* / lmCaption / lmLabel / lmButton* / lmControl* / lmStatNumber
+//
+// 這樣 production app 真正需要 bundle 的 LXGW weight 只剩 1 個 (Medium)、
+// 其他 5 個 .ttf (Light / Regular / Mono / Mono Medium) 留 preview app dev toggle 試驗用、
+// production iOS / macOS / Web 落地時可以拿掉減 bundle size。
+//
+// Dev toggle: LMFontMode.useAllLXGW · TypographyView 內可切換、讓 functional tier 也試 LXGW。
 
 // MARK: - Dev mode toggle
 
 enum LMFontMode {
     /// Debug / preview only · TypographyView 提供 toggle
-    /// 開啟時、UI tier (body/caption/button/control) 全切到 LXGW、可體感「全 LXGW」是否怪
+    /// 開啟時、functional UI tier 全切到 LXGW、體感「全 LXGW」風格 (preview app only)
     static var useAllLXGW: Bool {
         UserDefaults.standard.bool(forKey: "lm_dev_useAllLXGW")
     }
@@ -25,27 +34,38 @@ extension Font {
 
     static let lmBrandFontLight        = "LXGWWenKaiTC-Light"
     static let lmBrandFontRegular      = "LXGWWenKaiTC-Regular"
-    static let lmBrandFontMedium       = "LXGWWenKaiTC-Medium"
+    static let lmBrandFontMedium       = "LXGWWenKaiTC-Medium"     // ★ production 唯一需要的 weight
     static let lmBrandFontMono         = "LXGWWenKaiMonoTC-Regular"
     static let lmBrandFontMonoMedium   = "LXGWWenKaiMonoTC-Medium"
 
-    // MARK: - Display tier · 永遠 LXGW WenKai TC
+    // MARK: - Brand identity tier · 永遠 LXGW WenKai TC Medium
 
-    static let lmDisplayXL    = Font.custom(lmBrandFontMedium, size: 56)
-    static let lmDisplayLarge = Font.custom(lmBrandFontMedium, size: 48)
-    static let lmDisplay      = Font.custom(lmBrandFontMedium, size: 40)
-    static let lmH1           = Font.custom(lmBrandFontMedium, size: 28)
-    static let lmH2           = Font.custom(lmBrandFontMedium, size: 22)
-    static let lmH3           = Font.custom(lmBrandFontMedium, size: 20)
-    static let lmEmptyVisual  = Font.custom(lmBrandFontMedium, size: 52)  // hero ✦ / large icon
+    static let lmDisplayXL    = Font.custom(lmBrandFontMedium, size: 56)  // hero / wordmark
+    static let lmDisplayLarge = Font.custom(lmBrandFontMedium, size: 48)  // splash / 大型 brand 訊息
+    static let lmDisplay      = Font.custom(lmBrandFontMedium, size: 40)  // section 級 brand 訊息
+    static let lmEmptyVisual  = Font.custom(lmBrandFontMedium, size: 52)  // empty state hero ✦
     static let lmEmptyCode    = Font.custom(lmBrandFontMedium, size: 48)  // 404 / 大字 code
 
-    // MARK: - Numeric tier · 永遠 LXGW Mono (等寬數字對齊)
+    // MARK: - Functional UI tier · 預設 system、dev toggle 可切 LXGW
 
-    static let lmStatNumber = Font.custom(lmBrandFontMonoMedium, size: 40)
-
-    // MARK: - UI tier · 預設 system、dev toggle 可切到 LXGW
-
+    /// page-level 大標 (28pt) · 功能性、不算 brand 聲量
+    static var lmH1: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMedium, size: 28)
+            : Font.system(.title, design: .default).weight(.semibold)
+    }
+    /// section 標題 (22pt)
+    static var lmH2: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMedium, size: 22)
+            : Font.system(.title2, design: .default).weight(.semibold)
+    }
+    /// 子 section 標題 (20pt)
+    static var lmH3: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMedium, size: 20)
+            : Font.system(.title3, design: .default).weight(.semibold)
+    }
     static var lmBodyLarge: Font {
         LMFontMode.useAllLXGW
             ? Font.custom(lmBrandFontRegular, size: 17)
@@ -90,6 +110,12 @@ extension Font {
         LMFontMode.useAllLXGW
             ? Font.custom(lmBrandFontRegular, size: 14)
             : Font.system(size: 14, weight: .medium, design: .default)
+    }
+    /// stat 數字 (40pt) · 等寬對齊用 monospacedDigit (SF Pro 內建)
+    static var lmStatNumber: Font {
+        LMFontMode.useAllLXGW
+            ? Font.custom(lmBrandFontMonoMedium, size: 40)
+            : Font.system(size: 40, weight: .bold, design: .default).monospacedDigit()
     }
 }
 
