@@ -22,7 +22,7 @@ struct ColorsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                section("ROLE TOKENS") {
+                LMSection("ROLE TOKENS") {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
                         ForEach(lightRoles) { swatch in
                             swatchCard(swatch)
@@ -30,7 +30,7 @@ struct ColorsView: View {
                     }
                 }
 
-                section("EARTH TONE STATUS") {
+                LMSection("EARTH TONE STATUS") {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
                         ForEach(statusRoles) { swatch in
                             swatchCard(swatch)
@@ -38,7 +38,7 @@ struct ColorsView: View {
                     }
                 }
 
-                section("ALPHA TOKENS") {
+                LMSection("ALPHA TOKENS") {
                     HStack(spacing: 12) {
                         alphaCard("HAIRLINE", base: Color.bg, fill: Color.hairline)
                         alphaCard("BORDER", base: Color.bg, fill: Color.border)
@@ -98,14 +98,6 @@ struct ColorsView: View {
         .tactilePlain(radius: 12)
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 private struct ColorSwatch: Identifiable {

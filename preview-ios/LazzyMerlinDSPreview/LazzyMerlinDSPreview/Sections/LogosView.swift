@@ -4,7 +4,7 @@ struct LogosView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                section("BRAND MARK") {
+                LMSection("BRAND MARK") {
                     logoCard(
                         imageName: "LazzyMerlinLogo3D",
                         label: "Primary",
@@ -13,7 +13,7 @@ struct LogosView: View {
                     )
                 }
 
-                section("ICON / GLYPH") {
+                LMSection("ICON / GLYPH") {
                     iconCard(
                         imageName: "MoonStars",
                         label: "Moon & Stars",
@@ -22,7 +22,7 @@ struct LogosView: View {
                     )
                 }
 
-                section("SIGNATURE") {
+                LMSection("SIGNATURE") {
                     Text("Laziness sets your soul free.")
                         .font(.lmH3)
                         .foregroundStyle(Color.ink)
@@ -116,14 +116,6 @@ struct LogosView: View {
         .tactileBase(radius: 20)
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 #Preview {

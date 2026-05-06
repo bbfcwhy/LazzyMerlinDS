@@ -9,7 +9,7 @@ struct NavView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                section("TABS") {
+                LMSection("TABS") {
                     HStack(spacing: 20) {
                         ForEach(tabs, id: \.self) { tab in
                             Button {
@@ -29,7 +29,7 @@ struct NavView: View {
                     }
                 }
 
-                section("BREADCRUMB") {
+                LMSection("BREADCRUMB") {
                     HStack(spacing: 8) {
                         Text("首頁")
                         Text("·")
@@ -44,7 +44,7 @@ struct NavView: View {
                     .foregroundStyle(Color.primaryBrand)
                 }
 
-                section("PAGINATION") {
+                LMSection("PAGINATION") {
                     HStack(spacing: 8) {
                         pageIcon("chevron.left")
                         pageButton("1", selected: false)
@@ -59,7 +59,7 @@ struct NavView: View {
                     }
                 }
 
-                section("BOTTOM TAB BAR") {
+                LMSection("BOTTOM TAB BAR") {
                     LMTabBar(
                         selection: $bottomTab,
                         items: [
@@ -100,19 +100,11 @@ struct NavView: View {
         Button {
         } label: {
             Image(systemName: name)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.lmCaption.weight(.semibold))
         }
         .buttonStyle(TactileGhostButtonStyle(paddingV: 8, paddingH: 12))
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 #Preview {

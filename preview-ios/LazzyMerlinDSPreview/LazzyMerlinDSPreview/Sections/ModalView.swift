@@ -10,21 +10,21 @@ struct ModalView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
 
-                section("MODAL · Sheet (Tactile Raised dialog)") {
+                LMSection("MODAL · Sheet (Tactile Raised dialog)") {
                     Button("打開魔法書") {
                         showSheet = true
                     }
                     .buttonStyle(TactileRaisedButtonStyle(radius: 12))
                 }
 
-                section("MODAL · Alert") {
+                LMSection("MODAL · Alert") {
                     Button("確認危險操作") {
                         showAlert = true
                     }
                     .buttonStyle(TactileDestructiveButtonStyle(radius: 12))
                 }
 
-                section("MODAL · Confirmation Dialog") {
+                LMSection("MODAL · Confirmation Dialog") {
                     Button("更多選項") {
                         showConfirmation = true
                     }
@@ -121,14 +121,6 @@ struct ModalView: View {
         .background(Color.bgRaised.ignoresSafeArea())
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 #Preview {

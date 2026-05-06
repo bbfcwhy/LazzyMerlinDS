@@ -45,3 +45,24 @@
 //
 
 import SwiftUI
+
+// MARK: - Semantic opacity variants
+//
+// 散在各 view 的 `Color.inkMuted.opacity(0.65)` / `.opacity(0.40)` / `.opacity(0.55)`
+// 統一成語義化 alias、避免 hardcode magic number、跨 view 一致。
+//
+// 對應使用情境：
+//   inkMutedSubdued  · footer / meta / 次要說明文字 (0.65)
+//   inkMutedDisabled · disabled state 的字色 / placeholder (0.40)
+//   borderSubtle     · skeleton / 不重要的分隔線 (0.16)
+
+extension Color {
+    /// 次要說明文字 · footer / meta / disabled hint (~65% inkMuted)
+    static var inkMutedSubdued: Color { Color.inkMuted.opacity(0.65) }
+
+    /// Disabled state 字色 / placeholder (~40% inkMuted)
+    static var inkMutedDisabled: Color { Color.inkMuted.opacity(0.40) }
+
+    /// 弱化分隔 / skeleton fill (~16% inkMuted)
+    static var borderSubtle: Color { Color.inkMuted.opacity(0.16) }
+}

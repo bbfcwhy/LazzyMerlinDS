@@ -8,7 +8,7 @@ struct ChipsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
 
-                section("FILTER CHIPS (跨 hue 三色避免擠壓 §15.5.1)") {
+                LMSection("FILTER CHIPS (跨 hue 三色避免擠壓 §15.5.1)") {
                     HStack(spacing: 8) {
                         chip("ALL", color: .primaryBrand, selected: selected == "ALL") {
                             selected = "ALL"
@@ -22,7 +22,7 @@ struct ChipsView: View {
                     }
                 }
 
-                section("STATUS CHIPS (Earth Tone)") {
+                LMSection("STATUS CHIPS (Earth Tone)") {
                     HStack(spacing: 8) {
                         statusChip("INFO", icon: "info.circle.fill", color: .primaryBrand)
                         statusChip("SUCCESS", icon: "checkmark.circle.fill", color: .earthGreen)
@@ -31,7 +31,7 @@ struct ChipsView: View {
                     }
                 }
 
-                section("BADGE / TAG") {
+                LMSection("BADGE / TAG") {
                     HStack(spacing: 8) {
                         Text("BETA")
                             .font(.lmLabel)
@@ -92,14 +92,6 @@ struct ChipsView: View {
         .modifier(TactilePillModifier(color: color, isFilled: true))
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 // TactilePillModifier 已搬到 Tokens/TactileMaterial.swift、跨 view 共用 (DataView 也用)

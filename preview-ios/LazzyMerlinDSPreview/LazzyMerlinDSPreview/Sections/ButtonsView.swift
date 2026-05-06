@@ -7,7 +7,7 @@ struct ButtonsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
 
-                section("VARIANTS") {
+                LMSection("VARIANTS") {
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
                         Button("送出 Primary") {}
                             .buttonStyle(TactileRaisedButtonStyle(radius: 12))
@@ -26,7 +26,7 @@ struct ButtonsView: View {
                     }
                 }
 
-                section("SIZES") {
+                LMSection("SIZES") {
                     HStack(alignment: .center, spacing: 12) {
                         Button("S") {}
                             .buttonStyle(TactileRaisedButtonStyle(
@@ -41,7 +41,7 @@ struct ButtonsView: View {
                     }
                 }
 
-                section("ICON · LOADING · DISABLED") {
+                LMSection("ICON · LOADING · DISABLED") {
                     LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
                         Button {
                         } label: {
@@ -87,14 +87,6 @@ struct ButtonsView: View {
         .brandPage()
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 private struct TactileButtonLabelModifierProxy: ViewModifier {

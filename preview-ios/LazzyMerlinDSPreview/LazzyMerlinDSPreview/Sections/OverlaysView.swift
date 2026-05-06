@@ -9,7 +9,7 @@ struct OverlaysView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                section("TOOLTIP / POPOVER") {
+                LMSection("TOOLTIP / POPOVER") {
                     HStack(spacing: 8) {
                         Button("短提示") {
                             withAnimation(.spring(response: 0.32, dampingFraction: 0.78)) {
@@ -40,7 +40,7 @@ struct OverlaysView: View {
                     }
                 }
 
-                section("MODAL / TOAST") {
+                LMSection("MODAL / TOAST") {
                     HStack(spacing: 12) {
                         Button("打開 Modal") {
                             showSheet = true
@@ -115,14 +115,6 @@ struct OverlaysView: View {
         .tactileBase(radius: 12)
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 #Preview {

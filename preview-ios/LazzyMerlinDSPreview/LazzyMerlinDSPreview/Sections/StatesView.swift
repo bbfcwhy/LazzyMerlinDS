@@ -4,21 +4,21 @@ struct StatesView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                section("EMPTY / SEARCH") {
+                LMSection("EMPTY / SEARCH") {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 12)], spacing: 12) {
                         stateCard(assetImage: "MoonStars", title: "這裡還沒寫東西。", body: "懶人通常這樣。", action: "開始寫")
                         stateCard(systemImage: "magnifyingglass", title: "找不到。", body: "換個字試試？")
                     }
                 }
 
-                section("404 / ERROR") {
+                LMSection("404 / ERROR") {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 220), spacing: 12)], spacing: 12) {
                         stateCard(visual: "404", title: "頁面沒了。", body: "可能我當初就沒做出來。", action: "回首頁")
                         stateCard(systemImage: "exclamationmark.triangle", title: "壞了。", body: "不是你的問題。大概。", action: "再試一次")
                     }
                 }
 
-                section("SKELETON") {
+                LMSection("SKELETON") {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 12) {
                             skeleton(width: 44, height: 44, radius: 22)
@@ -53,19 +53,19 @@ struct StatesView: View {
             if let visual {
                 Text(visual)
                     .font(.system(size: visual == "404" ? 48 : 52, weight: .semibold, design: .serif))
-                    .foregroundStyle(Color.inkMuted.opacity(0.65))
+                    .foregroundStyle(Color.inkMutedSubdued)
             }
             if let systemImage {
                 Image(systemName: systemImage)
                     .font(.system(size: 42, weight: .regular))
-                    .foregroundStyle(Color.inkMuted.opacity(0.65))
+                    .foregroundStyle(Color.inkMutedSubdued)
             }
             if let assetImage {
                 Image(assetImage)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 48, height: 48)
-                    .foregroundStyle(Color.inkMuted.opacity(0.65))
+                    .foregroundStyle(Color.inkMutedSubdued)
             }
             Text(title)
                 .font(.lmH3)
@@ -87,18 +87,10 @@ struct StatesView: View {
     @ViewBuilder
     private func skeleton(width: CGFloat?, height: CGFloat, radius: CGFloat) -> some View {
         RoundedRectangle(cornerRadius: radius, style: .continuous)
-            .fill(Color.inkMuted.opacity(0.16))
+            .fill(Color.borderSubtle)
             .frame(width: width, height: height)
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 #Preview {

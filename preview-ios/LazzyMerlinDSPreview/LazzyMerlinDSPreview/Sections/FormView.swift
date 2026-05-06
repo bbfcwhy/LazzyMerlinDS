@@ -16,7 +16,7 @@ struct FormView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
 
-                section("INPUT · DEFAULT / ERROR / SUCCESS") {
+                LMSection("INPUT · DEFAULT / ERROR / SUCCESS") {
                     formField("Email", required: true, helper: "我們不會傳行銷信。懶人沒空寫。") {
                         input("name@example.com", text: $email)
                     }
@@ -30,12 +30,12 @@ struct FormView: View {
                     }
                 }
 
-                section("TEXTAREA · SELECT · DISABLED") {
+                LMSection("TEXTAREA · SELECT · DISABLED") {
                     formField("想說什麼") {
                         TextEditor(text: $note)
                             .scrollContentBackground(.hidden)
                             .frame(minHeight: 96)
-                            .font(.system(size: 14))
+                            .font(.lmBodySmall)
                             .foregroundStyle(Color.ink)
                             .padding(.vertical, 10)
                             .padding(.horizontal, 14)
@@ -45,11 +45,11 @@ struct FormView: View {
                     formField("你是哪種懶") {
                         HStack {
                             Text("選一個...")
-                                .font(.system(size: 14))
+                                .font(.lmBodySmall)
                                 .foregroundStyle(Color.ink)
                             Spacer()
                             Image(systemName: "chevron.down")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.lmCaption.weight(.semibold))
                                 .foregroundStyle(Color.ink)
                         }
                         .padding(.vertical, 14)
@@ -62,7 +62,7 @@ struct FormView: View {
                     }
                 }
 
-                section("TOGGLE / SWITCH") {
+                LMSection("TOGGLE / SWITCH") {
                     Toggle("接收懶人魔法師的更新", isOn: $notify)
                         .toggleStyle(.lmSwitch)
                         .font(.lmBodySmall)
@@ -72,7 +72,7 @@ struct FormView: View {
                         .tactileBase(radius: 12)
                 }
 
-                section("SLIDER") {
+                LMSection("SLIDER") {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
                             Text("音量")
@@ -90,7 +90,7 @@ struct FormView: View {
                     .tactileBase(radius: 12)
                 }
 
-                section("STEPPER") {
+                LMSection("STEPPER") {
                     HStack {
                         Text("數量")
                             .font(.lmBodySmall)
@@ -103,7 +103,7 @@ struct FormView: View {
                     .tactileBase(radius: 12)
                 }
 
-                section("COLOR PICKER") {
+                LMSection("COLOR PICKER") {
                     VStack(spacing: 0) {
                         LMColorPicker(title: "選個顏色", color: $pickedColor)
                             .padding(.vertical, 12)
@@ -112,7 +112,7 @@ struct FormView: View {
                     .tactileBase(radius: 12)
                 }
 
-                section("DATE PICKER") {
+                LMSection("DATE PICKER") {
                     LMDatePicker(selection: $pickedDate)
                 }
 
@@ -134,11 +134,11 @@ struct FormView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 2) {
                 Text(label)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.lmBodySmall.weight(.medium))
                     .foregroundStyle(Color.ink)
                 if required {
                     Text("*")
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.lmBodySmall.weight(.medium))
                         .foregroundStyle(Color.earthRed)
                 }
             }
@@ -147,7 +147,7 @@ struct FormView: View {
 
             if let helper {
                 Text(helper)
-                    .font(.system(size: 13))
+                    .font(.lmCaption)
                     .foregroundStyle(Color.inkMuted)
             }
             if let error {
@@ -155,7 +155,7 @@ struct FormView: View {
                     Image(systemName: "exclamationmark.circle")
                     Text(error)
                 }
-                .font(.system(size: 13))
+                .font(.lmCaption)
                 .foregroundStyle(Color.earthRed)
             }
             if let success {
@@ -163,7 +163,7 @@ struct FormView: View {
                     Image(systemName: "checkmark")
                     Text(success)
                 }
-                .font(.system(size: 13))
+                .font(.lmCaption)
                 .foregroundStyle(Color.earthGreen)
             }
         }
@@ -181,7 +181,7 @@ struct FormView: View {
             .keyboardType(.emailAddress)
             #endif
             .autocorrectionDisabled()
-            .font(.system(size: 14))
+            .font(.lmBodySmall)
             .foregroundStyle(isDisabled ? Color.inkMuted.opacity(0.60) : Color.ink)
             .padding(.vertical, 14)
             .padding(.horizontal, 18)
@@ -196,14 +196,6 @@ struct FormView: View {
             .disabled(isDisabled)
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 #Preview {

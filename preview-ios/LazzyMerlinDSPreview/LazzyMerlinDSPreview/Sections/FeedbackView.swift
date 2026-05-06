@@ -6,23 +6,23 @@ struct FeedbackView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
 
-                section("TOAST · SUCCESS") {
+                LMSection("TOAST · SUCCESS") {
                     toast(text: "好了 ✦", icon: "checkmark.circle.fill", color: .earthGreen)
                 }
 
-                section("TOAST · ERROR") {
+                LMSection("TOAST · ERROR") {
                     toast(text: "壞了。可能是我沒做對 — 再試試看 ↻", icon: "xmark.octagon.fill", color: .earthRed)
                 }
 
-                section("TOAST · WARNING") {
+                LMSection("TOAST · WARNING") {
                     toast(text: "比預期久一點，再等一下 ✦", icon: "clock.fill", color: .earthOchre)
                 }
 
-                section("TOAST · INFO") {
+                LMSection("TOAST · INFO") {
                     toast(text: "已儲存草稿。", icon: "info.circle.fill", color: .primaryBrand)
                 }
 
-                section("EMPTY STATE") {
+                LMSection("EMPTY STATE") {
                     VStack(spacing: 16) {
                         Image("MoonStars")
                             .resizable()
@@ -40,7 +40,7 @@ struct FeedbackView: View {
                     .padding(.vertical, 64)
                 }
 
-                section("LOADING") {
+                LMSection("LOADING") {
                     HStack(spacing: 12) {
                         LMSpinner(size: 22, lineWidth: 3)
                         Text("處理中⋯⋯")
@@ -76,14 +76,6 @@ struct FeedbackView: View {
         .tactileBase(radius: 12)
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 #Preview {

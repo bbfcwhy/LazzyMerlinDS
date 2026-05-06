@@ -11,7 +11,7 @@ struct DataView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
-                section("TABLE") {
+                LMSection("TABLE") {
                     VStack(spacing: 0) {
                         tableHeader
                         ForEach(rows) { row in
@@ -22,7 +22,7 @@ struct DataView: View {
                     .tactilePlain(radius: 14)
                 }
 
-                section("LIST") {
+                LMSection("LIST") {
                     VStack(spacing: 0) {
                         listRow(initial: "威", title: "把網站重構成 LazzyMerlin DS v5", meta: "2026-05-05 · 預估 4 小時", color: .primaryBrand)
                         Divider().overlay(Color.border)
@@ -103,14 +103,6 @@ struct DataView: View {
         .padding(14)
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 }
 
 private struct ProjectRow: Identifiable {

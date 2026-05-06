@@ -6,7 +6,7 @@ struct CardsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
 
-                section("EDITORIAL CARD (Tactile Base)") {
+                LMSection("EDITORIAL CARD (Tactile Base)") {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Laziness sets your soul free.")
                             .font(.lmH3)
@@ -21,7 +21,7 @@ struct CardsView: View {
                     .tactileBase(radius: 20)
                 }
 
-                section("HERO TILE (Tactile Raised)") {
+                LMSection("HERO TILE (Tactile Raised)") {
                     HStack(spacing: 16) {
                         Image("MoonStars")
                             .resizable()
@@ -41,7 +41,7 @@ struct CardsView: View {
                     .tactileRaised(radius: 16)
                 }
 
-                section("PLAIN CARD (Hybrid)") {
+                LMSection("PLAIN CARD (Hybrid)") {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("輕量卡片")
                             .font(.lmBodyLarge)
@@ -55,7 +55,7 @@ struct CardsView: View {
                     .tactilePlain(radius: 20)
                 }
 
-                section("STAT CARDS") {
+                LMSection("STAT CARDS") {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
                         statCard("DAU", value: "1,284", trend: "↑ 12% vs 上週", color: .earthGreen)
                         statCard("RETENTION", value: "68%", trend: "↓ 3% vs 上週", color: .earthRed)
@@ -71,14 +71,6 @@ struct CardsView: View {
         .brandPage()
     }
 
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title).sectionLabel()
-            content()
-        }
-    }
 
     @ViewBuilder
     private func statCard(_ label: String, value: String, trend: String, color: Color) -> some View {
