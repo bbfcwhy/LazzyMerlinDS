@@ -95,7 +95,7 @@ private struct LMAlertCard: View {
     private var buttonRow: some View {
         // 兩顆以下橫排、三顆以上直排
         if buttons.count <= 2 {
-            HStack(spacing: LMRadius.md) {
+            HStack(spacing: LMSpacing.md) {
                 ForEach(buttons) { btn in
                     button(btn)
                 }

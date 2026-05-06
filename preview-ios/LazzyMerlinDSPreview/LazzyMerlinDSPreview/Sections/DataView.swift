@@ -10,7 +10,7 @@ struct DataView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
                 LMSection("TABLE") {
                     VStack(spacing: 0) {
                         tableHeader
@@ -18,7 +18,7 @@ struct DataView: View {
                             tableRow(row)
                         }
                     }
-                    .padding(.vertical, 8)
+                    .padding(.vertical, LMSpacing.sm)
                     .tactilePlain(radius: 14)
                 }
 
@@ -35,7 +35,7 @@ struct DataView: View {
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Data")
         .brandPage()
@@ -50,7 +50,7 @@ struct DataView: View {
         }
         .font(.lmLabel)
         .foregroundStyle(Color.inkMuted)
-        .padding(.horizontal, 14)
+        .padding(.horizontal, LMSpacing.controlGap)
         .padding(.vertical, 10)
     }
 
@@ -67,7 +67,7 @@ struct DataView: View {
                 .frame(width: 84, alignment: .leading)
             Text(row.status)
                 .font(.lmLabel)
-                .padding(.vertical, 4)
+                .padding(.vertical, LMSpacing.xxs)
                 .padding(.horizontal, 7)
                 .tactilePill(color: row.statusColor)
                 .frame(width: 68, alignment: .leading)
@@ -76,8 +76,8 @@ struct DataView: View {
                 .foregroundStyle(Color.ink)
                 .frame(width: 68, alignment: .trailing)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
+        .padding(.horizontal, LMSpacing.controlGap)
+        .padding(.vertical, LMSpacing.md)
     }
 
     @ViewBuilder
@@ -86,7 +86,7 @@ struct DataView: View {
                          meta: String,
                          color: Color,
                          usesMoonStar: Bool = false) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: LMSpacing.md) {
             if usesMoonStar {
                 LMAvatar(assetImage: "MoonStars", color: color)
             } else {
@@ -105,7 +105,7 @@ struct DataView: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Color.inkMuted)
         }
-        .padding(14)
+        .padding(LMSpacing.controlGap)
     }
 
 }

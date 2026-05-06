@@ -14,7 +14,7 @@ struct FormView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
 
                 LMSection("INPUT · DEFAULT / ERROR / SUCCESS") {
                     formField("Email", required: true, helper: "我們不會傳行銷信。懶人沒空寫。") {
@@ -38,7 +38,7 @@ struct FormView: View {
                             .font(.lmBodySmall)
                             .foregroundStyle(Color.ink)
                             .padding(.vertical, 10)
-                            .padding(.horizontal, 14)
+                            .padding(.horizontal, LMSpacing.controlGap)
                             .tactileInset(radius: 16)
                     }
 
@@ -52,7 +52,7 @@ struct FormView: View {
                                 .font(.lmCaption.weight(.semibold))
                                 .foregroundStyle(Color.ink)
                         }
-                        .padding(.vertical, 14)
+                        .padding(.vertical, LMSpacing.controlGap)
                         .padding(.horizontal, 18)
                         .tactileInset(radius: 16)
                     }
@@ -67,8 +67,8 @@ struct FormView: View {
                         .toggleStyle(.lmSwitch)
                         .font(.lmBodySmall)
                         .foregroundStyle(Color.ink)
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
+                        .padding(.vertical, LMSpacing.md)
+                        .padding(.horizontal, LMSpacing.lg)
                         .tactileBase(radius: 12)
                 }
 
@@ -85,8 +85,8 @@ struct FormView: View {
                         }
                         LMSlider(value: $sliderVal, range: 0...1, step: 0.01)
                     }
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 14)
+                    .padding(.vertical, LMSpacing.md)
+                    .padding(.horizontal, LMSpacing.controlGap)
                     .tactileBase(radius: 12)
                 }
 
@@ -98,16 +98,16 @@ struct FormView: View {
                         Spacer()
                         LMStepper(value: $stepperVal, range: 0...20, step: 1)
                     }
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 14)
+                    .padding(.vertical, LMSpacing.sm)
+                    .padding(.horizontal, LMSpacing.controlGap)
                     .tactileBase(radius: 12)
                 }
 
                 LMSection("COLOR PICKER") {
                     VStack(spacing: 0) {
                         LMColorPicker(title: "選個顏色", color: $pickedColor)
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 14)
+                            .padding(.vertical, LMSpacing.md)
+                            .padding(.horizontal, LMSpacing.controlGap)
                     }
                     .tactileBase(radius: 12)
                 }
@@ -118,7 +118,7 @@ struct FormView: View {
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Form")
         .brandPage()
@@ -131,7 +131,7 @@ struct FormView: View {
                                           error: String? = nil,
                                           success: String? = nil,
                                           @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: LMSpacing.xs) {
             HStack(spacing: 2) {
                 Text(label)
                     .font(.lmBodySmall.weight(.medium))
@@ -151,7 +151,7 @@ struct FormView: View {
                     .foregroundStyle(Color.inkMuted)
             }
             if let error {
-                HStack(spacing: 6) {
+                HStack(spacing: LMSpacing.xs) {
                     Image(systemName: "exclamationmark.circle")
                     Text(error)
                 }
@@ -159,7 +159,7 @@ struct FormView: View {
                 .foregroundStyle(Color.earthRed)
             }
             if let success {
-                HStack(spacing: 6) {
+                HStack(spacing: LMSpacing.xs) {
                     Image(systemName: "checkmark")
                     Text(success)
                 }
@@ -183,12 +183,12 @@ struct FormView: View {
             .autocorrectionDisabled()
             .font(.lmBodySmall)
             .foregroundStyle(isDisabled ? Color.inkMuted.opacity(0.60) : Color.ink)
-            .padding(.vertical, 14)
+            .padding(.vertical, LMSpacing.controlGap)
             .padding(.horizontal, 18)
             .tactileInset(radius: 16)
             .overlay {
                 if isInvalid {
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    RoundedRectangle(cornerRadius: LMRadius.xl, style: .continuous)
                         .strokeBorder(Color.earthRed, lineWidth: 1.5)
                 }
             }

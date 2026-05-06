@@ -4,7 +4,7 @@ struct FeedbackView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
 
                 LMSection("TOAST · SUCCESS") {
                     LMToast(text: "好了", icon: "checkmark.circle.fill", iconColor: .earthGreen)
@@ -23,7 +23,7 @@ struct FeedbackView: View {
                 }
 
                 LMSection("EMPTY STATE") {
-                    VStack(spacing: 16) {
+                    VStack(spacing: LMSpacing.lg) {
                         Image("MoonStars")
                             .resizable()
                             .scaledToFit()
@@ -37,24 +37,24 @@ struct FeedbackView: View {
                             .foregroundStyle(Color.inkMuted)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 64)
+                    .padding(.vertical, LMSpacing.stateVertical)
                 }
 
                 LMSection("LOADING") {
-                    HStack(spacing: 12) {
+                    HStack(spacing: LMSpacing.md) {
                         LMSpinner(size: 22, lineWidth: 3)
                         Text("處理中⋯⋯")
                             .font(.lmBody)
                             .foregroundStyle(Color.inkMuted)
                     }
-                    .padding(20)
+                    .padding(LMSpacing.page)
                     .frame(maxWidth: .infinity)
                     .tactileBase(radius: 12)
                 }
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Feedback")
         .brandPage()

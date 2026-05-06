@@ -8,7 +8,7 @@ struct ModalView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
 
                 LMSection("MODAL · Sheet (Tactile Raised dialog)") {
                     Button("打開魔法書") {
@@ -33,7 +33,7 @@ struct ModalView: View {
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Modal")
         .brandPage()
@@ -66,7 +66,7 @@ struct ModalView: View {
     }
 
     private var sheetContent: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: LMSpacing.page) {
             HStack {
                 Image("MoonStars")
                     .resizable()
@@ -94,7 +94,7 @@ struct ModalView: View {
 
             Spacer()
 
-            HStack(spacing: 12) {
+            HStack(spacing: LMSpacing.md) {
                 Button("取消") {
                     showSheet = false
                 }
@@ -103,7 +103,7 @@ struct ModalView: View {
                 Button {
                     showSheet = false
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: LMSpacing.xs) {
                         Text("好了")
                         // ★ Color.clear 容器鎖死可見尺寸、避免 MoonStars template image 被 parent .font() 自動 scale
                         Color.clear
@@ -118,7 +118,7 @@ struct ModalView: View {
                 .buttonStyle(TactileRaisedButtonStyle(radius: 12))
             }
         }
-        .padding(28)
+        .padding(LMSpacing.editorial)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color.bgRaised.ignoresSafeArea())
     }

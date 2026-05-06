@@ -75,7 +75,7 @@ struct StatesView: View {
                 .foregroundStyle(Color.inkMuted)
             if let action {
                 Button(action) {}
-                    .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button, paddingV: LMRadius.md, paddingH: LMSpacing.lg))
+                    .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button, paddingV: LMControlSize.buttonMediumV, paddingH: LMSpacing.lg))
                     .padding(.top, LMSpacing.sm)
             }
         }

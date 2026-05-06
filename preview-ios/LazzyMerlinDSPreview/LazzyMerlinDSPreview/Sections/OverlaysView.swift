@@ -8,9 +8,9 @@ struct OverlaysView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
                 LMSection("TOOLTIP / POPOVER") {
-                    HStack(spacing: 8) {
+                    HStack(spacing: LMSpacing.sm) {
                         Button("短提示") {
                             withAnimation(.spring(response: 0.32, dampingFraction: 0.78)) {
                                 showPopover.toggle()
@@ -41,7 +41,7 @@ struct OverlaysView: View {
                 }
 
                 LMSection("MODAL / TOAST") {
-                    HStack(spacing: 12) {
+                    HStack(spacing: LMSpacing.md) {
                         Button("打開 Modal") {
                             showSheet = true
                         }
@@ -70,7 +70,7 @@ struct OverlaysView: View {
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Overlays")
         .brandPage()
@@ -95,7 +95,7 @@ struct OverlaysView: View {
                 }
                 .buttonStyle(TactileRaisedButtonStyle(radius: 12))
             }
-            .padding(28)
+            .padding(LMSpacing.editorial)
             .background(Color.bgRaised.ignoresSafeArea())
         }
     }

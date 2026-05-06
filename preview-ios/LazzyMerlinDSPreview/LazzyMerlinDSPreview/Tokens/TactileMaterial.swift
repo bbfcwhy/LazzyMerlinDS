@@ -80,7 +80,7 @@ struct TactileBaseModifier: ViewModifier {
         content
             .background {
                 ZStack {
-                    Color.bgRaised
+                    Color.surface1 // editorial cards · 比 page bg 略浮一階 (elevation +1)
                     LinearGradient(
                         colors: [
                             .white.opacity(colorScheme == .dark ? 0.04 : 0.08),

@@ -9,7 +9,7 @@ struct NavView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
                 LMSection("TABS") {
                     LMTabStrip(selection: $selectedTab, options: tabs) { tab in
                         Text(tab)
@@ -34,16 +34,16 @@ struct NavView: View {
                             LMTabItem(tag: "profile",  label: "我",    icon: "person",         selectedIcon: "person.fill")
                         ]
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .clipShape(RoundedRectangle(cornerRadius: LMRadius.navCapsule, style: .continuous))
                     .overlay {
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        RoundedRectangle(cornerRadius: LMRadius.navCapsule, style: .continuous)
                             .strokeBorder(Color.hairline, lineWidth: 1)
                     }
                 }
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Navigation")
         .brandPage()

@@ -94,7 +94,7 @@ struct LMOverlayCardChrome: ViewModifier {
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         content
-            .background(shape.fill(Color.bgRaised))
+            .background(shape.fill(Color.surface2)) // overlay / alert · 最高 elevation (+2)
             .overlay {
                 shape.strokeBorder(LMOverlayChrome.border(colorScheme), lineWidth: 1)
             }

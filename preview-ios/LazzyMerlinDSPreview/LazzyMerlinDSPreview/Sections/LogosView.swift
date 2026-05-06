@@ -3,7 +3,7 @@ import SwiftUI
 struct LogosView: View {
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
                 LMSection("BRAND MARK") {
                     logoCard(
                         imageName: "LazzyMerlinLogo3D",
@@ -26,14 +26,14 @@ struct LogosView: View {
                     Text("Laziness sets your soul free.")
                         .font(.lmH3)
                         .foregroundStyle(Color.ink)
-                        .padding(24)
+                        .padding(LMSpacing.card)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .tactilePlain(radius: 14)
                 }
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Logos")
         .brandPage()
@@ -41,7 +41,7 @@ struct LogosView: View {
 
     @ViewBuilder
     private func logoCard(imageName: String, label: String, caption: String, meta: String) -> some View {
-        VStack(spacing: 20) {
+        VStack(spacing: LMSpacing.page) {
             Text(label)
                 .sectionLabel()
 
@@ -50,14 +50,14 @@ struct LogosView: View {
                 .scaledToFit()
                 .frame(maxWidth: .infinity)
                 .frame(height: 210)
-                .padding(.horizontal, 4)
+                .padding(.horizontal, LMSpacing.xxs)
 
             Text(caption)
                 .font(.lmH3)
                 .foregroundStyle(Color.ink)
                 .multilineTextAlignment(.center)
 
-            HStack(spacing: 6) {
+            HStack(spacing: LMSpacing.xs) {
                 Text(meta)
                     .font(.lmLabel)
                 Text("·")
@@ -70,19 +70,19 @@ struct LogosView: View {
             }
             .foregroundStyle(Color.inkMuted)
         }
-        .padding(24)
+        .padding(LMSpacing.card)
         .frame(maxWidth: .infinity)
         .tactileBase(radius: 20)
     }
 
     @ViewBuilder
     private func iconCard(imageName: String, label: String, caption: String, meta: String) -> some View {
-        VStack(spacing: 20) {
+        VStack(spacing: LMSpacing.page) {
             Text(label)
                 .sectionLabel()
 
             // 三組 size 並排展示 ・ 對齊 brand 圖示典型 use case (大 / 中 / 小)
-            HStack(spacing: 28) {
+            HStack(spacing: LMSpacing.editorial) {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
@@ -100,7 +100,7 @@ struct LogosView: View {
                     .foregroundStyle(Color.inkMuted)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
+            .padding(.vertical, LMSpacing.sm)
 
             Text(caption)
                 .font(.lmBodySmall)
@@ -111,7 +111,7 @@ struct LogosView: View {
                 .font(.lmLabel)
                 .foregroundStyle(Color.inkMuted)
         }
-        .padding(24)
+        .padding(LMSpacing.card)
         .frame(maxWidth: .infinity)
         .tactileBase(radius: 20)
     }

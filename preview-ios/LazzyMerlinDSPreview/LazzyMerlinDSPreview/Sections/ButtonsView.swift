@@ -36,7 +36,7 @@ struct ButtonsView: View {
                             .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
                         Button("Large") {}
                             .buttonStyle(TactileRaisedButtonStyle(
-                                radius: LMSpacing.controlGap, paddingV: LMControlSize.buttonLargeV, paddingH: LMControlSize.buttonLargeH
+                                radius: LMRadius.button, paddingV: LMControlSize.buttonLargeV, paddingH: LMControlSize.buttonLargeH
                             ))
                     }
                 }

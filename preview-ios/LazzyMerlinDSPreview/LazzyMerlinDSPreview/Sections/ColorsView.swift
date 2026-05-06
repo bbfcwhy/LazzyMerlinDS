@@ -21,9 +21,9 @@ struct ColorsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
                 LMSection("ROLE TOKENS") {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: LMSpacing.md)], spacing: LMSpacing.md) {
                         ForEach(lightRoles) { swatch in
                             swatchCard(swatch)
                         }
@@ -31,7 +31,7 @@ struct ColorsView: View {
                 }
 
                 LMSection("EARTH TONE STATUS") {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: LMSpacing.md)], spacing: LMSpacing.md) {
                         ForEach(statusRoles) { swatch in
                             swatchCard(swatch)
                         }
@@ -39,7 +39,7 @@ struct ColorsView: View {
                 }
 
                 LMSection("ALPHA TOKENS") {
-                    HStack(spacing: 12) {
+                    HStack(spacing: LMSpacing.md) {
                         alphaCard("HAIRLINE", base: Color.bg, fill: Color.hairline)
                         alphaCard("BORDER", base: Color.bg, fill: Color.border)
                     }
@@ -47,7 +47,7 @@ struct ColorsView: View {
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Colors")
         .brandPage()
@@ -70,7 +70,7 @@ struct ColorsView: View {
                 .font(.lmCaption.monospaced())
                 .foregroundStyle(Color.inkMuted)
         }
-        .padding(12)
+        .padding(LMSpacing.md)
         .tactilePlain(radius: 12)
     }
 
@@ -82,7 +82,7 @@ struct ColorsView: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 5, style: .continuous)
                         .fill(fill)
-                        .padding(12)
+                        .padding(LMSpacing.md)
                 }
                 .frame(height: 84)
                 .overlay {
@@ -93,7 +93,7 @@ struct ColorsView: View {
                 .font(.lmLabel)
                 .foregroundStyle(Color.ink)
         }
-        .padding(12)
+        .padding(LMSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .tactilePlain(radius: 12)
     }

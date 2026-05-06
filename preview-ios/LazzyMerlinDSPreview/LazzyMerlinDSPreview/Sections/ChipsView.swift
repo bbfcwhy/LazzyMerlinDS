@@ -6,10 +6,10 @@ struct ChipsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
 
                 LMSection("FILTER CHIPS (跨 hue 三色避免擠壓 §15.5.1)") {
-                    HStack(spacing: 8) {
+                    HStack(spacing: LMSpacing.sm) {
                         chip("ALL", color: .primaryBrand, selected: selected == "ALL") {
                             selected = "ALL"
                         }
@@ -23,7 +23,7 @@ struct ChipsView: View {
                 }
 
                 LMSection("STATUS CHIPS (Earth Tone)") {
-                    HStack(spacing: 8) {
+                    HStack(spacing: LMSpacing.sm) {
                         LMStatusChip(text: "INFO", icon: "info.circle.fill", color: .primaryBrand)
                         LMStatusChip(text: "SUCCESS", icon: "checkmark.circle.fill", color: .earthGreen)
                         LMStatusChip(text: "WARNING", icon: "exclamationmark.triangle.fill", color: .earthOchre)
@@ -32,17 +32,17 @@ struct ChipsView: View {
                 }
 
                 LMSection("BADGE / TAG") {
-                    HStack(spacing: 8) {
+                    HStack(spacing: LMSpacing.sm) {
                         Text("BETA")
                             .chipLabel()
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
+                            .padding(.vertical, LMSpacing.xxs)
+                            .padding(.horizontal, LMSpacing.sm)
                             .modifier(TactilePillModifier(color: .earthOchre, isFilled: true))
 
                         Text("NEW")
                             .chipLabel()
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
+                            .padding(.vertical, LMSpacing.xxs)
+                            .padding(.horizontal, LMSpacing.sm)
                             .modifier(TactilePillModifier(color: .primaryBrand, isFilled: true))
 
                         Circle()
@@ -53,7 +53,7 @@ struct ChipsView: View {
 
                 Spacer(minLength: 32)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Chips")
         .brandPage()
@@ -64,8 +64,8 @@ struct ChipsView: View {
         Button(action: action) {
             Text(text)
                 .chipLabel()
-                .padding(.vertical, 6)
-                .padding(.horizontal, 14)
+                .padding(.vertical, LMSpacing.xs)
+                .padding(.horizontal, LMSpacing.controlGap)
         }
         .buttonStyle(.plain)
         .modifier(TactilePillModifier(color: color, isFilled: selected))
