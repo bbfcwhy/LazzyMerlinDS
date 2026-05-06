@@ -799,9 +799,7 @@ struct TunerView: View {
                 isPressed: isPressed
             ) {
                 Text("BETA")
-                    .font(.system(.caption2, design: .monospaced))
-                    .tracking(1.2)
-                    .textCase(.uppercase)
+                    .chipLabel()
             }
         case .circle:
             tactileLook(

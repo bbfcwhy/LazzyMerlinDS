@@ -7,9 +7,9 @@ import SwiftUI
 // MARK: - Raised (主 CTA)
 
 struct TactileRaisedButtonStyle: ButtonStyle {
-    var radius: CGFloat = 12
-    var paddingV: CGFloat = 12
-    var paddingH: CGFloat = 22
+    var radius: CGFloat = LMRadius.button
+    var paddingV: CGFloat = LMControlSize.buttonMediumV
+    var paddingH: CGFloat = LMControlSize.buttonMediumH
     var baseColor: Color = .primaryBrand
 
     func makeBody(configuration: Configuration) -> some View {
@@ -25,16 +25,16 @@ struct TactileRaisedButtonStyle: ButtonStyle {
             ))
             .scaleEffect(configuration.isPressed ? 0.985 : 1.0)
             .offset(y: configuration.isPressed ? 1 : 0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .animation(LMMotion.press, value: configuration.isPressed)
     }
 }
 
 // MARK: - Secondary (Hybrid · Web btn--secondary)
 
 struct TactileSecondaryButtonStyle: ButtonStyle {
-    var radius: CGFloat = 12
-    var paddingV: CGFloat = 12
-    var paddingH: CGFloat = 22
+    var radius: CGFloat = LMRadius.button
+    var paddingV: CGFloat = LMControlSize.buttonMediumV
+    var paddingH: CGFloat = LMControlSize.buttonMediumH
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -47,7 +47,7 @@ struct TactileSecondaryButtonStyle: ButtonStyle {
             ))
             .scaleEffect(configuration.isPressed ? 0.985 : 1.0)
             .offset(y: configuration.isPressed ? 1 : 0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .animation(LMMotion.press, value: configuration.isPressed)
     }
 }
 
@@ -58,9 +58,9 @@ struct TactileSecondaryButtonStyle: ButtonStyle {
 // 這個 style 現在只剩給 expand/collapse 容器或設定 card 整塊可點擊那種場景。
 
 struct TactileBaseButtonStyle: ButtonStyle {
-    var radius: CGFloat = 12
-    var paddingV: CGFloat = 12
-    var paddingH: CGFloat = 22
+    var radius: CGFloat = LMRadius.button
+    var paddingV: CGFloat = LMControlSize.buttonMediumV
+    var paddingH: CGFloat = LMControlSize.buttonMediumH
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -72,16 +72,16 @@ struct TactileBaseButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.985 : 1.0)
             .offset(y: configuration.isPressed ? 1 : 0)
             .opacity(configuration.isPressed ? 0.92 : 1.0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .animation(LMMotion.press, value: configuration.isPressed)
     }
 }
 
 // MARK: - Pressed (selected toggle)
 
 struct TactilePressedButtonStyle: ButtonStyle {
-    var radius: CGFloat = 12
-    var paddingV: CGFloat = 12
-    var paddingH: CGFloat = 22
+    var radius: CGFloat = LMRadius.button
+    var paddingV: CGFloat = LMControlSize.buttonMediumV
+    var paddingH: CGFloat = LMControlSize.buttonMediumH
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -91,16 +91,16 @@ struct TactilePressedButtonStyle: ButtonStyle {
             .tactilePressed(radius: radius)
             .scaleEffect(configuration.isPressed ? 0.985 : 1.0)
             .offset(y: configuration.isPressed ? 1 : 0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .animation(LMMotion.press, value: configuration.isPressed)
     }
 }
 
 // MARK: - Destructive (raised 結構 + earthRed base)
 
 struct TactileDestructiveButtonStyle: ButtonStyle {
-    var radius: CGFloat = 12
-    var paddingV: CGFloat = 12
-    var paddingH: CGFloat = 22
+    var radius: CGFloat = LMRadius.button
+    var paddingV: CGFloat = LMControlSize.buttonMediumV
+    var paddingH: CGFloat = LMControlSize.buttonMediumH
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -115,15 +115,15 @@ struct TactileDestructiveButtonStyle: ButtonStyle {
             ))
             .scaleEffect(configuration.isPressed ? 0.985 : 1.0)
             .offset(y: configuration.isPressed ? 1 : 0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .animation(LMMotion.press, value: configuration.isPressed)
     }
 }
 
 // MARK: - Ghost (text-only)
 
 struct TactileGhostButtonStyle: ButtonStyle {
-    var paddingV: CGFloat = 12
-    var paddingH: CGFloat = 22
+    var paddingV: CGFloat = LMControlSize.buttonMediumV
+    var paddingH: CGFloat = LMControlSize.buttonMediumH
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -132,7 +132,7 @@ struct TactileGhostButtonStyle: ButtonStyle {
             .padding(.horizontal, paddingH)
             .foregroundStyle(Color.primaryBrand)
             .opacity(configuration.isPressed ? 0.55 : 1.0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .animation(LMMotion.press, value: configuration.isPressed)
     }
 }
 
@@ -167,7 +167,7 @@ struct LMGhostIconButtonStyle: ButtonStyle {
             )
             .scaleEffect(isPressed ? 0.85 : 1.0)
             .opacity(isPressed ? 0.75 : 1.0)
-            .animation(.easeOut(duration: 0.12), value: isPressed)
+            .animation(LMMotion.press, value: isPressed)
     }
 }
 
@@ -192,6 +192,14 @@ enum TactileButtonLabelSize {
         case .large: 16
         }
     }
+
+    var font: Font {
+        switch self {
+        case .small: .lmButtonSmall
+        case .medium: .lmButtonMedium
+        case .large: .lmButtonLarge
+        }
+    }
 }
 
 struct TactileButtonLabelModifier: ViewModifier {
@@ -199,8 +207,6 @@ struct TactileButtonLabelModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .font(.system(size: size.pointSize, weight: .semibold, design: .default))
-            .lineLimit(1)
-            .minimumScaleFactor(0.85)
+            .tactileButtonText(size: size)
     }
 }

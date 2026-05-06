@@ -90,7 +90,7 @@ struct ModalView: View {
             Text("這是一個 modal 範例。Tactile Raised dialog 浮在 backdrop 上，用 §5.4 共通六件配方做出視覺氣質一致的層次感。")
                 .font(.lmBody)
                 .foregroundStyle(Color.inkMuted)
-                .lineSpacing(6)
+                .lineSpacing(LMLineSpacing.loose)
 
             Spacer()
 

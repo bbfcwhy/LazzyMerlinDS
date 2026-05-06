@@ -36,14 +36,14 @@ struct LMAlertModifier: ViewModifier {
             ZStack {
                 if isPresented {
                     // Backdrop
-                    Color.black.opacity(0.42)
+                    LMOverlayChrome.backdrop
                         .ignoresSafeArea()
                         .transition(.opacity)
                         .onTapGesture {
                             if let cancel = buttons.first(where: { $0.role == .cancel }) {
                                 cancel.action()
                             }
-                            withAnimation(.easeOut(duration: 0.18)) { isPresented = false }
+                            withAnimation(LMMotion.quickDismiss) { isPresented = false }
                         }
 
                     LMAlertCard(
@@ -51,14 +51,14 @@ struct LMAlertModifier: ViewModifier {
                         message: message,
                         buttons: buttons,
                         dismiss: {
-                            withAnimation(.easeOut(duration: 0.18)) { isPresented = false }
+                            withAnimation(LMMotion.quickDismiss) { isPresented = false }
                         }
                     )
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, LMSpacing.section)
                     .transition(.scale(scale: 0.92).combined(with: .opacity))
                 }
             }
-            .animation(.spring(response: 0.32, dampingFraction: 0.82), value: isPresented)
+            .animation(LMMotion.overlaySpring, value: isPresented)
         }
     }
 }
@@ -68,19 +68,16 @@ private struct LMAlertCard: View {
     let message: String?
     let buttons: [LMAlertButton]
     let dismiss: () -> Void
-    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         cardContent
-            .padding(24)
-            .frame(maxWidth: 420)
-            .background(cardBackground)
-            .overlay(cardBorder)
-            .shadow(color: .black.opacity(0.32), radius: 20, x: 0, y: 12)
+            .padding(LMSpacing.card)
+            .frame(maxWidth: LMOverlayChrome.cardMaxWidth)
+            .lmOverlayCardChrome()
     }
 
     private var cardContent: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: LMSpacing.controlGap) {
             Text(title)
                 .font(.lmH3)
                 .foregroundStyle(Color.ink)
@@ -88,40 +85,29 @@ private struct LMAlertCard: View {
                 Text(message)
                     .font(.lmBodySmall)
                     .foregroundStyle(Color.inkMuted)
-                    .lineSpacing(4)
+                    .lineSpacing(LMLineSpacing.normal)
             }
             buttonRow
         }
-    }
-
-    private var cardBackground: some View {
-        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
-        return shape
-            .fill(Color.bgRaised)
-    }
-
-    private var cardBorder: some View {
-        RoundedRectangle(cornerRadius: 20, style: .continuous)
-            .strokeBorder(Color.black.opacity(colorScheme == .dark ? 0.30 : 0.10), lineWidth: 1)
     }
 
     @ViewBuilder
     private var buttonRow: some View {
         // 兩顆以下橫排、三顆以上直排
         if buttons.count <= 2 {
-            HStack(spacing: 10) {
+            HStack(spacing: LMRadius.md) {
                 ForEach(buttons) { btn in
                     button(btn)
                 }
             }
-            .padding(.top, 4)
+            .padding(.top, LMSpacing.xxs)
         } else {
-            VStack(spacing: 8) {
+            VStack(spacing: LMSpacing.sm) {
                 ForEach(buttons) { btn in
                     button(btn)
                 }
             }
-            .padding(.top, 4)
+            .padding(.top, LMSpacing.xxs)
         }
     }
 
@@ -139,9 +125,9 @@ private struct LMAlertCard: View {
 
     private func buttonStyleFor(_ role: LMAlertButton.Role) -> AnyButtonStyle {
         switch role {
-        case .destructive: return AnyButtonStyle(TactileDestructiveButtonStyle(radius: 12, paddingV: 11, paddingH: 18))
-        case .cancel:      return AnyButtonStyle(TactileSecondaryButtonStyle(radius: 12, paddingV: 11, paddingH: 18))
-        case .default:     return AnyButtonStyle(TactileRaisedButtonStyle(radius: 12, paddingV: 11, paddingH: 18))
+        case .destructive: return AnyButtonStyle(TactileDestructiveButtonStyle(radius: LMRadius.button, paddingV: LMControlSize.alertButtonV, paddingH: LMControlSize.alertButtonH))
+        case .cancel:      return AnyButtonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button, paddingV: LMControlSize.alertButtonV, paddingH: LMControlSize.alertButtonH))
+        case .default:     return AnyButtonStyle(TactileRaisedButtonStyle(radius: LMRadius.button, paddingV: LMControlSize.alertButtonV, paddingH: LMControlSize.alertButtonH))
         }
     }
 }
@@ -157,26 +143,26 @@ struct LMActionSheetModifier: ViewModifier {
         content.overlay {
             ZStack(alignment: .bottom) {
                 if isPresented {
-                    Color.black.opacity(0.42)
+                    LMOverlayChrome.backdrop
                         .ignoresSafeArea()
                         .transition(.opacity)
                         .onTapGesture {
-                            withAnimation(.easeOut(duration: 0.18)) { isPresented = false }
+                            withAnimation(LMMotion.quickDismiss) { isPresented = false }
                         }
 
                     LMActionSheetCard(
                         title: title,
                         buttons: buttons,
                         dismiss: {
-                            withAnimation(.easeOut(duration: 0.18)) { isPresented = false }
+                            withAnimation(LMMotion.quickDismiss) { isPresented = false }
                         }
                     )
-                    .padding(.horizontal, 12)
-                    .padding(.bottom, 12)
+                    .padding(.horizontal, LMSpacing.md)
+                    .padding(.bottom, LMSpacing.md)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
-            .animation(.spring(response: 0.32, dampingFraction: 0.82), value: isPresented)
+            .animation(LMMotion.overlaySpring, value: isPresented)
         }
     }
 }
@@ -191,7 +177,7 @@ private struct LMActionSheetCard: View {
     private var cancelButton: LMAlertButton? { buttons.first { $0.role == .cancel } }
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: LMSpacing.sm) {
             // Action group
             VStack(spacing: 0) {
                 if let title {
@@ -199,7 +185,7 @@ private struct LMActionSheetCard: View {
                         .font(.lmCaption)
                         .foregroundStyle(Color.inkMuted)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .padding(.vertical, LMSpacing.controlGap)
                     Divider().overlay(Color.border.opacity(0.5))
                 }
                 ForEach(Array(actionButtons.enumerated()), id: \.offset) { idx, btn in
@@ -211,7 +197,7 @@ private struct LMActionSheetCard: View {
                             .font(.lmBody.weight(btn.role == .destructive ? .semibold : .regular))
                             .foregroundStyle(btn.role == .destructive ? Color.earthRed : Color.ink)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
+                            .padding(.vertical, LMSpacing.lg)
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
@@ -232,7 +218,7 @@ private struct LMActionSheetCard: View {
                         .font(.lmBody.weight(.semibold))
                         .foregroundStyle(Color.ink)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
+                            .padding(.vertical, LMSpacing.lg)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -246,9 +232,9 @@ private struct LMActionSheetCard: View {
             .fill(Color.bgRaised)
             .overlay {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
-                    .strokeBorder(Color.black.opacity(colorScheme == .dark ? 0.30 : 0.08), lineWidth: 1)
+                    .strokeBorder(LMOverlayChrome.actionSheetBorder(colorScheme), lineWidth: 1)
             }
-            .shadow(color: .black.opacity(0.32), radius: 14, x: 0, y: 8)
+            .shadow(color: LMOverlayChrome.cardShadow, radius: 14, x: 0, y: 8)
     }
 }
 

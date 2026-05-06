@@ -9,15 +9,19 @@ struct LMBackButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 4) {
+            HStack(spacing: LMSpacing.xxs) {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.lmButtonSmall)
                 Text("返回")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.lmControlLabel)
             }
         }
         // radius 大一點接近 capsule、padding 比一般 CTA 略小 (back button 是 utility chrome)
-        .buttonStyle(TactileSecondaryButtonStyle(radius: 18, paddingV: 8, paddingH: 14))
+        .buttonStyle(TactileSecondaryButtonStyle(
+            radius: LMRadius.navCapsule,
+            paddingV: LMControlSize.buttonSmallV,
+            paddingH: LMControlSize.buttonSmallH
+        ))
         .fixedSize()
     }
 }

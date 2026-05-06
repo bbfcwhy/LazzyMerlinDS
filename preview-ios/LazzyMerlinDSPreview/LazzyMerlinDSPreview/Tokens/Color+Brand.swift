@@ -13,6 +13,8 @@
 //  ----------------+-----------------------+--------------------------------
 //  Bg              | Color.bg              | #F5EFE4 → #0F1C26
 //  BgRaised        | Color.bgRaised        | #F5EFE4 → #0F1C26 (同 Bg)
+//  Surface1        | Color.surface1        | #F2ECDF → #152633
+//  Surface2        | Color.surface2        | #EEE5D6 → #1A3040
 //  BgMuted         | Color.bgMuted         | #DECCA7 → #4E3029
 //  Ink             | Color.ink             | #0F1C26 → #F5EFE4
 //  InkMuted        | Color.inkMuted        | #4E3029 → #DECCA7

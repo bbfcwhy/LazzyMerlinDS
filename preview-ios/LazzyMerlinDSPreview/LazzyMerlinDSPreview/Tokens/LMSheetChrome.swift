@@ -6,7 +6,7 @@ import SwiftUI
 // 用法：在 sheet content root 上加 `.lmSheetChrome()`
 
 struct LMSheetChromeModifier: ViewModifier {
-    var cornerRadius: CGFloat = 28
+    var cornerRadius: CGFloat = LMRadius.sheet
     var showsDragIndicator: Bool = true
 
     func body(content: Content) -> some View {
@@ -14,9 +14,9 @@ struct LMSheetChromeModifier: ViewModifier {
             if showsDragIndicator {
                 Capsule()
                     .fill(Color.inkMuted.opacity(0.35))
-                    .frame(width: 36, height: 5)
-                    .padding(.top, 8)
-                    .padding(.bottom, 4)
+                    .frame(width: LMControlSize.iconButton, height: 5)
+                    .padding(.top, LMSpacing.sm)
+                    .padding(.bottom, LMSpacing.xxs)
             }
             content
         }
@@ -33,7 +33,7 @@ struct LMSheetChromeModifier: ViewModifier {
 extension View {
     /// LazzyMerlin sheet chrome — bg + corner + 自訂 drag indicator
     /// 套在 sheet content 的 root 上、取代系統 Liquid Glass + 黑色 drag bar
-    func lmSheetChrome(cornerRadius: CGFloat = 28, showsDragIndicator: Bool = true) -> some View {
+    func lmSheetChrome(cornerRadius: CGFloat = LMRadius.sheet, showsDragIndicator: Bool = true) -> some View {
         modifier(LMSheetChromeModifier(cornerRadius: cornerRadius, showsDragIndicator: showsDragIndicator))
     }
 }

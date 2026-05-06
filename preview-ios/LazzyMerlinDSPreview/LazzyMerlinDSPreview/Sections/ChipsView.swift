@@ -34,17 +34,13 @@ struct ChipsView: View {
                 LMSection("BADGE / TAG") {
                     HStack(spacing: 8) {
                         Text("BETA")
-                            .font(.lmLabel)
-                            .textCase(.uppercase)
-                            .tracking(0.8)
+                            .chipLabel()
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
                             .modifier(TactilePillModifier(color: .earthOchre, isFilled: true))
 
                         Text("NEW")
-                            .font(.lmLabel)
-                            .textCase(.uppercase)
-                            .tracking(0.8)
+                            .chipLabel()
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
                             .modifier(TactilePillModifier(color: .primaryBrand, isFilled: true))
@@ -67,9 +63,7 @@ struct ChipsView: View {
     private func chip(_ text: String, color: Color, selected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(text)
-                .font(.lmCaption)
-                .textCase(.uppercase)
-                .tracking(0.8)
+                .chipLabel()
                 .padding(.vertical, 6)
                 .padding(.horizontal, 14)
         }

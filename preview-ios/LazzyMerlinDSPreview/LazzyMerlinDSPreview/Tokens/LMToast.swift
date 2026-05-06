@@ -9,10 +9,10 @@ struct LMToast: View {
     let text: String
     let icon: String        // SF Symbol name
     var iconColor: Color = .primaryBrand
-    var radius: CGFloat = 12
+    var radius: CGFloat = LMRadius.button
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: LMRadius.md) {
             Image(systemName: icon)
                 .font(.lmBodySmall.weight(.semibold))
                 .foregroundStyle(iconColor)
@@ -21,8 +21,8 @@ struct LMToast: View {
                 .foregroundStyle(Color.ink)
             Spacer()
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
+        .padding(.vertical, LMSpacing.md)
+        .padding(.horizontal, LMSpacing.lg)
         .tactileBase(radius: radius)
     }
 }

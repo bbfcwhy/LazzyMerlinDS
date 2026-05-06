@@ -7,8 +7,8 @@ import SwiftUI
 struct LMSkeleton: View {
 
     var width: CGFloat? = nil
-    var height: CGFloat = 12
-    var radius: CGFloat = 6
+    var height: CGFloat = LMSpacing.md
+    var radius: CGFloat = LMRadius.sm
     var animated: Bool = true
 
     @State private var pulse: Bool = false
@@ -20,7 +20,7 @@ struct LMSkeleton: View {
             .opacity(animated ? (pulse ? 1.0 : 0.55) : 1.0)
             .animation(
                 animated
-                    ? .easeInOut(duration: 1.2).repeatForever(autoreverses: true)
+                    ? LMMotion.skeletonPulse
                     : .default,
                 value: pulse
             )

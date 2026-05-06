@@ -1,87 +1,87 @@
 import SwiftUI
 
 struct ButtonsView: View {
-    private let columns = [GridItem(.adaptive(minimum: 118), spacing: 14)]
+    private let columns = [GridItem(.adaptive(minimum: 118), spacing: LMSpacing.controlGap)]
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: LMSpacing.section) {
 
                 LMSection("VARIANTS") {
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: LMSpacing.controlGap) {
                         Button("送出 Primary") {}
-                            .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+                            .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
 
                         Button("Cancel Secondary") {}
-                            .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
+                            .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button))
 
                         Button("Skip Ghost") {}
                             .buttonStyle(TactileGhostButtonStyle())
 
                         Button("刪除 Destructive") {}
-                            .buttonStyle(TactileDestructiveButtonStyle(radius: 12))
+                            .buttonStyle(TactileDestructiveButtonStyle(radius: LMRadius.button))
 
                         Button("Brand Deep") {}
-                            .buttonStyle(TactileRaisedButtonStyle(radius: 12, baseColor: .primaryDeep))
+                            .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button, baseColor: .primaryDeep))
                     }
                 }
 
                 LMSection("SIZES") {
-                    HStack(alignment: .center, spacing: 12) {
+                    HStack(alignment: .center, spacing: LMSpacing.md) {
                         Button("S") {}
                             .buttonStyle(TactileRaisedButtonStyle(
-                                radius: 10, paddingV: 8, paddingH: 14
+                                radius: LMRadius.md, paddingV: LMControlSize.buttonSmallV, paddingH: LMControlSize.buttonSmallH
                             ))
                         Button("中") {}
-                            .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+                            .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
                         Button("Large") {}
                             .buttonStyle(TactileRaisedButtonStyle(
-                                radius: 14, paddingV: 16, paddingH: 28
+                                radius: LMSpacing.controlGap, paddingV: LMControlSize.buttonLargeV, paddingH: LMControlSize.buttonLargeH
                             ))
                     }
                 }
 
                 LMSection("ICON · LOADING · DISABLED") {
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: LMSpacing.controlGap) {
                         Button {
                         } label: {
                             Label("新增", systemImage: "plus")
                         }
-                        .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+                        .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
 
                         Button {
                         } label: {
                             Label("查看更多", systemImage: "arrow.right")
                         }
-                        .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
+                        .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button))
 
                         Button {
                         } label: {
                             Image(systemName: "gearshape")
                                 .frame(width: 18, height: 18)
                         }
-                        .buttonStyle(TactileSecondaryButtonStyle(radius: 12, paddingV: 12, paddingH: 12))
+                        .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button, paddingV: LMControlSize.buttonMediumV, paddingH: LMControlSize.buttonMediumV))
 
                         Label("處理中", systemImage: "progress.indicator")
                             .modifier(TactileButtonLabelModifier(size: .medium))
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 22)
-                            .modifier(TactileRaisedModifier(radius: 12, isPressed: false))
+                            .padding(.vertical, LMControlSize.buttonMediumV)
+                            .padding(.horizontal, LMControlSize.buttonMediumH)
+                            .modifier(TactileRaisedModifier(radius: LMRadius.button, isPressed: false))
 
                         // Disabled · 保留 raised 立體 + 陰影 (跟其他 button 視覺一致) · 降飽和 + 降透明感「暫時不能按」
                         Text("已停用")
                             .modifier(TactileButtonLabelModifier(size: .medium))
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 22)
-                            .modifier(TactileRaisedModifier(radius: 12, isPressed: false))
+                            .padding(.vertical, LMControlSize.buttonMediumV)
+                            .padding(.horizontal, LMControlSize.buttonMediumH)
+                            .modifier(TactileRaisedModifier(radius: LMRadius.button, isPressed: false))
                             .saturation(0.35)
-                            .opacity(0.55)
+                            .opacity(LMOpacity.disabled)
                     }
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
-            .padding(20)
+            .padding(LMSpacing.page)
         }
         .navigationTitle("Buttons")
         .brandPage()

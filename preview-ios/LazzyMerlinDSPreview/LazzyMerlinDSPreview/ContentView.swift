@@ -17,7 +17,7 @@ struct ContentView: View {
                         Text("Design System Preview")
                             .font(.lmCaption)
                             .foregroundStyle(Color.inkMuted)
-                            .tracking(1)
+                            .tracking(LMTracking.loose)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)

@@ -12,12 +12,7 @@ struct TactileRaisedModifier: ViewModifier {
     var baseColor: Color = .primaryBrand
     var isPressed: Bool = false
     @Environment(\.colorScheme) private var colorScheme
-    // shadow color · light: navy #0F1C26 (brand-fitted) / dark: pure black (跟 dark bg #0F1C26 區分、避免 navy 投 navy 0 對比看不到)
-    private var shadowInk: Color {
-        colorScheme == .dark
-            ? .black
-            : Color(red: 15 / 255, green: 28 / 255, blue: 38 / 255)
-    }
+    private var shadowInk: Color { LMTactile.shadowInk(colorScheme) }
 
     func body(content: Content) -> some View {
         content
@@ -38,12 +33,12 @@ struct TactileRaisedModifier: ViewModifier {
                                 .clear,
                                 .black.opacity(0.10)
                             ],
-                        startPoint: UnitPoint(x: 0.413, y: 0.008),
-                        endPoint: UnitPoint(x: 0.587, y: 0.993)
+                        startPoint: LMTactile.gradientStart,
+                        endPoint: LMTactile.gradientEnd
                     )
                     Image("TactileNoise")
                         .resizable(resizingMode: .tile)
-                        .opacity(0.30)
+                        .opacity(LMTactile.raisedNoiseOpacity)
                         .blendMode(colorScheme == .dark ? .softLight : .overlay)
                         .allowsHitTesting(false)
                 }
@@ -92,12 +87,12 @@ struct TactileBaseModifier: ViewModifier {
                             .clear,
                             .black.opacity(colorScheme == .dark ? 0.10 : 0.04)
                         ],
-                        startPoint: UnitPoint(x: 0.413, y: 0.008),
-                        endPoint: UnitPoint(x: 0.587, y: 0.993)
+                        startPoint: LMTactile.gradientStart,
+                        endPoint: LMTactile.gradientEnd
                     )
                     Image("TactileNoise")
                         .resizable(resizingMode: .tile)
-                        .opacity(colorScheme == .dark ? 0.75 : 0.55)
+                        .opacity(colorScheme == .dark ? LMTactile.baseNoiseDark : LMTactile.baseNoiseLight)
                         .blendMode(colorScheme == .dark ? .softLight : .overlay)
                         .allowsHitTesting(false)
                 }
@@ -153,12 +148,7 @@ struct TactileSecondaryModifier: ViewModifier {
     let radius: CGFloat
     var isPressed: Bool = false
     @Environment(\.colorScheme) private var colorScheme
-    // shadow color · light: navy #0F1C26 (brand-fitted) / dark: pure black (跟 dark bg #0F1C26 區分、避免 navy 投 navy 0 對比看不到)
-    private var shadowInk: Color {
-        colorScheme == .dark
-            ? .black
-            : Color(red: 15 / 255, green: 28 / 255, blue: 38 / 255)
-    }
+    private var shadowInk: Color { LMTactile.shadowInk(colorScheme) }
 
     func body(content: Content) -> some View {
         content
@@ -168,7 +158,7 @@ struct TactileSecondaryModifier: ViewModifier {
                     Color.bg
                     Image("TactileNoise")
                         .resizable(resizingMode: .tile)
-                        .opacity(colorScheme == .dark ? 0.70 : 0.55)
+                        .opacity(colorScheme == .dark ? LMTactile.secondaryNoiseDark : LMTactile.secondaryNoiseLight)
                         .blendMode(colorScheme == .dark ? .softLight : .overlay)
                         .allowsHitTesting(false)
                 }
@@ -266,8 +256,8 @@ struct TactilePressedModifier: ViewModifier {
                             .clear,
                             .white.opacity(0.06)
                         ],
-                        startPoint: UnitPoint(x: 0.413, y: 0.008),
-                        endPoint: UnitPoint(x: 0.587, y: 0.993)
+                        startPoint: LMTactile.gradientStart,
+                        endPoint: LMTactile.gradientEnd
                     )
                     Image("TactileNoise")
                         .resizable(resizingMode: .tile)
@@ -319,8 +309,8 @@ struct TactilePillModifier: ViewModifier {
                                         .clear,
                                         .black.opacity(colorScheme == .dark ? 0.18 : 0.10)
                                     ],
-                                    startPoint: UnitPoint(x: 0.413, y: 0.008),
-                                    endPoint: UnitPoint(x: 0.587, y: 0.993)
+                                    startPoint: LMTactile.gradientStart,
+                                    endPoint: LMTactile.gradientEnd
                                 )
                             )
                     }
@@ -333,7 +323,7 @@ struct TactilePillModifier: ViewModifier {
                                     scale: 1
                                 )
                             )
-                            .opacity(colorScheme == .dark ? 0.20 : 0.30)
+                            .opacity(colorScheme == .dark ? LMTactile.smallNoiseDark : LMTactile.smallNoiseLight)
                             .blendMode(colorScheme == .dark ? .softLight : .overlay)
                             .clipShape(Capsule())
                     }
@@ -382,8 +372,8 @@ struct TactileCircleModifier: ViewModifier {
                                         .clear,
                                         .black.opacity(colorScheme == .dark ? 0.18 : 0.10)
                                     ],
-                                    startPoint: UnitPoint(x: 0.413, y: 0.008),
-                                    endPoint: UnitPoint(x: 0.587, y: 0.993)
+                                    startPoint: LMTactile.gradientStart,
+                                    endPoint: LMTactile.gradientEnd
                                 )
                             )
                     }
@@ -396,7 +386,7 @@ struct TactileCircleModifier: ViewModifier {
                                     scale: 1
                                 )
                             )
-                            .opacity(colorScheme == .dark ? 0.20 : 0.30)
+                            .opacity(colorScheme == .dark ? LMTactile.smallNoiseDark : LMTactile.smallNoiseLight)
                             .blendMode(colorScheme == .dark ? .softLight : .overlay)
                     }
             }

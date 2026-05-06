@@ -11,16 +11,14 @@ struct LMStatusChip: View {
     var color: Color = .primaryBrand
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: LMSpacing.xs) {
             Image(systemName: icon)
                 .font(.lmCaption.weight(.semibold))
             Text(text)
-                .font(.lmLabel)
-                .textCase(.uppercase)
-                .tracking(0.6)
+                .statusChipLabel()
         }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 10)
+        .padding(.vertical, LMSpacing.xs)
+        .padding(.horizontal, LMRadius.md)
         .modifier(TactilePillModifier(color: color, isFilled: true))
     }
 }

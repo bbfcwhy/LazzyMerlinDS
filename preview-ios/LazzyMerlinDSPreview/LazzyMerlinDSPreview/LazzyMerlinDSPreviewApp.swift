@@ -5,6 +5,12 @@ struct LazzyMerlinDSPreviewApp: App {
 
     @AppStorage("appearance") private var appearance: AppearancePreference = .system
 
+    init() {
+        // 註冊 LXGW WenKai TC 字型 (見 Tokens/LMFontLoader.swift)
+        // 必須在 App init 階段、SwiftUI render 前完成
+        LMFontLoader.register()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
