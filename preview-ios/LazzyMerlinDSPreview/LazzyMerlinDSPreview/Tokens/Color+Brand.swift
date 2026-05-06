@@ -24,9 +24,9 @@
 //
 //  ## Earth Tone Status Extension (§2.2.2)
 //
-//  EarthRed        | Color.earthRed        | #9E5949 → #C58775   (destructive / error)
-//  EarthGreen      | Color.earthGreen      | #6A7A60 → #A8B898   (success)
-//  EarthOchre      | Color.earthOchre      | #8E6E37 → #D4AB6E   (warning)
+//  EarthRed        | Color.earthRed        | #9E5949 → #9E5949   (destructive / error)
+//  EarthGreen      | Color.earthGreen      | #596751 → #596751   (success)
+//  EarthOchre      | Color.earthOchre      | #CB9B52 → #CB9B52   (warning)
 //
 //  ## Hairline / Border (§2.2.1)
 //

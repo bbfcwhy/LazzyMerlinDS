@@ -1,71 +1,81 @@
 import SwiftUI
 
 struct ButtonsView: View {
+    private let columns = [GridItem(.adaptive(minimum: 118), spacing: 14)]
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 32) {
 
-                section("PRIMARY (Tactile Raised)") {
-                    Button("確認") {}
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 22)
-                        .tactileRaised(radius: 12)
-                }
+                section("VARIANTS") {
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                        Button("送出 Primary") {}
+                            .buttonStyle(TactileRaisedButtonStyle(radius: 12))
 
-                section("BASE (Tactile Base · 容器)") {
-                    Button("一般操作") {}
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 22)
-                        .foregroundStyle(Color.ink)
-                        .tactileBase(radius: 12)
-                }
+                        Button("Cancel Secondary") {}
+                            .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
 
-                section("PRESSED (Active state)") {
-                    Button("已選取") {}
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 22)
-                        .tactilePressed(radius: 12)
-                }
+                        Button("Skip Ghost") {}
+                            .buttonStyle(TactileGhostButtonStyle())
 
-                section("DESTRUCTIVE") {
-                    Button("刪除") {}
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 22)
-                        .foregroundStyle(Color.inkOnBrand)
-                        .background(Color.earthRed)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .strokeBorder(
-                                    LinearGradient(
-                                        colors: [.white.opacity(0.30), .black.opacity(0.20)],
-                                        startPoint: .top, endPoint: .bottom
-                                    ),
-                                    lineWidth: 1
-                                )
-                        }
-                        .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
-                }
+                        Button("刪除 Destructive") {}
+                            .buttonStyle(TactileDestructiveButtonStyle(radius: 12))
 
-                section("GHOST (text-only, 無 Tactile)") {
-                    Button("取消") {}
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 22)
-                        .foregroundStyle(Color.primaryBrand)
+                        Button("Brand Deep") {}
+                            .buttonStyle(TactileRaisedButtonStyle(radius: 12, baseColor: .primaryDeep))
+                    }
                 }
 
                 section("SIZES") {
-                    HStack(spacing: 12) {
+                    HStack(alignment: .center, spacing: 12) {
                         Button("S") {}
-                            .padding(.vertical, 8).padding(.horizontal, 14)
-                            .tactileRaised(radius: 10)
+                            .buttonStyle(TactileRaisedButtonStyle(
+                                radius: 10, paddingV: 8, paddingH: 14
+                            ))
                         Button("中") {}
-                            .padding(.vertical, 12).padding(.horizontal, 22)
-                            .tactileRaised(radius: 12)
+                            .buttonStyle(TactileRaisedButtonStyle(radius: 12))
                         Button("Large") {}
-                            .padding(.vertical, 16).padding(.horizontal, 28)
-                            .tactileRaised(radius: 14)
+                            .buttonStyle(TactileRaisedButtonStyle(
+                                radius: 14, paddingV: 16, paddingH: 28
+                            ))
+                    }
+                }
+
+                section("ICON · LOADING · DISABLED") {
+                    LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                        Button {
+                        } label: {
+                            Label("新增", systemImage: "plus")
+                        }
+                        .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+
+                        Button {
+                        } label: {
+                            Label("查看更多", systemImage: "arrow.right")
+                        }
+                        .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
+
+                        Button {
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .frame(width: 18, height: 18)
+                        }
+                        .buttonStyle(TactileSecondaryButtonStyle(radius: 12, paddingV: 12, paddingH: 12))
+
+                        Label("處理中", systemImage: "progress.indicator")
+                            .modifier(TactileButtonLabelModifierProxy())
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 22)
+                            .modifier(TactileRaisedModifier(radius: 12, isPressed: false))
+
+                        // Disabled · 保留 raised 立體 + 陰影 (跟其他 button 視覺一致) · 降飽和 + 降透明感「暫時不能按」
+                        Text("已停用")
+                            .modifier(TactileButtonLabelModifierProxy())
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 22)
+                            .modifier(TactileRaisedModifier(radius: 12, isPressed: false))
+                            .saturation(0.35)
+                            .opacity(0.55)
                     }
                 }
 
@@ -84,6 +94,15 @@ struct ButtonsView: View {
             Text(title).sectionLabel()
             content()
         }
+    }
+}
+
+private struct TactileButtonLabelModifierProxy: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: 14, weight: .semibold, design: .default))
+            .lineLimit(1)
+            .minimumScaleFactor(0.85)
     }
 }
 

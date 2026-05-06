@@ -24,8 +24,10 @@ struct FeedbackView: View {
 
                 section("EMPTY STATE") {
                     VStack(spacing: 16) {
-                        Text("✦")
-                            .font(.system(size: 56))
+                        Image("MoonStars")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 56, height: 56)
                             .foregroundStyle(Color.inkMuted.opacity(0.5))
                         Text("這裡還沒寫東西。")
                             .font(.lmH3)
@@ -40,8 +42,7 @@ struct FeedbackView: View {
 
                 section("LOADING") {
                     HStack(spacing: 12) {
-                        ProgressView()
-                            .tint(Color.primaryBrand)
+                        LMSpinner(size: 22, lineWidth: 3)
                         Text("處理中⋯⋯")
                             .font(.lmBody)
                             .foregroundStyle(Color.inkMuted)

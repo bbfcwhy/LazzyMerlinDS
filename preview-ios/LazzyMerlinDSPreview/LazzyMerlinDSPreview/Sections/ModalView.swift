@@ -14,31 +14,21 @@ struct ModalView: View {
                     Button("打開魔法書") {
                         showSheet = true
                     }
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 22)
-                    .tactileRaised(radius: 12)
+                    .buttonStyle(TactileRaisedButtonStyle(radius: 12))
                 }
 
                 section("MODAL · Alert") {
                     Button("確認危險操作") {
                         showAlert = true
                     }
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 22)
-                    .foregroundStyle(Color.inkOnBrand)
-                    .background(Color.earthRed)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    .shadow(color: .black.opacity(0.15), radius: 4, y: 2)
+                    .buttonStyle(TactileDestructiveButtonStyle(radius: 12))
                 }
 
                 section("MODAL · Confirmation Dialog") {
                     Button("更多選項") {
                         showConfirmation = true
                     }
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 22)
-                    .foregroundStyle(Color.ink)
-                    .tactileBase(radius: 12)
+                    .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
                 }
 
                 Spacer(minLength: 32)
@@ -49,29 +39,39 @@ struct ModalView: View {
         .brandPage()
         .sheet(isPresented: $showSheet) {
             sheetContent
+                .lmSheetChrome()
                 #if os(macOS)
                 .frame(minWidth: 400, minHeight: 500)
                 #endif
         }
-        .alert("壞了。", isPresented: $showAlert) {
-            Button("再試試看", role: .none) {}
-            Button("取消", role: .cancel) {}
-        } message: {
-            Text("可能是我沒做對。要不要再試一次？")
-        }
-        .confirmationDialog("選一個", isPresented: $showConfirmation, titleVisibility: .visible) {
-            Button("第一個選項") {}
-            Button("第二個選項") {}
-            Button("第三個選項") {}
-            Button("取消", role: .cancel) {}
-        }
+        .lmAlert(
+            isPresented: $showAlert,
+            title: "壞了。",
+            message: "可能是我沒做對。要不要再試一次？",
+            buttons: [
+                LMAlertButton.default("再試試看"),
+                LMAlertButton.cancel()
+            ]
+        )
+        .lmActionSheet(
+            isPresented: $showConfirmation,
+            title: "選一個",
+            buttons: [
+                LMAlertButton.default("第一個選項"),
+                LMAlertButton.default("第二個選項"),
+                LMAlertButton.default("第三個選項"),
+                LMAlertButton.cancel()
+            ]
+        )
     }
 
     private var sheetContent: some View {
         VStack(alignment: .leading, spacing: 20) {
             HStack {
-                Text("✦")
-                    .font(.system(size: 28))
+                Image("MoonStars")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 28, height: 28)
                     .foregroundStyle(Color.primaryBrand)
                 Spacer()
                 Button {
@@ -83,10 +83,7 @@ struct ModalView: View {
                 }
             }
 
-            Text("MMXXVI")
-                .sectionLabel()
-
-            Text("Shine, lazily and steadily.")
+            Text("Laziness sets your soul free.")
                 .font(.lmH2)
                 .foregroundStyle(Color.ink)
 
@@ -101,16 +98,22 @@ struct ModalView: View {
                 Button("取消") {
                     showSheet = false
                 }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 22)
-                .foregroundStyle(Color.primaryBrand)
+                .buttonStyle(TactileGhostButtonStyle())
 
-                Button("好了 ✦") {
+                Button {
                     showSheet = false
+                } label: {
+                    Label {
+                        Text("好了")
+                    } icon: {
+                        Image("MoonStars")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 14, height: 14)
+                    }
+                    .labelStyle(.titleAndIcon)
                 }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 22)
-                .tactileRaised(radius: 12)
+                .buttonStyle(TactileRaisedButtonStyle(radius: 12))
             }
         }
         .padding(28)

@@ -39,9 +39,7 @@ struct ChipsView: View {
                             .tracking(0.8)
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
-                            .foregroundStyle(Color.inkOnBrand)
-                            .background(Color.earthOchre)
-                            .clipShape(Capsule())
+                            .modifier(TactilePillModifier(color: .earthOchre, isFilled: true))
 
                         Text("NEW")
                             .font(.lmLabel)
@@ -49,9 +47,7 @@ struct ChipsView: View {
                             .tracking(0.8)
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
-                            .foregroundStyle(Color.inkOnBrand)
-                            .background(Color.primaryBrand)
-                            .clipShape(Capsule())
+                            .modifier(TactilePillModifier(color: .primaryBrand, isFilled: true))
 
                         Circle()
                             .fill(Color.earthRed)
@@ -77,20 +73,8 @@ struct ChipsView: View {
                 .padding(.vertical, 6)
                 .padding(.horizontal, 14)
         }
-        .foregroundStyle(selected ? Color.inkOnBrand : color)
-        .background(selected ? color : color.opacity(0.10))
-        .clipShape(Capsule())
-        .overlay {
-            Capsule()
-                .strokeBorder(
-                    LinearGradient(
-                        colors: [.white.opacity(selected ? 0.30 : 0), .black.opacity(selected ? 0.20 : 0)],
-                        startPoint: .top, endPoint: .bottom
-                    ),
-                    lineWidth: 1
-                )
-        }
-        .shadow(color: selected ? .black.opacity(0.12) : .clear, radius: 2, y: 1)
+        .buttonStyle(.plain)
+        .modifier(TactilePillModifier(color: color, isFilled: selected))
     }
 
     @ViewBuilder
@@ -103,11 +87,9 @@ struct ChipsView: View {
                 .textCase(.uppercase)
                 .tracking(0.6)
         }
-        .foregroundStyle(color)
         .padding(.vertical, 6)
         .padding(.horizontal, 10)
-        .background(color.opacity(0.12))
-        .clipShape(Capsule())
+        .modifier(TactilePillModifier(color: color, isFilled: true))
     }
 
     @ViewBuilder
@@ -119,6 +101,8 @@ struct ChipsView: View {
         }
     }
 }
+
+// TactilePillModifier 已搬到 Tokens/TactileMaterial.swift、跨 view 共用 (DataView 也用)
 
 #Preview {
     NavigationStack {

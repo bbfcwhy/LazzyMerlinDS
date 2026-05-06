@@ -8,27 +8,27 @@ struct CardsView: View {
 
                 section("EDITORIAL CARD (Tactile Base)") {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("MMXXVI · CHAPTER I")
-                            .sectionLabel()
-                        Text("Shine, lazily and steadily.")
+                        Text("Laziness sets your soul free.")
                             .font(.lmH3)
                             .foregroundStyle(Color.ink)
-                        Text("懶人魔法師慵懶地閃耀著。冷面笑匠的氣質，外硬內軟，誠實，不 hype。")
+                        Text("慵懶不可恥，唯有如此，才能讓靈魂自由。\n冷面笑匠，外硬內軟，誠實直白不做作。")
                             .font(.lmBody)
                             .foregroundStyle(Color.inkMuted)
                             .lineSpacing(4)
                     }
-                    .padding(20)
+                    .padding(28)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .tactileBase(radius: 16)
+                    .tactileBase(radius: 20)
                 }
 
                 section("HERO TILE (Tactile Raised)") {
                     HStack(spacing: 16) {
-                        Image(systemName: "sparkles")
-                            .font(.system(size: 28, weight: .semibold))
+                        Image("MoonStars")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 32, height: 32)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("✦ LazzyMerlin")
+                            Text("LazzyMerlin")
                                 .font(.lmH3)
                             Text("跨平台品牌核心")
                                 .font(.lmBodySmall)
@@ -36,27 +36,30 @@ struct CardsView: View {
                         }
                         Spacer()
                     }
-                    .padding(24)
+                    .padding(28)
                     .frame(maxWidth: .infinity)
                     .tactileRaised(radius: 16)
                 }
 
-                section("PLAIN CARD (Hairline only)") {
+                section("PLAIN CARD (Hybrid)") {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("輕量卡片")
                             .font(.lmBodyLarge)
                             .foregroundStyle(Color.ink)
-                        Text("Hairline 線框 + 無 shadow。適合 list view item。")
+                        Text("Hairline outline + soft shadow。比 Editorial 輕量，適合 list 內。")
                             .font(.lmBodySmall)
                             .foregroundStyle(Color.inkMuted)
                     }
-                    .padding(16)
+                    .padding(28)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.bg)
-                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .strokeBorder(Color.hairline, lineWidth: 1)
+                    .tactilePlain(radius: 20)
+                }
+
+                section("STAT CARDS") {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
+                        statCard("DAU", value: "1,284", trend: "↑ 12% vs 上週", color: .earthGreen)
+                        statCard("RETENTION", value: "68%", trend: "↓ 3% vs 上週", color: .earthRed)
+                        statCard("REVENUE", value: "$3,420", trend: "↑ 8%", color: .earthGreen)
                     }
                 }
 
@@ -75,6 +78,26 @@ struct CardsView: View {
             Text(title).sectionLabel()
             content()
         }
+    }
+
+    @ViewBuilder
+    private func statCard(_ label: String, value: String, trend: String, color: Color) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(label)
+                .sectionLabel()
+            Spacer(minLength: 16)
+            Text(value)
+                .font(.system(size: 40, weight: .bold, design: .default))
+                .monospacedDigit()
+                .foregroundStyle(Color.ink)
+                .minimumScaleFactor(0.7)
+            Text(trend)
+                .font(.lmCaption)
+                .foregroundStyle(color)
+        }
+        .padding(28)
+        .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)
+        .tactileBase(radius: 20)
     }
 }
 
