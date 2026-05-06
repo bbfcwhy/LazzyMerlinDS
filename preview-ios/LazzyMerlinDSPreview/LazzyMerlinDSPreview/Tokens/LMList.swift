@@ -182,13 +182,6 @@ extension LMListRowLink {
     }
 }
 
-// MARK: - Divider (列間分隔)
-
-struct LMListDivider: View {
-    var body: some View {
-        Rectangle()
-            .fill(Color.border.opacity(0.5))
-            .frame(height: 0.5)
-            .padding(.leading, 16)
-    }
-}
+// MARK: - List divider
+// LMListDivider 是 LMDivider(inset: 16) 的 alias、保留向後相容
+// 實際 struct 定義在 Tokens/LMDivider.swift
