@@ -1,30 +1,36 @@
 {
   "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
   "typography": {
-    "$description": "字體系統（§3）· 3 family + Mono",
+    "$description": "字體系統（§3）· 4-tier: Display / Sans / Serif / Mono",
     "family": {
-      "display":   { "$value": "'LXGW WenKai TC', serif",        "$type": "fontFamily", "$description": "霞鶩文楷 · Hero / 大標題 / 文章 title" },
-      "body":      { "$value": "'Geist', 'Noto Sans TC', sans-serif", "$type": "fontFamily", "$description": "正文（中英混排）" },
-      "mono":      { "$value": "'Geist Mono', monospace",        "$type": "fontFamily", "$description": "Small-caps label / 羅馬數字 / 程式碼" }
+      "display":   { "$value": "'LXGW WenKai TC', serif",                                "$type": "fontFamily", "$description": "霞鶩文楷 · Hero / 大標題 / 文章 title / brand 識別" },
+      "sans":      { "$value": "'Geist', 'Noto Sans TC', sans-serif",                   "$type": "fontFamily", "$description": "UI / 短 body · navigation / button / form / dashboard" },
+      "serif":     { "$value": "'Source Serif 4', 'Noto Serif TC', Georgia, serif",     "$type": "fontFamily", "$description": "長文 article body · blog / 知識庫 / 教學文" },
+      "mono":      { "$value": "'Geist Mono', 'JetBrains Mono', monospace",             "$type": "fontFamily", "$description": "Small-caps label / 羅馬數字 / 程式碼 / token spec" },
+      "body":      { "$value": "'Geist', 'Noto Sans TC', sans-serif",                   "$type": "fontFamily", "$description": "舊 alias · 等同 family.sans (向後相容)" }
     },
     "weight": {
       "regular":  { "$value": 400, "$type": "fontWeight" },
       "medium":   { "$value": 500, "$type": "fontWeight" },
-      "semibold": { "$value": 600, "$type": "fontWeight" }
+      "semibold": { "$value": 600, "$type": "fontWeight" },
+      "bold":     { "$value": 700, "$type": "fontWeight" }
     },
     "scale": {
-      "$description": "Type Scale（§3.2）",
-      "display-xl":  { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "clamp(52px, 8vw, 88px)", "lineHeight": 1.15, "fontWeight": 400 }, "$type": "typography" },
-      "display-l":   { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "clamp(36px, 5vw, 56px)", "lineHeight": 1.2,  "fontWeight": 400 }, "$type": "typography" },
-      "h1":          { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "40px", "lineHeight": 1.25, "fontWeight": 500 }, "$type": "typography" },
-      "h2":          { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "28px", "lineHeight": 1.3,  "fontWeight": 500 }, "$type": "typography" },
-      "h3":          { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "22px", "lineHeight": 1.4,  "fontWeight": 400 }, "$type": "typography" },
-      "h4":          { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "18px", "lineHeight": 1.45, "fontWeight": 500 }, "$type": "typography" },
-      "body-large":  { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "17px", "lineHeight": 1.75, "fontWeight": 400 }, "$type": "typography" },
-      "body":        { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "16px", "lineHeight": 1.65, "fontWeight": 400 }, "$type": "typography" },
-      "small":       { "$value": { "fontFamily": "{typography.family.body}",    "fontSize": "14px", "lineHeight": 1.55, "fontWeight": 400 }, "$type": "typography" },
-      "label":       { "$value": { "fontFamily": "{typography.family.mono}",    "fontSize": "12px", "lineHeight": 1,    "fontWeight": 500, "letterSpacing": "0.2em", "textTransform": "uppercase" }, "$type": "typography" },
-      "caption":     { "$value": { "fontFamily": "{typography.family.mono}",    "fontSize": "10px", "lineHeight": 1.3,  "fontWeight": 400 }, "$type": "typography" }
+      "$description": "Type Scale（§3.2）· 4-tier mapping",
+      "display-xl":   { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "clamp(52px, 8vw, 88px)", "lineHeight": 1.15, "fontWeight": 400 }, "$type": "typography" },
+      "display-l":    { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "clamp(36px, 5vw, 56px)", "lineHeight": 1.2,  "fontWeight": 400 }, "$type": "typography" },
+      "h1":           { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "40px", "lineHeight": 1.25, "fontWeight": 500 }, "$type": "typography" },
+      "h2":           { "$value": { "fontFamily": "{typography.family.sans}",    "fontSize": "28px", "lineHeight": 1.3,  "fontWeight": 500 }, "$type": "typography" },
+      "h3":           { "$value": { "fontFamily": "{typography.family.display}", "fontSize": "22px", "lineHeight": 1.4,  "fontWeight": 400 }, "$type": "typography", "$description": "文章 title 用 display、UI heading 改 sans" },
+      "h4":           { "$value": { "fontFamily": "{typography.family.sans}",    "fontSize": "18px", "lineHeight": 1.45, "fontWeight": 500 }, "$type": "typography" },
+      "article-large":{ "$value": { "fontFamily": "{typography.family.serif}",   "fontSize": "19px", "lineHeight": 1.75, "fontWeight": 400 }, "$type": "typography", "$description": "長文 lead paragraph · blog 開頭" },
+      "article-body": { "$value": { "fontFamily": "{typography.family.serif}",   "fontSize": "18px", "lineHeight": 1.8,  "fontWeight": 400 }, "$type": "typography", "$description": "長文 body · 部落格 / 知識庫段落" },
+      "body-large":   { "$value": { "fontFamily": "{typography.family.sans}",    "fontSize": "17px", "lineHeight": 1.75, "fontWeight": 400 }, "$type": "typography", "$description": "UI 短 body / card 內文" },
+      "body":         { "$value": { "fontFamily": "{typography.family.sans}",    "fontSize": "16px", "lineHeight": 1.65, "fontWeight": 400 }, "$type": "typography", "$description": "UI 預設 body · 短段落" },
+      "small":        { "$value": { "fontFamily": "{typography.family.sans}",    "fontSize": "14px", "lineHeight": 1.55, "fontWeight": 400 }, "$type": "typography" },
+      "label":        { "$value": { "fontFamily": "{typography.family.mono}",    "fontSize": "12px", "lineHeight": 1,    "fontWeight": 500, "letterSpacing": "0.2em", "textTransform": "uppercase" }, "$type": "typography" },
+      "caption":      { "$value": { "fontFamily": "{typography.family.mono}",    "fontSize": "10px", "lineHeight": 1.3,  "fontWeight": 400 }, "$type": "typography" },
+      "code":         { "$value": { "fontFamily": "{typography.family.mono}",    "fontSize": "14px", "lineHeight": 1.6,  "fontWeight": 400 }, "$type": "typography", "$description": "inline / block code" }
     }
   }
 }

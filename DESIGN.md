@@ -1,6 +1,6 @@
 # LazzyMerlin Design System
 
-> *Shine, lazily and steadily.* ✦
+> *Laziness sets your soul free.* ✦
 
 **慵懶梅林實驗室 · LazzyMerlin Lab** 跨平台品牌核心設計系統。
 任何專案做視覺決策前都先讀這份檔案。有衝突時，以此為準。
@@ -67,7 +67,7 @@
 2. **Unicode 裝飾字**（✦ ◈ ❦ ☾）作為 section separator
 3. **雙語混排**（中文楷體 + 英文）展現跨文化質感
 4. **Small-caps label + 羅馬數字**（MMXXVI）— 古卷感
-5. **結尾致敬句**「Shine, lazily and steadily.」（致敬 Paco Coursey "Shine, constantly and steadily"）
+5. **結尾簽名句**「Laziness sets your soul free.」
 
 不加金色、不加紫色、不加神秘漸層。顏色維持冷藍系，讓字體與排版去扛魔法氛圍。
 
@@ -314,57 +314,76 @@ body { transition: background 400ms ease, color 400ms ease; }
 
 ---
 
-## 三、字體系統（精簡版 3 family）
+## 三、字體系統（4-tier · Display / Sans / Serif / Mono）
 
 ### 3.1 Font stack
 
-| 角色 | Font family | 用途 |
+| Tier | Font family | 用途 |
 |---|---|---|
-| **Display**（中英通用） | LXGW WenKai TC（霞鶩文楷） | Hero、大標題、文章 title、品牌簽名 |
-| **Body**（英文 + 數字） | Geist Sans | 正文、UI 文字 |
-| **Body**（中文 fallback） | Noto Sans TC | 正文中文字顯示 |
-| **Mono / Labels** | Geist Mono | Small-caps section label、羅馬數字、metadata、程式碼 |
+| **Display**（中英通用） | LXGW WenKai TC（霞鶩文楷） | Hero、大標題、品牌簽名、empty state hero、404 |
+| **Sans**（UI / 短 body） | Geist Sans + Noto Sans TC fallback | navigation、button、form、dashboard、UI 文字、短段落 |
+| **Serif**（article body） | Source Serif 4 + Noto Serif TC fallback | **部落格 / 長文 / 知識庫 article body**（讀超過 3 段落的內容用 serif、降低眼睛疲勞） |
+| **Mono**（labels / code） | Geist Mono + JetBrains Mono fallback | Small-caps section label、羅馬數字、metadata、程式碼、token spec |
 
 **字體理由：**
-- **LXGW WenKai TC**：楷體手繪字體，搭配「懶人魔法師」品牌的手工感。中文顯示字型裡絕大多數人選黑體，這是最強差異化點。其英文字母也有手抄感，可直接用於英文 display。
-- **Geist**：Vercel 出品，現代中性，支援 tabular-nums（表格對齊），跨平台 fallback 好。比 Inter 更有品味。
-- **Noto Sans TC**：Google 字型，中文系統相容性最佳，與 Geist 視覺重量接近，中英混排不打架。
+- **LXGW WenKai TC**：楷體手繪字體，搭配「懶人魔法師」品牌的手工感。中文顯示字型裡絕大多數人選黑體，這是最強差異化點。英文字母也有手抄感、可直接用於英文 display。
+- **Geist Sans**：Vercel 出品，現代中性，支援 tabular-nums，跨平台 fallback 好。比 Inter 更有品味。
+- **Source Serif 4**（Adobe）：Source Serif Pro 的現代版，screen-reading 優化，與 Geist 視覺重量配對自然。長文閱讀比 sans 舒服、英文 serif 質感跟 LXGW 楷體呼應。
+- **Noto Sans TC** / **Noto Serif TC**（Google）：中文 sans / serif 標準 fallback，與 Geist / Source Serif 視覺重量接近，中英混排不打架。
 - **Geist Mono**：專給 label / 羅馬數字 / code，製造編碼感與古卷對比。
 
-**砍掉 Cormorant Garamond**：display 統一用霞鶩文楷已足夠。兩個 serif 同場視覺太滿。
+**為什麼有 Serif tier**：行銷頁 + button + form 用 sans 是對的（簡潔、UI 感），但部落格文章 / 知識庫長文用 sans 讀久了會累。serif 在連續閱讀時對眼睛友善（letter form 變化更豐富、字符區隔感更強），這是傳統印刷邏輯延伸到 web。Medium / The New York Times / Stratechery 都這樣分。
+
+**iOS / macOS 上沒 Serif tier**：iOS app 不放長文（用 Apple News / Notion 讀），所以 native app 維持 Display + Sans + Mono 三 tier 就夠（見 §7.2、§7.3）。Serif 只在 web 上需要。
 
 ### 3.2 Type Scale
 
-| 角色 | Size | Line | Weight | Font |
+| 角色 | Size | Line | Weight | Font tier |
 |---|---|---|---|---|
-| Display XL（Hero） | `clamp(52px, 8vw, 88px)` | 1.15 | 400 | LXGW |
-| Display L | `clamp(36px, 5vw, 56px)` | 1.2 | 400 | LXGW |
-| H1 | 40px | 1.25 | 500 | LXGW 或 Geist |
-| H2 | 28px | 1.3 | 500 | Geist |
-| H3 | 22px | 1.4 | 400 | LXGW（文章 title）或 500 Geist |
-| H4 | 18px | 1.45 | 500 | Geist |
-| Body Large | 17px | 1.75 | 400 | Geist + Noto TC |
-| Body | 16px | 1.65 | 400 | Geist + Noto TC |
-| Small | 14px | 1.55 | 400 | Geist + Noto TC |
-| Label（small-caps） | 11-12px | 1 | 500 | Geist Mono |
-| Caption | 10px | 1.3 | 400 | Geist Mono |
+| Display XL（Hero） | `clamp(52px, 8vw, 88px)` | 1.15 | 400 | Display (LXGW) |
+| Display L | `clamp(36px, 5vw, 56px)` | 1.2 | 400 | Display (LXGW) |
+| H1 | 40px | 1.25 | 500 | Display 或 Sans |
+| H2 | 28px | 1.3 | 500 | Sans (Geist) |
+| H3 | 22px | 1.4 | 400 | Display（文章 title）或 500 Sans |
+| H4 | 18px | 1.45 | 500 | Sans |
+| **Article Large**（長文 lead） | 19px | 1.75 | 400 | **Serif** (Source Serif + Noto Serif TC) |
+| **Article Body**（長文段落） | 17-18px | 1.8  | 400 | **Serif** (Source Serif + Noto Serif TC) |
+| Body Large（UI / 短文）| 17px | 1.75 | 400 | Sans |
+| Body（UI / 短文） | 16px | 1.65 | 400 | Sans |
+| Small | 14px | 1.55 | 400 | Sans |
+| Label（small-caps） | 11-12px | 1 | 500 | Mono (Geist Mono) |
+| Caption | 10px | 1.3 | 400 | Mono |
+| Code（inline / block） | 14-15px | 1.6 | 400 | Mono |
 
 ### 3.3 字體用法規則
 - **Hero 必定中英雙語混排**：中文用楷體 + 英文用楷體（同字型）
   - 例：`嗨，我是 威爾` + `Hey, I am Will. A lazy wizard.`
-- **Section label 用 Geist Mono**：letter-spacing `0.2em`，`uppercase`，搭配小字金色 accent（dark mode 是亮藍）
+- **長文 article body 用 Serif**：超過 3 段落的內容、blog post、知識庫條目、教學文、long-form newsletter
+  - 例：blog 頁的內文、`/notes` 的長條目、產品教學頁的步驟詳述
+  - line-height **1.75-1.8**（比 sans 的 1.65 寬）、給楷字 / 中文 serif 呼吸空間
+- **Section label 用 Geist Mono**：letter-spacing `0.2em`、`uppercase`、搭配小字金色 accent（dark mode 是亮藍）
   - 例：`LAZZYMERLIN · EST. MMXXVI`、`精選專案 · FEATURED SPELLS`
-- **羅馬數字（MMXXVI = 2026）**：用 Geist Mono 於 footer、label
-- **正文保持 Geist Sans + Noto Sans TC**：不用 serif body，確保中文可讀
+- **羅馬數字（MMXXVI = 2026）**：用 Geist Mono 於 footer / label
+- **UI 短文用 Sans**：button label、form input、navigation、card body（非長文）、tooltip
+  - 短於 3 段落、屬於「操作 / 提示 / 標籤」性質的、永遠 Sans
+- **Code / token / hex 顯示用 Mono**：`#46647C`、`0F1C26`、token name、CLI 指令、code snippet
 
 ### 3.4 載入策略（Web）
+
+詳細 CSS 實作見 [`tokens/font.css`](./tokens/font.css)。Google Fonts CDN 引用：
+
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;600&family=LXGW+WenKai+TC:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;500;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=LXGW+WenKai+TC:wght@400&display=swap" rel="stylesheet">
 ```
-- 使用 `display=swap` 避免 FOIT
-- LXGW WenKai 檔案較大（繁體子集可減半），視專案是否要 subset
+
+**載入策略**：
+- `display=swap` 避免 FOIT（畫面空白）
+- **LXGW** 主要用在 hero、頁面初始就需要，preload 第一順位
+- **Source Serif 4** 只在 article 頁需要，可以 lazy load（用 article path 判斷）
+- **Geist + Geist Mono** UI 通用、preconnect 加速
+- **Noto Sans/Serif TC** 中文 fallback、檔案最大（繁體子集仍 2-3MB），生產環境建議 self-host 並 subset 到實際用到的字符範圍
 
 ---
 
@@ -1270,7 +1289,7 @@ Home / About / Projects / Notebook / Contact
 
 | 位置 | 文案 |
 |---|---|
-| Footer 固定句 | `Shine, lazily and steadily. ✦` |
+| Footer 固定句 | `Laziness sets your soul free. ✦` |
 | About tagline | `梅林出主意，威爾用 AI 把她的魔法實現出來` |
 | Hero 副標 | `把一萬小時的功夫，壓縮成一個下午` |
 

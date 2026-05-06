@@ -1,0 +1,156 @@
+/* ==========================================================================
+   LazzyMerlin · Web Typography (§3 字體系統)
+   ==========================================================================
+   4-tier: Display / Sans / Serif / Mono
+   - Display:  LXGW WenKai TC                 · brand 識別 / hero
+   - Sans:     Geist + Noto Sans TC           · UI / 短 body / form / button
+   - Serif:    Source Serif 4 + Noto Serif TC · 部落格 / 長文 / 知識庫 article
+   - Mono:     Geist Mono + JetBrains Mono    · label / 羅馬數字 / code
+
+   參考: DESIGN.md §3, tokens/typography.json
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. 字型 import (Google Fonts CDN · production 建議改 self-host)
+   -------------------------------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;500;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=LXGW+WenKai+TC:wght@400&display=swap');
+
+/* --------------------------------------------------------------------------
+   2. CSS Custom Properties (Font Family Stacks)
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Family stacks · 直接套在 font-family 上 */
+  --lm-font-display: 'LXGW WenKai TC', 'Noto Sans TC', serif;
+  --lm-font-sans:    'Geist', -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'PingFang TC', sans-serif;
+  --lm-font-serif:   'Source Serif 4', 'Noto Serif TC', Georgia, 'Songti TC', serif;
+  --lm-font-mono:    'Geist Mono', 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+
+  /* Backward-compat alias */
+  --lm-font-body: var(--lm-font-sans);
+}
+
+/* --------------------------------------------------------------------------
+   3. Type Scale tokens (Size / Line height / Weight)
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Display tier */
+  --lm-text-display-xl-size:    clamp(52px, 8vw, 88px);
+  --lm-text-display-xl-line:    1.15;
+  --lm-text-display-l-size:     clamp(36px, 5vw, 56px);
+  --lm-text-display-l-line:     1.2;
+
+  /* Heading tier */
+  --lm-text-h1-size:            40px;
+  --lm-text-h1-line:            1.25;
+  --lm-text-h2-size:            28px;
+  --lm-text-h2-line:            1.3;
+  --lm-text-h3-size:            22px;
+  --lm-text-h3-line:            1.4;
+  --lm-text-h4-size:            18px;
+  --lm-text-h4-line:            1.45;
+
+  /* Article tier (long-form serif body) */
+  --lm-text-article-large-size: 19px;
+  --lm-text-article-large-line: 1.75;
+  --lm-text-article-body-size:  18px;
+  --lm-text-article-body-line:  1.8;
+
+  /* UI body tier (short sans body) */
+  --lm-text-body-large-size:    17px;
+  --lm-text-body-large-line:    1.75;
+  --lm-text-body-size:          16px;
+  --lm-text-body-line:          1.65;
+  --lm-text-small-size:         14px;
+  --lm-text-small-line:         1.55;
+
+  /* Mono tier */
+  --lm-text-label-size:         12px;
+  --lm-text-label-line:         1;
+  --lm-text-caption-size:       10px;
+  --lm-text-caption-line:       1.3;
+  --lm-text-code-size:          14px;
+  --lm-text-code-line:          1.6;
+
+  /* Tracking (letter-spacing) */
+  --lm-tracking-display:  -0.02em;
+  --lm-tracking-tight:    -0.01em;
+  --lm-tracking-normal:   0;
+  --lm-tracking-loose:    0.02em;
+  --lm-tracking-label:    0.2em;
+}
+
+/* --------------------------------------------------------------------------
+   4. 工具 class · 直接套用避免重複寫 size / line / family
+   -------------------------------------------------------------------------- */
+
+/* Display (LXGW · brand identity) */
+.lm-display-xl  { font-family: var(--lm-font-display); font-size: var(--lm-text-display-xl-size); line-height: var(--lm-text-display-xl-line); font-weight: 400; letter-spacing: var(--lm-tracking-display); }
+.lm-display-l   { font-family: var(--lm-font-display); font-size: var(--lm-text-display-l-size);  line-height: var(--lm-text-display-l-line);  font-weight: 400; letter-spacing: var(--lm-tracking-display); }
+
+/* Heading (Sans 預設、H1/H3 可選 Display) */
+.lm-h1          { font-family: var(--lm-font-display); font-size: var(--lm-text-h1-size); line-height: var(--lm-text-h1-line); font-weight: 500; letter-spacing: var(--lm-tracking-tight); }
+.lm-h1-sans     { font-family: var(--lm-font-sans);    font-size: var(--lm-text-h1-size); line-height: var(--lm-text-h1-line); font-weight: 600; letter-spacing: var(--lm-tracking-tight); }
+.lm-h2          { font-family: var(--lm-font-sans);    font-size: var(--lm-text-h2-size); line-height: var(--lm-text-h2-line); font-weight: 600; }
+.lm-h3          { font-family: var(--lm-font-display); font-size: var(--lm-text-h3-size); line-height: var(--lm-text-h3-line); font-weight: 400; }
+.lm-h3-sans     { font-family: var(--lm-font-sans);    font-size: var(--lm-text-h3-size); line-height: var(--lm-text-h3-line); font-weight: 600; }
+.lm-h4          { font-family: var(--lm-font-sans);    font-size: var(--lm-text-h4-size); line-height: var(--lm-text-h4-line); font-weight: 600; }
+
+/* Article body (Serif · 長文 / blog) */
+.lm-article-large { font-family: var(--lm-font-serif); font-size: var(--lm-text-article-large-size); line-height: var(--lm-text-article-large-line); font-weight: 400; }
+.lm-article-body  { font-family: var(--lm-font-serif); font-size: var(--lm-text-article-body-size);  line-height: var(--lm-text-article-body-line);  font-weight: 400; }
+
+/* UI body (Sans · 短文 / 操作) */
+.lm-body-large  { font-family: var(--lm-font-sans); font-size: var(--lm-text-body-large-size); line-height: var(--lm-text-body-large-line); font-weight: 400; }
+.lm-body        { font-family: var(--lm-font-sans); font-size: var(--lm-text-body-size);       line-height: var(--lm-text-body-line);       font-weight: 400; }
+.lm-small       { font-family: var(--lm-font-sans); font-size: var(--lm-text-small-size);      line-height: var(--lm-text-small-line);      font-weight: 400; }
+
+/* Mono (label / code) */
+.lm-label       { font-family: var(--lm-font-mono); font-size: var(--lm-text-label-size);   line-height: var(--lm-text-label-line);   font-weight: 500; letter-spacing: var(--lm-tracking-label); text-transform: uppercase; }
+.lm-caption     { font-family: var(--lm-font-mono); font-size: var(--lm-text-caption-size); line-height: var(--lm-text-caption-line); font-weight: 400; }
+.lm-code        { font-family: var(--lm-font-mono); font-size: var(--lm-text-code-size);    line-height: var(--lm-text-code-line);    font-weight: 400; }
+
+/* --------------------------------------------------------------------------
+   5. Article 容器 · 一次套用 .lm-article 給整個長文區域
+   -------------------------------------------------------------------------- */
+
+.lm-article {
+  font-family: var(--lm-font-serif);
+  font-size: var(--lm-text-article-body-size);
+  line-height: var(--lm-text-article-body-line);
+  font-weight: 400;
+}
+
+/* article 內的 heading 仍用 sans / display、覆蓋掉 serif 繼承 */
+.lm-article h1 { font-family: var(--lm-font-display); font-size: var(--lm-text-h1-size); line-height: var(--lm-text-h1-line); font-weight: 500; }
+.lm-article h2 { font-family: var(--lm-font-sans);    font-size: var(--lm-text-h2-size); line-height: var(--lm-text-h2-line); font-weight: 600; }
+.lm-article h3 { font-family: var(--lm-font-sans);    font-size: var(--lm-text-h3-size); line-height: var(--lm-text-h3-line); font-weight: 600; }
+.lm-article h4 { font-family: var(--lm-font-sans);    font-size: var(--lm-text-h4-size); line-height: var(--lm-text-h4-line); font-weight: 600; }
+.lm-article p  { margin-block: 1em; }
+.lm-article pre,
+.lm-article code { font-family: var(--lm-font-mono); }
+.lm-article blockquote {
+  font-style: italic;
+  border-left: 3px solid var(--lm-color-primary-brand, #46647c);
+  padding-left: 1em;
+  margin-block: 1.5em;
+}
+
+/* --------------------------------------------------------------------------
+   6. 全站 default
+   -------------------------------------------------------------------------- */
+
+html {
+  font-family: var(--lm-font-sans);
+  font-size: var(--lm-text-body-size);
+  line-height: var(--lm-text-body-line);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--lm-font-sans);
+}
