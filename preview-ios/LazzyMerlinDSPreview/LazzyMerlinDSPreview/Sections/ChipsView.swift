@@ -24,10 +24,10 @@ struct ChipsView: View {
 
                 LMSection("STATUS CHIPS (Earth Tone)") {
                     HStack(spacing: 8) {
-                        statusChip("INFO", icon: "info.circle.fill", color: .primaryBrand)
-                        statusChip("SUCCESS", icon: "checkmark.circle.fill", color: .earthGreen)
-                        statusChip("WARNING", icon: "exclamationmark.triangle.fill", color: .earthOchre)
-                        statusChip("ERROR", icon: "xmark.octagon.fill", color: .earthRed)
+                        LMStatusChip(text: "INFO", icon: "info.circle.fill", color: .primaryBrand)
+                        LMStatusChip(text: "SUCCESS", icon: "checkmark.circle.fill", color: .earthGreen)
+                        LMStatusChip(text: "WARNING", icon: "exclamationmark.triangle.fill", color: .earthOchre)
+                        LMStatusChip(text: "ERROR", icon: "xmark.octagon.fill", color: .earthRed)
                     }
                 }
 
@@ -75,21 +75,6 @@ struct ChipsView: View {
         }
         .buttonStyle(.plain)
         .modifier(TactilePillModifier(color: color, isFilled: selected))
-    }
-
-    @ViewBuilder
-    private func statusChip(_ text: String, icon: String, color: Color) -> some View {
-        HStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.system(size: 11, weight: .semibold))
-            Text(text)
-                .font(.lmLabel)
-                .textCase(.uppercase)
-                .tracking(0.6)
-        }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 10)
-        .modifier(TactilePillModifier(color: color, isFilled: true))
     }
 
 }

@@ -57,7 +57,7 @@ struct OverlaysView: View {
                 }
 
                 if showToast {
-                    toast("好了 ✦", icon: "checkmark.circle.fill", color: .earthGreen)
+                    LMToast(text: "好了", icon: "checkmark.circle.fill", iconColor: .earthGreen)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -99,22 +99,6 @@ struct OverlaysView: View {
             .background(Color.bgRaised.ignoresSafeArea())
         }
     }
-
-    @ViewBuilder
-    private func toast(_ text: String, icon: String, color: Color) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: icon)
-                .foregroundStyle(color)
-            Text(text)
-                .font(.lmBody)
-                .foregroundStyle(Color.ink)
-            Spacer()
-        }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
-        .tactileBase(radius: 12)
-    }
-
 }
 
 #Preview {

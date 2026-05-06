@@ -21,14 +21,14 @@ struct StatesView: View {
                 LMSection("SKELETON") {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 12) {
-                            skeleton(width: 44, height: 44, radius: 22)
+                            LMSkeleton(width: 44, height: 44, radius: 22)
                             VStack(alignment: .leading, spacing: 8) {
-                                skeleton(width: 180, height: 14, radius: 7)
-                                skeleton(width: 96, height: 10, radius: 5)
+                                LMSkeleton(width: 180, height: 14, radius: 7)
+                                LMSkeleton(width: 96, height: 10, radius: 5)
                             }
                         }
-                        skeleton(width: nil, height: 12, radius: 6)
-                        skeleton(width: 260, height: 12, radius: 6)
+                        LMSkeleton(height: 12, radius: 6)
+                        LMSkeleton(width: 260, height: 12, radius: 6)
                     }
                     .padding(20)
                     .tactileBase(radius: 16)
@@ -82,13 +82,6 @@ struct StatesView: View {
         .padding(24)
         .frame(maxWidth: .infinity, minHeight: 240, alignment: .topLeading)
         .tactilePlain(radius: 16)
-    }
-
-    @ViewBuilder
-    private func skeleton(width: CGFloat?, height: CGFloat, radius: CGFloat) -> some View {
-        RoundedRectangle(cornerRadius: radius, style: .continuous)
-            .fill(Color.borderSubtle)
-            .frame(width: width, height: height)
     }
 
 }

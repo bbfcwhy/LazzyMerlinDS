@@ -873,7 +873,7 @@ struct TunerView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(.footnote))
-                    Text("好了 ✦")
+                    Text("好了")
                         .font(.system(.footnote).weight(.medium))
                 }
             }

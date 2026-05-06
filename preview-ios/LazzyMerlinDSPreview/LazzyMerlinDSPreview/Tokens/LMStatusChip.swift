@@ -1,0 +1,26 @@
+import SwiftUI
+
+// LazzyMerlin DS · Status Chip (icon + uppercase label · 帶 tactile pill 質地)
+// 取代 ChipsView 的 statusChip() inline helper
+// 結構：HStack [icon + uppercase tracked text] + TactilePillModifier(isFilled: true)
+
+struct LMStatusChip: View {
+
+    let text: String
+    let icon: String        // SF Symbol name
+    var color: Color = .primaryBrand
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.lmCaption.weight(.semibold))
+            Text(text)
+                .font(.lmLabel)
+                .textCase(.uppercase)
+                .tracking(0.6)
+        }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .modifier(TactilePillModifier(color: color, isFilled: true))
+    }
+}

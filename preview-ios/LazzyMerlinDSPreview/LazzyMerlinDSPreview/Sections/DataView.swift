@@ -28,7 +28,7 @@ struct DataView: View {
                         Divider().overlay(Color.border)
                         listRow(initial: "梅", title: "整理 preview component coverage", meta: "進行中", color: .stone)
                         Divider().overlay(Color.border)
-                        listRow(initial: "✦", title: "寫今日手札", meta: "還沒開始", color: .earthGreen)
+                        listRow(initial: nil, title: "寫今日手札", meta: "還沒開始", color: .earthGreen, usesMoonStar: true)
                     }
                     .tactilePlain(radius: 14)
                 }
@@ -81,12 +81,17 @@ struct DataView: View {
     }
 
     @ViewBuilder
-    private func listRow(initial: String, title: String, meta: String, color: Color) -> some View {
+    private func listRow(initial: String?,
+                         title: String,
+                         meta: String,
+                         color: Color,
+                         usesMoonStar: Bool = false) -> some View {
         HStack(spacing: 12) {
-            Text(initial)
-                .font(.lmBodySmall.weight(.semibold))
-                .frame(width: 38, height: 38)
-                .tactileCircle(color: color)
+            if usesMoonStar {
+                LMAvatar(assetImage: "MoonStars", color: color)
+            } else {
+                LMAvatar(initial: initial ?? "", color: color)
+            }
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.lmBodySmall.weight(.semibold))

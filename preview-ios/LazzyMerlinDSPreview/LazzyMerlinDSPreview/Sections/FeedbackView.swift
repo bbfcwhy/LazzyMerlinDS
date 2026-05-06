@@ -7,19 +7,19 @@ struct FeedbackView: View {
             VStack(alignment: .leading, spacing: 32) {
 
                 LMSection("TOAST · SUCCESS") {
-                    toast(text: "好了 ✦", icon: "checkmark.circle.fill", color: .earthGreen)
+                    LMToast(text: "好了", icon: "checkmark.circle.fill", iconColor: .earthGreen)
                 }
 
                 LMSection("TOAST · ERROR") {
-                    toast(text: "壞了。可能是我沒做對 — 再試試看 ↻", icon: "xmark.octagon.fill", color: .earthRed)
+                    LMToast(text: "壞了。可能是我沒做對 — 再試試看 ↻", icon: "xmark.octagon.fill", iconColor: .earthRed)
                 }
 
                 LMSection("TOAST · WARNING") {
-                    toast(text: "比預期久一點，再等一下 ✦", icon: "clock.fill", color: .earthOchre)
+                    LMToast(text: "比預期久一點，再等一下", icon: "clock.fill", iconColor: .earthOchre)
                 }
 
                 LMSection("TOAST · INFO") {
-                    toast(text: "已儲存草稿。", icon: "info.circle.fill", color: .primaryBrand)
+                    LMToast(text: "已儲存草稿。", icon: "info.circle.fill", iconColor: .primaryBrand)
                 }
 
                 LMSection("EMPTY STATE") {
@@ -58,22 +58,6 @@ struct FeedbackView: View {
         }
         .navigationTitle("Feedback")
         .brandPage()
-    }
-
-    @ViewBuilder
-    private func toast(text: String, icon: String, color: Color) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: icon)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(color)
-            Text(text)
-                .font(.lmBody)
-                .foregroundStyle(Color.ink)
-            Spacer()
-        }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
-        .tactileBase(radius: 12)
     }
 
 }
