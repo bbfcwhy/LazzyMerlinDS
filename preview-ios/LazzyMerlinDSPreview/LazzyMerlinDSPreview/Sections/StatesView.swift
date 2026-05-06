@@ -52,12 +52,12 @@ struct StatesView: View {
         VStack(alignment: .leading, spacing: 12) {
             if let visual {
                 Text(visual)
-                    .font(.system(size: visual == "404" ? 48 : 52, weight: .semibold, design: .serif))
+                    .font(visual == "404" ? .lmDisplayLarge : .lmDisplayXL)
                     .foregroundStyle(Color.inkMutedSubdued)
             }
             if let systemImage {
                 Image(systemName: systemImage)
-                    .font(.system(size: 42, weight: .regular))
+                    .font(.lmDisplay)
                     .foregroundStyle(Color.inkMutedSubdued)
             }
             if let assetImage {

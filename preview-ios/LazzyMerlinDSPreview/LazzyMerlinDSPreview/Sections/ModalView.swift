@@ -103,15 +103,17 @@ struct ModalView: View {
                 Button {
                     showSheet = false
                 } label: {
-                    Label {
+                    HStack(spacing: 6) {
                         Text("好了")
-                    } icon: {
-                        Image("MoonStars")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 14, height: 14)
+                        // ★ Color.clear 容器鎖死可見尺寸、避免 MoonStars template image 被 parent .font() 自動 scale
+                        Color.clear
+                            .frame(width: 16, height: 16)
+                            .overlay {
+                                Image("MoonStars")
+                                    .resizable()
+                                    .scaledToFit()
+                            }
                     }
-                    .labelStyle(.titleAndIcon)
                 }
                 .buttonStyle(TactileRaisedButtonStyle(radius: 12))
             }

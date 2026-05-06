@@ -79,7 +79,7 @@ struct CardsView: View {
                 .sectionLabel()
             Spacer(minLength: 16)
             Text(value)
-                .font(.system(size: 40, weight: .bold, design: .default))
+                .font(.lmStatNumber)
                 .monospacedDigit()
                 .foregroundStyle(Color.ink)
                 .minimumScaleFactor(0.7)

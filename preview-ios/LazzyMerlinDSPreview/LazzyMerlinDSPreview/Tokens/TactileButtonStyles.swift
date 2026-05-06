@@ -171,7 +171,10 @@ struct LMGhostIconButtonStyle: ButtonStyle {
     }
 }
 
-private enum TactileButtonLabelSize {
+// MARK: - Internal: button label sizing
+// 從 private 改 internal · 讓 ButtonsView 等 view 可以重用 (取代 TactileButtonLabelModifierProxy)
+
+enum TactileButtonLabelSize {
     case small
     case medium
     case large
@@ -191,7 +194,7 @@ private enum TactileButtonLabelSize {
     }
 }
 
-private struct TactileButtonLabelModifier: ViewModifier {
+struct TactileButtonLabelModifier: ViewModifier {
     let size: TactileButtonLabelSize
 
     func body(content: Content) -> some View {

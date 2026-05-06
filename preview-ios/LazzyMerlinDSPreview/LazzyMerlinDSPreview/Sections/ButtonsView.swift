@@ -63,14 +63,14 @@ struct ButtonsView: View {
                         .buttonStyle(TactileSecondaryButtonStyle(radius: 12, paddingV: 12, paddingH: 12))
 
                         Label("處理中", systemImage: "progress.indicator")
-                            .modifier(TactileButtonLabelModifierProxy())
+                            .modifier(TactileButtonLabelModifier(size: .medium))
                             .padding(.vertical, 12)
                             .padding(.horizontal, 22)
                             .modifier(TactileRaisedModifier(radius: 12, isPressed: false))
 
                         // Disabled · 保留 raised 立體 + 陰影 (跟其他 button 視覺一致) · 降飽和 + 降透明感「暫時不能按」
                         Text("已停用")
-                            .modifier(TactileButtonLabelModifierProxy())
+                            .modifier(TactileButtonLabelModifier(size: .medium))
                             .padding(.vertical, 12)
                             .padding(.horizontal, 22)
                             .modifier(TactileRaisedModifier(radius: 12, isPressed: false))
@@ -89,14 +89,7 @@ struct ButtonsView: View {
 
 }
 
-private struct TactileButtonLabelModifierProxy: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .font(.system(size: 14, weight: .semibold, design: .default))
-            .lineLimit(1)
-            .minimumScaleFactor(0.85)
-    }
-}
+// TactileButtonLabelModifierProxy 已移除、改用 TactileButtonStyles.swift 內 internal 化的 TactileButtonLabelModifier
 
 #Preview {
     NavigationStack {

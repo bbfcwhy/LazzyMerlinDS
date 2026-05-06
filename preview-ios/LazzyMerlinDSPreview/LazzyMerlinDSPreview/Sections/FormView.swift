@@ -10,7 +10,7 @@ struct FormView: View {
     @State private var stepperVal: Double = 3
     @State private var sliderVal: Double = 0.42
     @State private var pickedDate: Date = Date()
-    @State private var pickedColor: Color = Color(red: 0x46/255, green: 0x64/255, blue: 0x7C/255)
+    @State private var pickedColor: Color = .primaryBrand
 
     var body: some View {
         ScrollView {
