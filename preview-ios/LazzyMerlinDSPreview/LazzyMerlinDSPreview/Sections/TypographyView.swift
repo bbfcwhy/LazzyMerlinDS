@@ -36,8 +36,8 @@ struct TypographyView: View {
                         sample(name: "lmDisplayXL · 56pt",    text: displayLine, font: .lmDisplayXL)
                         sample(name: "lmDisplayLarge · 48pt", text: displayLine, font: .lmDisplayLarge)
                         sample(name: "lmDisplay · 40pt",      text: displayLine, font: .lmDisplay)
-                        sample(name: "lmEmptyVisual · 52pt",  text: "✦", font: .lmEmptyVisual)
-                        sample(name: "lmEmptyCode · 48pt",    text: "404", font: .lmEmptyCode)
+                        sampleAsset(name: "lmEmptyVisual · 52pt (MoonStars)", assetName: "MoonStars", size: 52)
+                        sample(name: "lmEmptyCode · 48pt", text: "404", font: .lmEmptyCode)
                     }
                     .padding(LMSpacing.card)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -123,6 +123,21 @@ struct TypographyView: View {
                 .foregroundStyle(Color.ink)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
+        }
+    }
+
+    /// Asset image variant · empty state hero glyph 用 (取代 ✦ 字元)
+    @ViewBuilder
+    private func sampleAsset(name: String, assetName: String, size: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: LMSpacing.xxs) {
+            Text(name)
+                .font(.lmCaption)
+                .foregroundStyle(Color.inkMutedSubdued)
+            Image(assetName)
+                .resizable()
+                .scaledToFit()
+                .frame(width: size, height: size)
+                .foregroundStyle(Color.ink)
         }
     }
 
