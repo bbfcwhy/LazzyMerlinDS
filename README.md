@@ -1,6 +1,6 @@
 # LazzyMerlin Design System
 
-> *Shine, lazily and steadily.* ✦
+> *Laziness sets your soul free.* ✦
 
 **慵懶梅林實驗室 · LazzyMerlin Lab** 跨平台品牌核心設計系統。
 

@@ -225,21 +225,51 @@
     }
 
     /* ===== Layout ===== */
-    .container { max-width: 1080px; margin: 0 auto; padding: 56px 32px 96px; position: relative; z-index: var(--z-content); }
-    .hero { margin-bottom: 64px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px 96px; position: relative; z-index: var(--z-content); }
+    .hero {
+      margin-bottom: 64px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+    @media (max-width: 720px) {
+      .hero { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .hero__logo {
+      width: 96px; height: 96px;
+      flex-shrink: 0;
+    }
+    .hero__logo img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(15, 28, 38, 0.18));
+    }
+    [data-theme="dark"] .hero__logo img {
+      filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.45));
+    }
+    .hero__text { min-width: 0; }
     .kicker {
       font-family: 'Geist Mono', monospace;
       font-size: 12px; letter-spacing: 0.22em; color: var(--primary);
       text-transform: uppercase; display: flex; align-items: center; gap: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
     .kicker::before { content: ''; width: 32px; height: 1px; background: var(--primary); }
     h1.title {
-      font-family: 'LXGW WenKai TC', serif;
+      font-family: 'LXGW WenKai TC', 'Noto Sans TC', serif;
       font-size: clamp(40px, 6vw, 64px); line-height: 1.15; letter-spacing: -0.01em;
-      margin-bottom: 14px;
+      margin-bottom: 8px;
+      color: var(--ink);
     }
-    p.subtitle { font-size: 17px; color: var(--ink-muted); max-width: 640px; }
+    h1.title .title__zh {
+      display: block;
+      font-size: 0.6em;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+    }
+    p.subtitle { font-size: 17px; color: var(--ink-muted); max-width: 640px; line-height: 1.6; }
 
     section.demo { margin-bottom: 80px; scroll-margin-top: 32px; }
     section.demo > .section-kicker {
@@ -802,57 +832,14 @@
       margin-top: 4px; line-height: 1.4;
     }
 
-    /* Two-column compare panels (Light vs Dark static reference, ignores theme toggle) */
-    .swatch-compare {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    @media (max-width: 720px) { .swatch-compare { grid-template-columns: 1fr; } }
-    .swatch-compare__col {
-      --swatch-chip-line: rgba(15, 28, 38, 0.16);
-      --swatch-chip-highlight: rgba(255, 255, 255, 0.28);
-      padding: 20px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(15, 28, 38, 0.10);
-    }
-    .swatch-compare__col--light { background: #F5EFE4; }
-    .swatch-compare__col--dark {
-      --swatch-chip-line: rgba(245, 239, 228, 0.18);
-      --swatch-chip-highlight: rgba(245, 239, 228, 0.08);
-      background: #0F1C26;
-      border-color: rgba(245, 239, 228, 0.08);
-    }
-    .swatch-compare__label {
-      font-family: 'Geist Mono', monospace;
-      font-size: 11px; letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-    .swatch-compare__col--light .swatch-compare__label { color: #4E3029; }
-    .swatch-compare__col--dark .swatch-compare__label { color: #DECCA7; }
-
-    /* Inside compare panels: lock swatch styling to the panel's mode */
-    .swatch-compare .swatches { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-    .swatch-compare .swatch {
-      background: transparent;
-      border: 1px solid rgba(150, 116, 89, 0.20);
-      box-shadow: none;
-    }
-    .swatch-compare__col--dark .swatch {
-      border-color: rgba(245, 239, 228, 0.10);
-    }
-    .swatch-compare .swatch__chip {
-      box-shadow:
-        inset 0 0 0 1px var(--swatch-chip-line),
-        inset 0 1px 0 var(--swatch-chip-highlight);
-    }
-    .swatch-compare__col--light .swatch__name { color: #0F1C26; }
-    .swatch-compare__col--light .swatch__hex,
-    .swatch-compare__col--light .swatch__role { color: #4E3029; }
-    .swatch-compare__col--dark .swatch__name { color: #F5EFE4; }
-    .swatch-compare__col--dark .swatch__hex,
-    .swatch-compare__col--dark .swatch__role { color: #DECCA7; }
+    /* Role tokens · 跟著 page theme toggle 顯示對應 mode 的角色 token 列表 */
+    .role-tokens { display: none; }
+    [data-theme="light"] .role-tokens--light { display: grid; }
+    [data-theme="dark"]  .role-tokens--dark  { display: grid; }
+    /* fallback：當頁面尚未套上 [data-theme] 時、預設顯示 light */
+    html:not([data-theme]) .role-tokens--light { display: grid; }
+    /* role-tokens--dark 第二組與第一組之間留 spacing（同時顯示時不會發生，但保險） */
+    .role-tokens + .role-tokens { margin-top: 12px; }
 
     /* ===== Theme toggle (§2.4 / §15) — Tactile Base simplified ===== */
     .theme-toggle {
@@ -1827,28 +1814,32 @@
     /* TOC */
     .toc {
       position: sticky; top: 24px;
-      padding: 20px;
+      padding: 16px 14px;
       background: var(--bg-raised);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-soft-sm);
       max-height: calc(100vh - 48px); overflow-y: auto;
     }
     .toc h4 {
-      font-family: 'Geist Mono', monospace; font-size: 11px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--primary); margin-bottom: 12px;
+      font-family: 'Geist Mono', monospace; font-size: 10px;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 8px; margin-top: 14px;
     }
+    .toc h4:first-of-type { margin-top: 0; }
     .toc ol { list-style: none; counter-reset: toc; }
-    .toc li { counter-increment: toc; margin-bottom: 6px; }
+    .toc li { counter-increment: toc; margin-bottom: 2px; }
     .toc a {
       color: var(--ink-muted); text-decoration: none;
-      font-size: 13px; display: block; padding: 4px 0;
+      font-size: 12px; display: block; padding: 3px 0;
+      line-height: 1.45;
     }
     .toc a:hover { color: var(--primary); }
     .toc a::before { content: counter(toc) ". "; color: var(--ink-muted); opacity: 0.4; }
 
-    .layout-with-toc { display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start; }
-    @media (max-width: 960px) { .layout-with-toc { grid-template-columns: 1fr; } .toc { display: none; } }
+    /* TOC 寬度收緊 + 響應式：寬螢幕 sidebar、中螢幕收縮、窄螢幕完全隱藏 */
+    .layout-with-toc { display: grid; grid-template-columns: 180px 1fr; gap: 32px; align-items: start; min-width: 0; }
+    .layout-with-toc > * { min-width: 0; }
+    @media (max-width: 1100px) { .layout-with-toc { grid-template-columns: 1fr; } .toc { display: none; } }
 
     /* ===== Logo Showcase ===== */
     .logo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -1935,9 +1926,14 @@
 
   <div class="container">
     <header class="hero">
-      <div class="kicker">LazzyMerlin DS · Components</div>
-      <h1 class="title">家具預覽 · §15 元件全覽</h1>
-      <p class="subtitle">DS 從 tokens / 材質升到家具層。本頁是 §15 Components 規範的視覺實作，沿用 v5-morandi 的 Tactile material 與 ambient layer，是跨專案落地時的元件參考實作。</p>
+      <div class="hero__logo">
+        <img src="../assets/Lazzy%20Merlin%20Logo_3D.png" alt="LazzyMerlin Logo">
+      </div>
+      <div class="hero__text">
+        <div class="kicker">LazzyMerlin DS · v0.2.0-rc</div>
+        <h1 class="title">Lazzy Merlin · Design System<span class="title__zh">慵懶梅林實驗室 · 設計系統</span></h1>
+        <p class="subtitle">本頁是 §15 Components 規範的視覺實作，沿用 v5-morandi Tactile material 與 ambient layer，跨平台落地時的元件參考實作。</p>
+      </div>
     </header>
 
     <div class="layout-with-toc">
@@ -2135,202 +2131,166 @@
           </div>
         </div>
 
-        <!-- Role tokens · Light vs Dark side by side -->
+        <!-- Role tokens · Current mode (theme-aware, both light/dark sets shown via [data-theme] toggle) -->
         <div class="swatch-group">
-          <div class="swatch-group__label">Role Tokens · Light ↔ Dark 兩 mode 對照（primary / primary-soft 互換、ink / bg 互換）</div>
-          <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light">
-              <div class="swatch-compare__label">Light Mode</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#F5EFE4"></div>
-                  <div class="swatch__name">bg / bg-raised</div>
-                  <div class="swatch__hex">#F5EFE4</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#DECCA7"></div>
-                  <div class="swatch__name">bg-muted</div>
-                  <div class="swatch__hex">#DECCA7</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#0F1C26"></div>
-                  <div class="swatch__name">ink</div>
-                  <div class="swatch__hex">#0F1C26</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#4E3029"></div>
-                  <div class="swatch__name">ink-muted</div>
-                  <div class="swatch__hex">#4E3029</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#46647C"></div>
-                  <div class="swatch__name">primary</div>
-                  <div class="swatch__hex">#46647C</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#5E7A8D"></div>
-                  <div class="swatch__name">primary-soft</div>
-                  <div class="swatch__hex">#5E7A8D</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#334D5C"></div>
-                  <div class="swatch__name">primary-deep</div>
-                  <div class="swatch__hex">#334D5C</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#967459"></div>
-                  <div class="swatch__name">stone</div>
-                  <div class="swatch__hex">#967459</div>
-                </article>
-              </div>
-            </div>
-            <div class="swatch-compare__col swatch-compare__col--dark">
-              <div class="swatch-compare__label">Dark Mode</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#0F1C26"></div>
-                  <div class="swatch__name">bg / bg-raised</div>
-                  <div class="swatch__hex">#0F1C26</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#4E3029"></div>
-                  <div class="swatch__name">bg-muted</div>
-                  <div class="swatch__hex">#4E3029</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#F5EFE4"></div>
-                  <div class="swatch__name">ink</div>
-                  <div class="swatch__hex">#F5EFE4</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#DECCA7"></div>
-                  <div class="swatch__name">ink-muted</div>
-                  <div class="swatch__hex">#DECCA7</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#5E7A8D"></div>
-                  <div class="swatch__name">primary</div>
-                  <div class="swatch__hex">#5E7A8D</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#46647C"></div>
-                  <div class="swatch__name">primary-soft</div>
-                  <div class="swatch__hex">#46647C</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#334D5C"></div>
-                  <div class="swatch__name">primary-deep</div>
-                  <div class="swatch__hex">#334D5C</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#967459"></div>
-                  <div class="swatch__name">stone</div>
-                  <div class="swatch__hex">#967459</div>
-                </article>
-              </div>
-            </div>
+          <div class="swatch-group__label">Role Tokens · 角色 token（跟著上方 theme toggle 切換、light ↔ dark 互換邏輯：primary↔primary-soft、ink↔bg、bg-muted↔ink-muted）</div>
+
+          <!-- Light mode role tokens (visible only when [data-theme="light"]) -->
+          <div class="swatches role-tokens role-tokens--light">
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#F5EFE4"></div>
+              <div class="swatch__name">bg / bg-raised</div>
+              <div class="swatch__hex">#F5EFE4</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#DECCA7"></div>
+              <div class="swatch__name">bg-muted</div>
+              <div class="swatch__hex">#DECCA7</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#0F1C26"></div>
+              <div class="swatch__name">ink</div>
+              <div class="swatch__hex">#0F1C26</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#4E3029"></div>
+              <div class="swatch__name">ink-muted</div>
+              <div class="swatch__hex">#4E3029</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#46647C"></div>
+              <div class="swatch__name">primary</div>
+              <div class="swatch__hex">#46647C</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#5E7A8D"></div>
+              <div class="swatch__name">primary-soft</div>
+              <div class="swatch__hex">#5E7A8D</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#334D5C"></div>
+              <div class="swatch__name">primary-deep</div>
+              <div class="swatch__hex">#334D5C</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#967459"></div>
+              <div class="swatch__name">stone</div>
+              <div class="swatch__hex">#967459</div>
+            </article>
+          </div>
+
+          <!-- Dark mode role tokens (visible only when [data-theme="dark"]) -->
+          <div class="swatches role-tokens role-tokens--dark">
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#0F1C26"></div>
+              <div class="swatch__name">bg / bg-raised</div>
+              <div class="swatch__hex">#0F1C26</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#4E3029"></div>
+              <div class="swatch__name">bg-muted</div>
+              <div class="swatch__hex">#4E3029</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#F5EFE4"></div>
+              <div class="swatch__name">ink</div>
+              <div class="swatch__hex">#F5EFE4</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#DECCA7"></div>
+              <div class="swatch__name">ink-muted</div>
+              <div class="swatch__hex">#DECCA7</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#5E7A8D"></div>
+              <div class="swatch__name">primary</div>
+              <div class="swatch__hex">#5E7A8D</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#46647C"></div>
+              <div class="swatch__name">primary-soft</div>
+              <div class="swatch__hex">#46647C</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#334D5C"></div>
+              <div class="swatch__name">primary-deep</div>
+              <div class="swatch__hex">#334D5C</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#967459"></div>
+              <div class="swatch__name">stone</div>
+              <div class="swatch__hex">#967459</div>
+            </article>
           </div>
         </div>
 
         <!-- Earth tone Status · 跨 mode 同 hex (v0.2.0-rc.4 收斂為 3 hex 不翻轉) -->
         <div class="swatch-group">
-          <div class="swatch-group__label">Earth Tone Status Extension · 跨 mode 同 hex 不翻轉（不用鮮豔紅綠黃）</div>
-          <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light">
-              <div class="swatch-compare__label">Light Mode</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#9E5949"></div>
-                  <div class="swatch__name">error / destructive</div>
-                  <div class="swatch__hex">#9E5949</div>
-                  <div class="swatch__role">Terracotta 陶土紅</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#596751"></div>
-                  <div class="swatch__name">success</div>
-                  <div class="swatch__hex">#596751</div>
-                  <div class="swatch__role">Sage 苔蘚綠</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#CB9B52"></div>
-                  <div class="swatch__name">warning</div>
-                  <div class="swatch__hex">#CB9B52</div>
-                  <div class="swatch__role">Ochre 赭石黃</div>
-                </article>
-              </div>
-            </div>
-            <div class="swatch-compare__col swatch-compare__col--dark">
-              <div class="swatch-compare__label">Dark Mode（同 hex）</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#9E5949"></div>
-                  <div class="swatch__name">error / destructive</div>
-                  <div class="swatch__hex">#9E5949</div>
-                  <div class="swatch__role">Terracotta 陶土紅</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#596751"></div>
-                  <div class="swatch__name">success</div>
-                  <div class="swatch__hex">#596751</div>
-                  <div class="swatch__role">Sage 苔蘚綠</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#CB9B52"></div>
-                  <div class="swatch__name">warning</div>
-                  <div class="swatch__hex">#CB9B52</div>
-                  <div class="swatch__role">Ochre 赭石黃</div>
-                </article>
-              </div>
-            </div>
+          <div class="swatch-group__label">Earth Tone Status Extension · 跨 mode 同 hex 不翻轉（不用鮮豔紅綠黃 · light/dark 都是同一組值）</div>
+          <div class="swatches">
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#9E5949"></div>
+              <div class="swatch__name">error / destructive</div>
+              <div class="swatch__hex">#9E5949</div>
+              <div class="swatch__role">Terracotta 陶土紅</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#596751"></div>
+              <div class="swatch__name">success</div>
+              <div class="swatch__hex">#596751</div>
+              <div class="swatch__role">Sage 苔蘚綠</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#CB9B52"></div>
+              <div class="swatch__name">warning</div>
+              <div class="swatch__hex">#CB9B52</div>
+              <div class="swatch__role">Ochre 赭石黃</div>
+            </article>
           </div>
         </div>
 
-        <!-- Transparent layers · alpha on each mode backdrop -->
+        <!-- Transparent layers · alpha on current mode backdrop -->
         <div class="swatch-group">
-          <div class="swatch-group__label">Transparent · 透明度層（hairline / border / focus ring 用，alpha 在 mode backdrop 上實際呈現）</div>
-          <div class="swatch-compare">
-            <div class="swatch-compare__col swatch-compare__col--light">
-              <div class="swatch-compare__label">Light Mode</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#F5EFE4">
-                    <div class="swatch__chip--alpha-inner" style="background:rgba(150,116,89,0.30);border:1px solid rgba(150,116,89,0.30)"></div>
-                  </div>
-                  <div class="swatch__name">hairline</div>
-                  <div class="swatch__hex">rgba(150,116,89,0.30)</div>
-                  <div class="swatch__role">Stone @ 30% · divider / list separator</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#F5EFE4">
-                    <div class="swatch__chip--alpha-inner" style="background:rgba(15,28,38,0.10);border:1px solid rgba(15,28,38,0.10)"></div>
-                  </div>
-                  <div class="swatch__name">border</div>
-                  <div class="swatch__hex">rgba(15,28,38,0.10)</div>
-                  <div class="swatch__role">Ink @ 10% · card / input outline</div>
-                </article>
+          <div class="swatch-group__label">Transparent · 透明度層（hairline / border / focus ring · alpha 在當前 mode backdrop 上實際呈現）</div>
+
+          <!-- Light mode alpha tokens -->
+          <div class="swatches role-tokens role-tokens--light">
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#F5EFE4">
+                <div class="swatch__chip--alpha-inner" style="background:rgba(150,116,89,0.30);border:1px solid rgba(150,116,89,0.30)"></div>
               </div>
-            </div>
-            <div class="swatch-compare__col swatch-compare__col--dark">
-              <div class="swatch-compare__label">Dark Mode</div>
-              <div class="swatches">
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#0F1C26">
-                    <div class="swatch__chip--alpha-inner" style="background:rgba(94,122,141,0.30);border:1px solid rgba(94,122,141,0.30)"></div>
-                  </div>
-                  <div class="swatch__name">hairline</div>
-                  <div class="swatch__hex">rgba(94,122,141,0.30)</div>
-                  <div class="swatch__role">Mid Petrol @ 30% · divider</div>
-                </article>
-                <article class="swatch">
-                  <div class="swatch__chip" style="background:#0F1C26">
-                    <div class="swatch__chip--alpha-inner" style="background:rgba(245,239,228,0.08);border:1px solid rgba(245,239,228,0.08)"></div>
-                  </div>
-                  <div class="swatch__name">border</div>
-                  <div class="swatch__hex">rgba(245,239,228,0.08)</div>
-                  <div class="swatch__role">Parchment @ 8% · card outline</div>
-                </article>
+              <div class="swatch__name">hairline</div>
+              <div class="swatch__hex">rgba(150,116,89,0.30)</div>
+              <div class="swatch__role">Stone @ 30% · divider / list separator</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#F5EFE4">
+                <div class="swatch__chip--alpha-inner" style="background:rgba(15,28,38,0.10);border:1px solid rgba(15,28,38,0.10)"></div>
               </div>
-            </div>
+              <div class="swatch__name">border</div>
+              <div class="swatch__hex">rgba(15,28,38,0.10)</div>
+              <div class="swatch__role">Ink @ 10% · card / input outline</div>
+            </article>
+          </div>
+
+          <!-- Dark mode alpha tokens -->
+          <div class="swatches role-tokens role-tokens--dark">
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#0F1C26">
+                <div class="swatch__chip--alpha-inner" style="background:rgba(94,122,141,0.30);border:1px solid rgba(94,122,141,0.30)"></div>
+              </div>
+              <div class="swatch__name">hairline</div>
+              <div class="swatch__hex">rgba(94,122,141,0.30)</div>
+              <div class="swatch__role">Mid Petrol @ 30% · divider</div>
+            </article>
+            <article class="swatch">
+              <div class="swatch__chip" style="background:#0F1C26">
+                <div class="swatch__chip--alpha-inner" style="background:rgba(245,239,228,0.08);border:1px solid rgba(245,239,228,0.08)"></div>
+              </div>
+              <div class="swatch__name">border</div>
+              <div class="swatch__hex">rgba(245,239,228,0.08)</div>
+              <div class="swatch__role">Parchment @ 8% · card outline</div>
+            </article>
           </div>
         </div>
       </section>
