@@ -6,31 +6,68 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 ## [Unreleased]
 
-### v0.2.0-rc.1 進度（spec 收斂、未 release）
+## [0.2.0] — 2026-05-07
 
-**Changed**
-- **§5.4 Tactile material 重新定義為「跨平台共通六件配方」**：對角微暗化 + 上亮下暗單層 stroke（取代雙層 inset rim） + 2 層 drop shadow（從 4 層降）+ PNG noise tile（取代 SVG turbulence dynamic）+ text shadow + continuous radius。每件 web (CSS) + SwiftUI 等價可實作，視覺氣質「分不太出來」
-- **§5.4.1 四態材質規格大幅簡化**：Base / Raised / Inset / Pressed 仍保留語意，但 CSS 從 4-9 層 box-shadow 降到 4 層（2 inset stroke + 2 drop shadow）
-- **§5.4.2 dark mode** 同步降規格 + noise opacity 從 0.55-0.85 → 0.10-0.12（dark 上要稍強才看見）
-- **§5.7 Material 對照表加 platform column**：Web class ↔ SwiftUI ViewModifier 對照
-- **§7.2.9 重寫**（v0.1.4 補的「iOS noise opt-out / 0.05-0.08 克制」**作廢**）→ 「Tactile material 跨平台等價」附完整 `tactileRaised()` SwiftUI ViewModifier reference impl
-- **§7.3 macOS** 沿用 §7.2 SwiftUI ViewModifier 同份 code
-- **`tokens/shadow.json` `tactile-raised`** 全部重寫降規格（4-9 層 → 4 層）
-- **`tokens/shadow.json` `noise-overlay`** 改為 PNG tile reference + light/dark 統一 soft-light blend mode
-- **`preview/components-preview.html`** 共用 `--noise-bg` CSS var 從 SVG turbulence inline data URI 改 `url('../assets/tactile-noise.png')`，dark mode 多餘 blend override 移除（兩 mode 統一 soft-light）
+LazzyMerlin DS v0.2.0 主菜：**Tactile-Heavy 雙軌等價策略** + iOS SwiftUI multiplatform reference impl + 28 個 LM* 元件家族 catalog。
 
-**Added**
-- **`assets/tactile-noise.png`**（256×256 RGBA stitchable PNG）· 從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` 用 `rsvg-convert` render，跨 Web / iOS / macOS 共用同一份 asset
+落實 §16 2026-05-05 v0.2.0-rc.5「待主人 Tuner 校好 SwiftUI 接近版本後 batch revisit、寫成雙軌 spec」TODO。**v1.0 路徑第 6 條達成 ✓**：跨平台 Tactile 視覺氣質一致落地驗證。
 
-**Why**
-v0.1.4 release 後使用者反思 LazzyMerlin DS 核心問題：「web 端 Tactile-Heavy 在 SwiftUI 跑不出來、QTL / 未來 iOS 子專案永遠落地不到位」。技術根因 CSS `inset` shadow + SVG turbulence + `mix-blend-mode` 是 web pipeline 獨有，SwiftUI 無等價硬模擬只到 50% 像。決策：兩平台都做 Tactile，但只做 SwiftUI 也能對齊的部分（最大公約數），要求視覺氣質「分不太出來」。Trade-off：web 端 Tactile 視覺強度 -30%，換得 iOS / macOS / web 三端視覺氣質真正一致 + iOS 子專案有完整 reference impl 可 copy-paste。詳見 §16 2026-05-04 Decisions Log 條目。
+### Changed
 
-**Stage 2 待補（v0.2.0 final 才 release）**
-- 建 `preview-ios/` Xcode 26.4.1 SwiftUI app（multiplatform iOS + macOS）含 Tokens / TactileMaterial.swift / 6 個 MVP component views
-- `preview/components-preview.html` 各 component CSS 完整視覺 overhaul（套新六件配方、不只是 noise var）
-- `preview-ios/screenshots/` 截 web vs iOS side-by-side 比對圖、commit 進 repo 作 visual baseline
-- 反覆校正數值直到「分不太出來」
-- README + §17.6 v1.0 路徑加新條件第 6 條「跨平台 Tactile 等價 reference impl 落地驗證 ✓」
+**Spec（DESIGN.md）**
+- **§5.4 Tactile material 改寫為 Tactile-Heavy 雙軌等價策略**：v0.2.0-rc.1「跨平台共通六件配方 / 視覺氣質分不太出來 / web -30%」narrative 退役、改寫成 web 維持 v0.1.x Tactile-Heavy + SwiftUI 校到視覺氣質接近，跨平台一致 = 視覺氣質一致而非 pixel-perfect 數值對齊
+- **§5.4.1 四態材質**：Web spec 取自 `components-preview.html` 實際 render 數值（rc.9 對齊 4-layer raised group）+ SwiftUI spec 用結構簡述 + 連結 §7.2.9，加 iOS-only 4 modifier 表（Secondary / Plain / Pill / Circle）
+- **§5.4.2 dark mode 雙軌規則** + raised buttons 跨 mode 同 box-shadow 例外 + LMTactile namespace 4 級 per-element noise opacity（raised / base / secondary / small × light/dark）
+- **§5.4.3 noise overlay 跨平台**：v0.1.4「iOS opt-out / 0.05-0.08 克制」作廢，rc.9 校到 0.20-0.30 範圍實測接近 web + Web/iOS 同源 PNG tile + Text shadow 補深底淺字情境（raised buttons 用的 black 0.80 加重雕刻感版本）
+- **§5.7 元件 → Material 對照表**：Web class 對齊 actual element class（`.btn--primary` / `.card--editorial` / `.chip` / `.badge` / `.avatar`）+ SwiftUI column 補完 8 modifier + 7 ButtonStyle + 加「視覺氣質一致而非 pixel-perfect 數值對齊」note
+- **§7.2.4 補 iOS Typography 2-tier 規則**：Brand identity tier（LXGW WenKai TC Medium 永遠 LXGW、5 個 display token）+ Functional UI tier（system 字、dev toggle 可切 LXGW、12 個 functional token）+ Tracking 標準（`LMTracking` 4 個）+ Line spacing 標準（`LMLineSpacing` 3 個）+ 4 個 compound modifier（`sectionLabel` / `chipLabel` / `statusChipLabel` / `eyebrow`）。Production iOS app 真正需要 bundle 的 LXGW weight 只剩 `Medium` ~150KB subset
+- **§7.2.9 重寫為「Tactile material SwiftUI 落地」**：拿掉 rc.1 的 50 行 `tactileRaised` reference code（outdated, source 在 `TactileMaterial.swift`）+ 8 modifier 視覺結構表（Raised / Base / Plain / Secondary / Inset / Pressed / Pill / Circle）+ 7 ButtonStyle 表（Raised / Destructive / Secondary / Pressed / Base / Ghost / LMGhostIcon）+ `LMTactile` namespace 完整 Swift code（`gradientStart/End` / 7 個 noise opacity / `shadowInk` function）+ Tuner 校準工具段（21 個 `@AppStorage` 持久化參數即時調 + 校好寫進 namespace）+ 視覺一致性驗證段
+- **§7.3 macOS**：「Tactile material 共通配方」→「雙軌等價」+ 列 4 modifier → 列 8 modifier 完整名稱
+- **§8.3.2 iOS App Icon**：v0.1.4「stylized 巫師帽 + ✦ 星芒、Petrol fill」→ v0.2.0「LazzyMerlinLogo3D 整顆 logo、11% padding per side」對齊 commit `7f5f7e3`。Logo 來源 `assets/Lazzy Merlin Logo_3D.png` (1742×1747)、Python PIL pipeline（取代 Figma master + Bakery）
+- **§8.3.3 macOS App Icon**：v0.1.4「Liquid Glass 立體版、64 size 包含、自繪 multi-plane」→ v0.2.0「跟 iOS 同源 logo + LANCZOS 縮 5 size × 2 scale = 10 個 PNG」（保留「未來重做立體版」future work option）
+
+**Tokens**
+- **`tokens/shadow.json` `tactile-raised.button-light/dark`** 從 9-layer Tactile-Heavy 退到 4-layer rc.9 對齊 web 實作（`inset 0 ±1px black 0.10 + duplicated 3/3/3 directional drop`）
+- **`tokens/shadow.json` `noise-overlay`** 加 `size: 256px 256px` token + opacity 0.55/0.75 → 0.30/0.30 收斂
+
+**Web preview**
+- **`preview/components-preview.html` `--noise-bg`** 從雙層 inline SVG turbulence (90px + 220px) 改 PNG tile（`assets/tactile-noise.png`, 256×256, baseFreq 1.6）跨 web/iOS 同源
+- **`preview/components-preview.html` 8 個 `::after` `mix-blend-mode`** 從 hardcode `overlay/soft-light` 改 `var(--noise-bg-blend)`（dead variable → active），dark mode override 內 `mix-blend-mode` 移除（var 自動切）
+- **`preview/components-preview.html` `.card--editorial::after` / `.modal::after` / `.logo-card::after`** 三個 inline SVG 特例統一收進 `var(--noise-bg)` pattern
+
+### Added
+
+- **§7.2.10 LM* SwiftUI 元件家族 catalog**：列出 [`preview-ios/.../Tokens/`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/) 內 28 個檔案分 6 group：Foundation 5（`Color+Brand` / `BrandTypography` / `LMDesignTokens` / `LMFontLoader` / `BrandPage`）+ Tactile 2（`TactileMaterial` / `TactileButtonStyles`）+ Layout-Content 5（`LMSection` / `LMDivider` / `LMAlert` / `LMAvatar` / `LMSkeleton`）+ Form-Input 7（`LMColorPicker` / `LMDatePicker` / `LMMenuPicker` / `LMSegmentedPicker` / `LMSlider` / `LMStepper` / `LMSwitchToggleStyle`）+ Navigation 5（`LMBackButton` / `LMBreadcrumb` / `LMPagination` / `LMTabBar` / `LMTabStrip`）+ Overlay-Status-Data 6（`LMSheetChrome` / `LMTooltip` / `LMSpinner` / `LMStatusChip` / `LMToast` / `LMList`）。每個附 source link + 一句用途 + 對應 §15 哪小節 + 子專案落地建議（最低需求 ~10 個 vs 完整 28 個）
+- **`assets/moon-stars-glyph.png`** 新增（從 `preview-ios/.../Assets.xcassets/MoonStars.imageset/moon-stars_24pt_3x.png` copy 一份平面位置給 web preview 用、跟 Xcode `.xcassets` 解耦）
+- **§17.6 v1.0 路徑第 6 條** 新增「跨平台 Tactile 視覺氣質一致落地驗證」並標記達成
+
+### Fixed
+
+- **`preview/components-preview.html` `.moonstar-glyph` mask url path** 從 `../preview-ios/.../Assets.xcassets/MoonStars.imageset/moon-stars_24pt_3x.png` 改 `../assets/moon-stars-glyph.png`。根因：原 path 含 `.xcassets` / `.imageset` 兩層帶 dot 目錄，瀏覽器 file:// 直接打開或某些 dev server 對 `.xcassets` 路徑做 filter、fetch 失敗 → mask 沒套到 image → 整個 span invisible（`background: currentColor` + mask broken 預設整片透明）。影響範圍 14 處 `.moonstar-glyph` 用法（asset card 預覽 / empty state / chip / alert / button / footer brand sign / avatar 等）一次到位
+- **`preview/components-preview.html` `PRIMARY BUTTON · TUNER REFERENCE` section** 整段拿掉（HTML + CSS `.tuner-ref-*` class + JS `setupTunerReference` IIFE）。SwiftUI Tuner 已校到 v0.2.0-rc.9 視覺氣質接近 web、Tuner Reference inspector 階段任務完成
+- **`preview/components-preview.html` Brand Assets 拿掉 2D Flat Logo asset card**（3D 為主、2D 不再展示）
+
+### Why
+
+v0.1.4 release 後使用者反思「web 端 Tactile-Heavy 在 SwiftUI 跑不出來、iOS 子專案永遠落地不到位」，v0.2.0 主菜走過三輪策略反覆：
+
+- **rc.1（2026-05-04）**：兩平台都收斂到 SwiftUI 也能等價的「跨平台共通六件配方」（單層 stroke + 2 層 drop shadow）—— web 視覺強度 -30%、SwiftUI 也對齊到位
+- **rc.3（2026-05-05）**：新增 `--ink-on-brand` token + §15.5.4 generalize 到全 component（彩色底配米色字、不翻轉）
+- **rc.4（2026-05-05）**：§2.2.2 Earth Tone 收斂為 3 hex 跨 mode 同值（terracotta `#9E5949` / sage `#596751` / ochre `#CB9B52`）
+- **rc.5（2026-05-05）**：rc.1 共通六件配方**正式作廢** —— web 端 -30% 視覺強度太狠失去主招牌，反思後改走「web 維持 v0.1.x Tactile-Heavy 9-layer + SwiftUI 用 Tuner 校到視覺氣質接近」雙軌路線。`tokens/shadow.json` 跟 `preview/components-preview.html` 整檔 `git checkout v0.1.4 --` 回 9-layer
+- **rc.9（2026-05-06）**：SwiftUI Tuner 校到 v0.2.0-rc.9、視覺氣質實測接近 web v0.1.x。SwiftUI button shadow 從「rc.1 共通配方」進化到「對齊 web v0.1.x raised group 4-layer rc.9」
+- **v0.2.0 finalize（2026-05-07）**：DESIGN.md spec 文字全面改寫對齊雙軌策略 + 28 個 LM* 元件 catalog 落地 + 配套 token / preview / asset 同步 + web preview 4 件 cleanup（2D logo / MoonStars / Tuner / .moonstar-glyph path）
+
+詳細決策軌跡見 §16 Decisions Log 2026-05-04 ~ 2026-05-07 條目。
+
+§17.6 v1.0 第 2 條 Token 結構穩定觀察期延續 v0.1.1 起點 2026-04-27（本 release 不含 token 結構 breaking change，只是 button shadow / noise overlay opacity 數值收斂 + 加 `noise-overlay.size` 一個 token）。
+
+### Downstream Impact
+
+- **QuickTimeLapse**（pin v0.1.4）：可選擇升 pin v0.2.0 改用 §7.2.10 LM* catalog（特別是 `LMSlider` / `LMStatusChip` / `LMToast` 對齊雙軌等價）。Tactile material 視覺差異有限（QTL light-only、本 release web/iOS button rc.9 對齊主要影響 dark mode + 對比強度），upgrade 風險低
+- **個人網站 lazzywill**（pin v0.1.1）：本 release 不含 token 結構 breaking change，可順手 bump pin 到 v0.2.0；Brand Assets section 加新 asset card / Tuner Reference 拿掉、需 review web preview screenshot baseline
+
+[0.2.0]: https://github.com/bbfcwhy/LazzyMerlinDS/releases/tag/v0.2.0
 
 ## [0.1.4] — 2026-05-01
 
@@ -194,5 +231,5 @@ DS 應該是 brand-level 的純規範，不該耦合具體子專案。子專案�
 - **Loading state 不弱化 color，靠 spinner + `pointer-events: none`**（避免 `currentColor` cycle 踩坑 + alpha mix 字色不一致）
 - **品牌定位為「二人（+ 雙貓）實驗室」**（Merlin 是老婆名字諧音 · 梅林出主意 · 威爾用 AI 實現）
 
-[Unreleased]: https://github.com/bbfcwhy/LazzyMerlinDS/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/bbfcwhy/LazzyMerlinDS/compare/v0.2.0...HEAD
 [0.1.0]: https://github.com/bbfcwhy/LazzyMerlinDS/releases/tag/v0.1.0
