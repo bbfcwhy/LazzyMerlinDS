@@ -340,7 +340,7 @@ CSS pattern 全部從 `preview/components-preview.html` Phase 4 copy。**reduced
 - **Empty search**：「找不到。換個字試試？」
 - **Loading > 8 秒**：「比預期久一點，再等一下 ✦」
 - **Success toast**：「好了 ✦」
-- **Footer 簽名**：「Shine, lazily and steadily. ✦」
+- **Footer 簽名**：「Laziness sets your soul free. ✦」
 
 文案直接 copy DESIGN.md §10.3 表格，不要自己重寫。
 
@@ -428,7 +428,7 @@ https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/motion.jso
 - [ ] 沒引入新 hex / 新字體 / 新元件 anatomy
 - [ ] 反面教材 9 條全部沒踩
 - [ ] 邊緣狀態文案（404 / Error / Empty）有用 §10.3 而不是自己重寫
-- [ ] Footer 有 `Shine, lazily and steadily. ✦` 簽名
+- [ ] Footer 有 `Laziness sets your soul free. ✦` 簽名
 
 ---
 
