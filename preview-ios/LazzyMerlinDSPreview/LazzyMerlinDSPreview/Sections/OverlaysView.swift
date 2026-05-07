@@ -91,7 +91,17 @@ struct OverlaysView: View {
                 Button {
                     showSheet = false
                 } label: {
-                    Text("好了 \(Image("MoonStars"))")
+                    HStack(spacing: LMSpacing.xs) {
+                        Text("好了")
+                        // ★ Color.clear 容器鎖死可見尺寸、避免 MoonStars template image 被 parent .font() 自動 scale
+                        Color.clear
+                            .frame(width: 16, height: 16)
+                            .overlay {
+                                Image("MoonStars")
+                                    .resizable()
+                                    .scaledToFit()
+                            }
+                    }
                 }
                 .buttonStyle(TactileRaisedButtonStyle(radius: 12))
             }

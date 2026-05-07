@@ -9,15 +9,25 @@ struct ContentView: View {
             ScrollView {
                 VStack(spacing: 28) {
 
-                    // MARK: Brand header (取代 system large title)
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("LazzyMerlin")
-                            .font(.system(size: 34, weight: .bold, design: .serif))
-                            .foregroundStyle(Color.ink)
-                        Text("Design System Preview")
-                            .font(.lmCaption)
-                            .foregroundStyle(Color.inkMuted)
-                            .tracking(LMTracking.loose)
+                    // MARK: Brand header (取代 system large title) · Logo + LXGW brand font
+                    HStack(alignment: .center, spacing: 12) {
+                        Image("LazzyMerlinLogo3D")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 56, height: 56)
+                            .shadow(color: Color.black.opacity(0.18), radius: 6, x: 0, y: 3)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Lazzy Merlin · Design System")
+                                .font(.custom(Font.lmBrandFontMedium, size: 22))
+                                .foregroundStyle(Color.ink)
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.85)
+                            Text("慵懶梅林實驗室 · 設計系統")
+                                .font(.lmCaption)
+                                .foregroundStyle(Color.inkMuted)
+                                .tracking(LMTracking.loose)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
