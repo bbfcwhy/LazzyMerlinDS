@@ -80,12 +80,10 @@
       --sp-3xl: 48px;
       --sp-4xl: 64px;
 
-      /* 共用 Tactile noise overlay — 給 background-image 用（給 ::after 偽元素用的內聯版仍在各元件 CSS 內）*/
-      --noise-bg:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='nz1'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23nz1)'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='nz2'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23nz2)'/%3E%3C/svg%3E");
-      --noise-bg-size: 90px 90px, 220px 220px;
-      --noise-bg-blend: overlay, overlay;
+      /* 共用 Tactile noise overlay (§5.4) — 跨平台共用 PNG tile，跟 iOS Image("TactileNoise") 同源 (assets/tactile-noise.png, 256×256, baseFrequency 1.6, stitchable) */
+      --noise-bg: url("../assets/tactile-noise.png");
+      --noise-bg-size: 256px 256px;
+      --noise-bg-blend: overlay;
     }
     [data-theme="dark"] {
       --bg: #0F1C26;
@@ -106,7 +104,7 @@
          Semantic alias 不重寫 — var() 動態 resolve 跟著 :root earth-* / primary 自動切 */
 
       /* Dark mode noise blend mode — overlay 在深底會過曝，改 soft-light */
-      --noise-bg-blend: soft-light, soft-light;
+      --noise-bg-blend: soft-light;
 
       --shadow-soft-sm:
         6px 6px 12px rgba(0, 0, 0, 0.45),
@@ -390,7 +388,7 @@
       z-index: -1;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay; opacity: 0.6;
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.6;
       pointer-events: none;
     }
     /* Secondary 淺底，noise 強度稍低 */
@@ -399,7 +397,7 @@
     [data-theme="dark"] .btn--deep::after,
     [data-theme="dark"] .btn--destructive::after,
     [data-theme="dark"] .btn--secondary::after {
-      mix-blend-mode: soft-light; opacity: 0.85;
+      opacity: 0.85;
     }
     [data-theme="dark"] .btn--secondary::after { opacity: 0.7; }
 
@@ -635,12 +633,11 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay;
+      mix-blend-mode: var(--noise-bg-blend);
       opacity: 0.55;
       pointer-events: none;
     }
     [data-theme="dark"] .switch[aria-checked="true"]::before {
-      mix-blend-mode: soft-light;
       opacity: 0.75;
     }
     .switch[aria-checked="true"]::after { transform: translateX(24px); }
@@ -688,12 +685,11 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay;
+      mix-blend-mode: var(--noise-bg-blend);
       opacity: 0.55;
       pointer-events: none;
     }
     [data-theme="dark"] .slider__fill::after {
-      mix-blend-mode: soft-light;
       opacity: 0.75;
     }
     .slider__thumb {
@@ -737,14 +733,12 @@
     }
     .card--editorial::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='c1a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='6'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23c1a)'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='c1b'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='1'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23c1b)'/%3E%3C/svg%3E");
-      background-size: 90px 90px, 220px 220px;
-      mix-blend-mode: overlay; opacity: 0.55;
+      background-image: var(--noise-bg);
+      background-size: var(--noise-bg-size);
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.55;
       pointer-events: none;
     }
-    [data-theme="dark"] .card--editorial::after { mix-blend-mode: soft-light; opacity: 0.75; }
+    [data-theme="dark"] .card--editorial::after { opacity: 0.75; }
     .card > * { position: relative; z-index: 1; }
     .card--editorial:hover {
       transform: translateY(-3px);
@@ -821,7 +815,7 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay;
+      mix-blend-mode: var(--noise-bg-blend);
       opacity: 0.55;
       pointer-events: none;
     }
@@ -836,7 +830,6 @@
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
     }
     [data-theme="dark"] .chip::after {
-      mix-blend-mode: soft-light;
       opacity: 0.75;
     }
     .chip:hover { transform: translateY(-2px); }
@@ -881,7 +874,7 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay;
+      mix-blend-mode: var(--noise-bg-blend);
       opacity: 0.55;
       pointer-events: none;
     }
@@ -894,7 +887,6 @@
         2px 3px 5px rgba(0, 0, 0, 0.55);
     }
     [data-theme="dark"] .badge::after {
-      mix-blend-mode: soft-light;
       opacity: 0.75;
     }
     /* Dot badge 太小（8×8）紋理會像髒污 — 不繼承 noise / Tactile shadow */
@@ -935,7 +927,7 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay;
+      mix-blend-mode: var(--noise-bg-blend);
       opacity: 0.55;
       pointer-events: none;
     }
@@ -949,7 +941,6 @@
         12px 16px 22px rgba(0, 0, 0, 0.40);
     }
     [data-theme="dark"] .avatar::after {
-      mix-blend-mode: soft-light;
       opacity: 0.75;
     }
     .avatar--xs { width: 24px; height: 24px; font-size: 10px; }
@@ -1036,14 +1027,12 @@
     }
     .modal::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='m1a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='6'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23m1a)'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='m1b'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='1'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23m1b)'/%3E%3C/svg%3E");
-      background-size: 90px 90px, 220px 220px;
-      mix-blend-mode: overlay; opacity: 0.55;
+      background-image: var(--noise-bg);
+      background-size: var(--noise-bg-size);
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.55;
       pointer-events: none;
     }
-    [data-theme="dark"] .modal::after { mix-blend-mode: soft-light; opacity: 0.75; }
+    [data-theme="dark"] .modal::after { opacity: 0.75; }
     .modal > * { position: relative; z-index: 1; }
     .modal__title { font-family: 'LXGW WenKai TC', serif; font-size: 24px; margin-bottom: 8px; }
     .modal__body { color: var(--ink-muted); font-size: 14px; margin-bottom: 24px; }
@@ -1128,12 +1117,11 @@
       border-radius: inherit;
       background-image: var(--noise-bg);
       background-size: var(--noise-bg-size);
-      mix-blend-mode: overlay;
+      mix-blend-mode: var(--noise-bg-blend);
       opacity: 0.55;
       pointer-events: none;
     }
     [data-theme="dark"] .progress-linear__bar::after {
-      mix-blend-mode: soft-light;
       opacity: 0.75;
     }
     .progress-linear--indeterminate .progress-linear__bar {
@@ -1331,14 +1319,12 @@
     }
     .logo-card::after {
       content: ''; position: absolute; inset: 0; border-radius: inherit;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='lc1a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.2' numOctaves='4' seed='6'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.8 -0.3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23lc1a)'/%3E%3C/svg%3E"),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='lc1b'%3E%3CfeTurbulence type='turbulence' baseFrequency='1.4 0.5' numOctaves='2' seed='1'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23lc1b)'/%3E%3C/svg%3E");
-      background-size: 90px 90px, 220px 220px;
-      mix-blend-mode: overlay; opacity: 0.55;
+      background-image: var(--noise-bg);
+      background-size: var(--noise-bg-size);
+      mix-blend-mode: var(--noise-bg-blend); opacity: 0.55;
       pointer-events: none;
     }
-    [data-theme="dark"] .logo-card::after { mix-blend-mode: soft-light; opacity: 0.75; }
+    [data-theme="dark"] .logo-card::after { opacity: 0.75; }
     .logo-card > * { position: relative; z-index: 1; }
     .logo-card img {
       max-width: 100%;
