@@ -530,137 +530,145 @@ Hero 區背景的 3 個 blur 漸層圓，緩慢 drift（24s 循環）：
 
 **Tactile 是 LazzyMerlin 的主視覺語言**：所有 CTA / 卡片 / Tile 都用這套。核心原則：**touchable 元件需有層次感** — fillable 底 + 暗化 / 漸層 + drop shadow + 細微紋理 + 雕刻字。
 
-#### 跨平台共通配方（v0.2.0 起）
+#### 雙軌等價策略（v0.2.0 起）
 
-v0.2.0 把 Tactile 重新校準為 **跨平台共通配方** —— web 跟 SwiftUI 用同一份「六件 building blocks」，視覺氣質一致到「分不太出來」。先前（v0.1.4 及之前）的 Tactile-Heavy 強度（雙層 inset rim、4 層 drop shadow、SVG turbulence noise）因為 SwiftUI 無等價而降規格 —— web 端視覺強度約 -30%，換得 iOS / macOS / web 視覺氣質真正一致。
+v0.2.0 改走 **Tactile-Heavy 雙軌等價**：web (CSS) 維持 v0.1.x 的 Tactile-Heavy 強度（多層 box-shadow + 雙層 inset rim 是 LazzyMerlin DNA、不為跨平台妥協），SwiftUI 用 ViewModifier 校到「視覺氣質接近」（同樣的浮雕感、雕刻感、質地感）。**跨平台一致 = 視覺氣質接近，不是 pixel-perfect 數值對齊。**
 
-**共通六件 building blocks：**
+**為何不走「跨平台最大公約數」：** v0.2.0-rc.1 期間試過把兩端都收斂到 SwiftUI 也能等價的「共通六件配方」（單層 stroke + 2 層 drop shadow），結果 web 端視覺強度 -30%、失去主招牌。v0.2.0-rc.5 反思後改走雙軌 —— 各取所長，web 端用 CSS 獨有 primitive (`inset` shadow / SVG turbulence / `mix-blend-mode`) 飆滿 Tactile-Heavy 強度，SwiftUI 端用 directional shadow + PNG noise tile 模擬到「氣質接近」。詳見 §16 2026-05-05 Decisions Log。
 
-| # | 元素 | Web (CSS) | SwiftUI |
-|---|---|---|---|
-| 1 | 對角微暗化 | `linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%, rgba(0,0,0,0.18) 100%)` | `LinearGradient(colors: [.white.opacity(0.04), .clear, .black.opacity(0.18)], startPoint: .topLeading, endPoint: .bottomTrailing)` |
-| 2 | 上亮下暗單層內邊（取代雙層 inset rim） | `box-shadow: inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.20)` | `.overlay { RoundedRectangle().stroke(LinearGradient(white→black, top→bottom), lineWidth: 1) }` |
-| 3 | Drop shadow（近 + 遠，共 2 層） | `box-shadow: 0 2px 4px rgba(15,28,38,0.15), 0 6px 12px rgba(15,28,38,0.10)` | `.shadow(color: .black.opacity(0.15), radius: 4, y: 2).shadow(color: .black.opacity(0.10), radius: 12, y: 6)` |
-| 4 | Noise overlay（共用 PNG tile） | `background-image: url('/assets/tactile-noise.png'); background-size: 256px; mix-blend-mode: soft-light; opacity 0.06-0.10` | `Image("TactileNoise").resizable(resizingMode: .tile).opacity(0.08).blendMode(.softLight)` |
-| 5 | Text shadow（雕刻字） | `text-shadow: 0 1px 0 rgba(255,255,255,0.40)`（深底改 `rgba(0,0,0,0.30)`） | `.shadow(color: .white.opacity(0.4), radius: 0, y: 1)`（深底改 `.black.opacity(0.3)`） |
-| 6 | Continuous radius | `border-radius: 10-20px`（CSS `border-radius` 視覺即 continuous squircle） | `RoundedRectangle(cornerRadius: ..., style: .continuous)` |
+**SwiftUI 端校準工具：** [`preview-ios/.../TunerView.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Sections/TunerView.swift) 可即時調 21 個參數對齊 web 視覺。最終值寫進 [`preview-ios/.../TactileMaterial.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift) (v0.2.0-rc.9) 跟 [`LMDesignTokens.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDesignTokens.swift) 內 `LMTactile` namespace。
 
-**共用 asset：** [`assets/tactile-noise.png`](assets/tactile-noise.png) —— 256×256 RGBA PNG，從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` render，stitchable 無縫平鋪。Web 跟 iOS bundle 同一份，從來源就保證跨平台一致。
+**共用 asset：** [`assets/tactile-noise.png`](assets/tactile-noise.png) —— 256×256 RGBA PNG，從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` 用 `rsvg-convert` render，stitchable 無縫平鋪。Web 跟 iOS bundle 同一份 PNG，從來源就保證 noise tile 跨平台同源（box-shadow / stroke 結構則各自走 platform 獨有 primitive）。
 
 #### 5.4.1 Tactile 四態材質
 
-四種材質對應四種語意角色，**任何 Tactile 元件選一種**。每態都用 §5.4 共通六件 building blocks 組合，跨平台等價：
+四種材質對應四種語意角色，**任何 Tactile 元件選一種**。Web spec 取自 [`preview/components-preview.html`](preview/components-preview.html) 實際 render 數值（v0.1.x Tactile-Heavy 風格、5379191 對齊 SwiftUI rc.9 修正版），SwiftUI spec 取自 [`preview-ios/.../TactileMaterial.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift) v0.2.0-rc.9。
 
-| Material | 背景 | 凸/凹 | 套用配方件 | 用途 |
-|---|---|---|---|---|
-| **Base** | `--bg-raised` | 微凸（薄浮雕） | 1 + 2 + 3（弱）+ 4（極淡）+ 6 | 一般卡片、容器、page surface |
-| **Raised** | `--primary` / `--primary-deep` | 強凸（厚浮雕） | 1 + 2 + 3（強）+ 4 + 5 + 6 | 主 CTA、Hero tile、強調 panel |
-| **Inset** | `--bg`（同底色） | 凹陷 | 反向 1 + 反向 2（光源反轉）+ 6 | 表單輸入、容器內凹槽 |
-| **Pressed** | `--stone` 或暗色 | 整片下沉 | 1（強暗）+ 反向 2 + 5 + 6 + 1 層淺 drop shadow | active 狀態、selected toggle |
+| Material | 背景 | 凸/凹 | 用途 | Web 代表元件 | SwiftUI ViewModifier |
+|---|---|---|---|---|---|
+| **Base** | `--bg-raised` | 微凸（薄浮雕） | 一般卡片、容器、page surface | `.card--editorial` | `.tactileBase()` |
+| **Raised** | `--primary` / `--primary-deep` / `--error` | 強凸（厚浮雕） | 主 CTA、Hero tile、強調 panel | `.btn--primary` / `.btn--deep` / `.btn--destructive` | `.tactileRaised()` |
+| **Inset** | `--bg`（同底色） | 凹陷（光源反轉） | 表單輸入、容器內凹槽 | `.input` (Soft Inset) | `.tactileInset()` |
+| **Pressed** | `--stone` / `--primary` 加暗 | 整片下沉 | active 狀態、selected toggle | `.btn--primary:active` / `.chip--selected` | `.tactilePressed()` |
 
-**Raised（主 CTA）web 規格：**
+**Raised（主 CTA）web spec** — 對齊 SwiftUI rc.9 的 4-layer 配方：
 ```css
-.tactile-raised {
-  background-color: var(--primary);
-  color: var(--bg);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.30);
+.btn--primary, .btn--deep, .btn--destructive {
+  color: var(--ink-on-brand);
   background-image:
-    linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.22) 100%),
-    url('/assets/tactile-noise.png');
-  background-size: auto, 256px 256px;
-  background-blend-mode: normal, soft-light;
+    linear-gradient(170deg,
+      rgba(255,255,255,0.10) 0%,
+      transparent 50%,
+      rgba(0,0,0,0.10) 100%);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.80);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.30),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
-    0 2px 4px rgba(15, 28, 38, 0.15),
-    0 6px 12px rgba(15, 28, 38, 0.10);
-  border-radius: 12px;
+    inset 0 1px 0 rgba(0, 0, 0, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10),
+    3px 3px 3px rgba(15, 28, 38, 0.50),
+    3px 3px 3px rgba(15, 28, 38, 0.50);
+}
+.btn--primary::after,
+.btn--deep::after,
+.btn--destructive::after {
+  background-image: var(--noise-bg);
+  background-size: var(--noise-bg-size);
+  mix-blend-mode: var(--noise-bg-blend);
+  opacity: 0.30;
 }
 ```
+對應 token：`tactile-raised.button-light/dark`。SwiftUI 等價：`.tactileRaised(radius:)` ViewModifier — 結構 = `baseColor` + 近垂直 LinearGradient (約 10° 偏移) + `TactileNoise` PNG tile (opacity 0.30) + continuous `RoundedRectangle` clip + 1pt black 0.10 strokeBorder + 兩層 directional shadow (`shadowInk × 0.50` / radius 3 / offset (3, 3)) + text shadow (black 0.80, y=2)。完整實作見 §7.2.9。
 
-**Raised SwiftUI 等價** — 完整 ViewModifier 見 §7.2.9。
-
-**Base（淺浮雕）web 規格：**
+**Base（淺浮雕）web spec：**
 ```css
-.tactile-base {
-  background-color: var(--bg-raised);
-  background-image:
-    linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(15,28,38,0.10) 100%),
-    url('/assets/tactile-noise.png');
-  background-size: auto, 256px 256px;
-  background-blend-mode: normal, soft-light;
+.card--editorial {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.50),
-    inset 0 -1px 0 rgba(15, 28, 38, 0.10),
-    0 2px 4px rgba(15, 28, 38, 0.10),
-    0 4px 8px rgba(15, 28, 38, 0.06);
-  border-radius: 12px;
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(33, 23, 21, 0.10),
+    inset 0 0 0 1px rgba(33, 23, 21, 0.05),
+    4px 6px 14px rgba(33, 23, 21, 0.12);
+}
+.card--editorial::after {
+  background-image: var(--noise-bg);
+  background-size: var(--noise-bg-size);
+  mix-blend-mode: var(--noise-bg-blend);
+  opacity: 0.55;
 }
 ```
+對應 token：`tactile-raised.card-light/dark`。SwiftUI 等價：`.tactileBase(radius:isPressed:)` ViewModifier — 結構 = `Color.surface1` 底 (page bg +1 階) + 近垂直 LinearGradient (white 0.08 → clear → black 0.04) + `TactileNoise` PNG tile (opacity 0.55 / 0.75 跨 light/dark) + 1pt 跨 mode 不同 strokeBorder + 單層軟漫射 shadow (radius 14 / offset (4, 6) / opacity 0.12)。
 
-**Inset（凹陷）web 規格** — 光源反轉（左上陰影、右下反射光）：
+**Inset（凹陷）web spec** — 走 Soft Inset 寫法（不再用 Tactile 雙層 inset rim）：
 ```css
-.tactile-inset {
-  background-color: var(--bg);
-  background-image:
-    linear-gradient(135deg, rgba(15,28,38,0.10) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.06) 100%);
-  box-shadow:
-    inset 0 1px 2px rgba(15, 28, 38, 0.18),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.40);
-  border-radius: 10px;
+.input {
+  background: var(--bg);
+  box-shadow: var(--shadow-soft-inset);
+  /* = inset 4px 4px 8px rgba(33,23,21,0.08),
+       inset -4px -4px 8px rgba(255,255,255,0.75) */
 }
 ```
-注意：Inset **不加 noise overlay**（凹槽紋理會打架），也**不加 drop shadow**（凹槽本來就在元件內）。
+注意：Inset **不加 noise overlay**（凹槽紋理會打架），也**不加 drop shadow**（凹槽本來就在元件內）。SwiftUI 等價：`.tactileInset(radius:)` ViewModifier — 結構 = `Color.bg` 底 + 4 層 stroke 模擬凹陷 (左上深 black blur + 右下亮 white blur + 1pt outer stroke + clip mask)。SwiftUI 沒原生 inset shadow，用 directional stroke + offset + blur 模擬，rc.9 對齊 `LMSwitchToggleStyle.trackInsetShadow` 配方、跨「凹陷」元件視覺一致。
 
-**Pressed web 規格：**
+**Pressed web spec：**
 ```css
-.tactile-pressed {
-  background-color: var(--stone);
-  color: var(--bg);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.30);
-  background-image:
-    linear-gradient(135deg, rgba(0,0,0,0.20) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.06) 100%);
+.btn--primary:active {
+  transform: translateY(2px);
   box-shadow:
-    inset 0 1px 2px rgba(0, 0, 0, 0.30),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.10),
-    0 1px 2px rgba(15, 28, 38, 0.10);
-  border-radius: 12px;
+    inset 3px 4px 10px rgba(0, 0, 0, 0.30),
+    inset -1px -1px 4px rgba(255, 255, 255, 0.18),
+    1px 1px 2px rgba(15, 28, 38, 0.10);
 }
 ```
+SwiftUI 等價：`.tactilePressed(radius:)` ViewModifier — 結構 = `Color.stone` 底 + 反向 LinearGradient (black 0.15 → clear → white 0.06) + `TactileNoise` PNG tile (opacity 0.20 / 0.15 跨 light/dark) + 1pt black 0.20 strokeBorder + 1 層 directional shadow (black 0.30 / radius 1 / offset (1, 1))。
+
+**SwiftUI 額外 4 個 modifier**（web 沒有對應抽象 class、跑各自具象元件規格）：
+
+| iOS-only ViewModifier | 用途 | Web 對應 |
+|---|---|---|
+| `.tactileSecondary(radius:isPressed:)` | 次 CTA / Hybrid button | `.btn--secondary` (neumorphic, `var(--shadow-soft-sm)`) |
+| `.tactilePlain(radius:)` | List / table / 安靜容器 | `.card--plain` (neumorphic, hairline border) |
+| `.tactilePill(color:isFilled:)` | Chip / badge / inline status (Capsule shape) | `.chip` (6-layer Tactile-Heavy) / `.badge` (5-layer) |
+| `.tactileCircle(color:)` | Avatar / status dot (Circle shape) | `.avatar` (6-layer Tactile-Heavy) |
+
+完整 SwiftUI ViewModifier reference impl 見 §7.2.9。
 
 #### 5.4.2 Dark mode 規則
 
-Dark mode 不是 light 直接反色，三項調整：
-- **Single inset stroke**：頂緣 highlight 降到 `rgba(255,255,255,0.10-0.20)`，底緣加深到 `rgba(0,0,0,0.30-0.40)`
-- **Drop shadows** 全部換成 `rgba(0,0,0,...)`，opacity 比 light mode 高 30-40%（dark 上 shadow 視覺感弱、需補強）
-- **Noise overlay** opacity 從 0.06-0.10 → 0.10-0.12（dark 底上要稍強才看得見），blend mode `soft-light` 不變
+Dark mode 不是 light 直接反色，雙軌規則：
 
+**Web 端**（per-element 各自獨立 dark spec、見 `tokens/shadow.json` `tactile-raised.*-dark`）：
+- **Inset rim** 整體調暗：頂緣 highlight `rgba(255,255,255,0.30 → 0.10-0.20)` 降淡、底緣 shadow 從 `rgba(33,23,21,0.10)` / `rgba(15,28,38,0.18)` 換成 `rgba(0,0,0,0.30-0.45)` 加深
+- **Drop shadows** 全換成 `rgba(0, 0, 0, ...)`、opacity 提升 30-50%（dark 上 shadow 視覺感弱、需補強）
+- **Noise overlay** blend mode 從 `overlay → soft-light`（overlay 在深底會過曝）— 由 `var(--noise-bg-blend)` 自動切，per-element opacity 各自跨 mode 不同（見 `tokens/shadow.json` `noise-overlay`）
+
+**Raised buttons 例外** — 跨 mode 同 box-shadow 結構（已對齊 SwiftUI rc.9）：
 ```css
-[data-theme="dark"] .tactile-raised {
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.40);
-  background-image:
-    linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 100%),
-    url('/assets/tactile-noise.png');
-  background-size: auto, 256px 256px;
-  background-blend-mode: normal, soft-light;
+[data-theme="dark"] .btn--primary,
+[data-theme="dark"] .btn--deep,
+[data-theme="dark"] .btn--destructive {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.40),
-    0 2px 6px rgba(0, 0, 0, 0.25),
-    0 8px 16px rgba(0, 0, 0, 0.20);
+    inset 0 1px 0 rgba(0, 0, 0, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10),
+    3px 3px 3px rgba(0, 0, 0, 0.50),
+    3px 3px 3px rgba(0, 0, 0, 0.50);
 }
 ```
+跨 mode 同 inset stroke + 同 layer count，差別只是 ink color `rgba(15,28,38)` → `rgba(0,0,0)`。對應 token：`tactile-raised.button-dark`（黑色 0.20 / 0.65 強化版）。
 
-[從 web-only 強配方退役] v0.1.4 及之前的雙層 inset rim + 4 層 drop shadow + SVG turbulence noise 配方因為跨平台無等價，於 v0.2.0 退役。歷史完整 spec 見 `git show v0.1.4:DESIGN.md`。
+**SwiftUI 端：**
+- `LMTactile.shadowInk(colorScheme)` light = `Color.ink` (#0F1C26) / dark = `.black`
+- Stroke 跨 mode 同色（all 走 `Color.black.opacity(...)`、不翻 white），opacity per-modifier 各自定義
+- `Image("TactileNoise")` blend mode：light = `.overlay` / dark = `.softLight`（跟 web `--noise-bg-blend` 對齊）
+- Noise opacity 集中在 `LMTactile` namespace：`raisedNoiseOpacity = 0.30` / `baseNoise(Light/Dark) = 0.55/0.75` / `secondaryNoise(Light/Dark) = 0.55/0.70` / `smallNoise(Light/Dark) = 0.30/0.20`
 
 #### 5.4.3 Tactile 配套參數
 
 - **Radius**：Tactile 元件最小 `radius-md 10px`，**建議 `radius-lg 12px` 起跳**，tile 用 `radius-xl 16-20px`，按鈕 `radius-lg 12-16px`
 - **Padding**：要夠寬才撐得起浮雕。按鈕至少 `12px 22px`，卡片至少 `24px`，tile 至少 `14px`
-- **`overflow: hidden`**：必須，否則 noise overlay 會溢出
-- **`position: relative` + `::after`**：noise overlay 必經 `::after` 偽元素，內容子元素需 `position: relative; z-index: 1` 浮在 noise 之上
-- **Text shadow**：Tactile 元件文字一律加 `text-shadow: 0 1px 0 rgba(255,255,255,0.4)`（深底文字改 `rgba(0,0,0,0.3)`），雕刻感才完整
-- **Noise overlay 跨平台調整**：Web 採 spec 全強度（`opacity: 0.55-0.85`、blend mode `overlay`/`soft-light`）；iOS Retina 高 DPI（@2x / @3x）下這個強度會被認知為「螢幕髒」而非材質感，須降到 spec 的 1/10（建議 `opacity: 0.05-0.08`）或直接 opt-out。詳見 §7.2「Noise overlay iOS 調整」
+- **`overflow: hidden`**（web 端必須，否則 noise overlay 會溢出。SwiftUI 用 `.clipShape(RoundedRectangle(cornerRadius:, style: .continuous))` 等價）
+- **`position: relative` + `::after`**（web 端 noise overlay 必經 `::after` 偽元素，內容子元素需 `position: relative; z-index: 1` 浮在 noise 之上。SwiftUI 用 ZStack background 內 layer 疊加等價）
+- **Text shadow**：Tactile 元件文字一律加 text shadow，雕刻感才完整。
+  - 一般淺底深字：`text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4)` / SwiftUI `.shadow(color: .white.opacity(0.4), radius: 0, y: 1)`
+  - 深底淺字（raised buttons 用 `--ink-on-brand`）：`text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25-0.30)` / 加重版 `0 2px 0 rgba(0, 0, 0, 0.80)`（rc.9 buttons 用） / SwiftUI `.shadow(color: .black.opacity(0.80), radius: 0, y: 2)`
+- **Noise overlay 跨平台**（v0.2.0 起，雙軌等價）：Web 跟 iOS bundle 同一份 PNG tile [`assets/tactile-noise.png`](assets/tactile-noise.png) (256×256, baseFreq 1.6)，**不再 opt-out**（v0.1.4 寫的「iOS Retina 上強度會被當螢幕髒、須降到 1/10 或 opt-out」已作廢，rc.9 校到 `0.20-0.30` 範圍實測視覺氣質接近 web）。Per-element opacity 4 級（raised / base / secondary / small × light/dark），權威數值見 `tokens/shadow.json` `noise-overlay` (web default reference) 跟 iOS `LMTactile` namespace
 
 ### 5.5 Hybrid Shadow（輕量替代）
 
@@ -751,24 +759,28 @@ Input / Switch / Slider 這類控制元件不適合 Tactile（太厚重會擋視
 
 ### 5.7 元件 → Material 對照表
 
-每個元件**選一套**，不要混用。各 Material 在 web / iOS / macOS 三平台的 implementation 對照：
+每個元件**選一套**，不要混用。各 Material 在 web / iOS / macOS 三平台的 implementation 對照（v0.2.0 雙軌等價、視覺氣質一致而非 pixel-perfect 數值對齊）：
 
-| 元件類型 | Material | Web class | iOS / macOS（SwiftUI） |
+| 元件類型 | Material | Web class | SwiftUI |
 |---|---|---|---|
-| 主 CTA 按鈕 | **Tactile Raised** | `.btn-tactile.primary` | `.tactileRaised()` ViewModifier（§7.2.9） |
-| 次 CTA / Ghost button | **Hybrid** | `.btn-hybrid` | `.tactileHybrid()` ViewModifier |
-| Hero / Landing tile | **Tactile（base/raised 擇一）** | `.tile-tactile.base` | `.tactileBase()` / `.tactileRaised()` |
-| Editorial card / Article tile | **Tactile Base** | `.shadow-card` | `.tactileBase()` |
-| List view item / 輕量卡片 | **Hybrid** | `.btn-hybrid`（拉長版） | `.tactileHybrid()` |
-| Theme toggle / Pill button | **Tactile Base 簡化版** | `.theme-toggle` | `.tactileBase(radius: .infinity)` |
-| Input / Textarea | **Soft Inset** | `.soft-input` | `.tactileInset()` |
-| Switch / Toggle | **Soft Inset**（track）+ Tactile thumb | `.soft-switch` | iOS `Toggle()` 自帶 + `.tint(.accent)` |
-| Slider | **Soft Inset**（track）+ Tactile thumb | `.soft-slider` | iOS `Slider()` 自帶 |
-| Checkbox / Radio | **Soft Inset**（unchecked）→ **Tactile Pressed**（checked） | — | iOS `Toggle(.checkbox)` 自帶 |
-| Chip / Tag | 純色 fill，不加 shadow | `.chip` | `.background(...).clipShape(Capsule())` |
-| Pure text link | 只 color hover，**不**加 shadow / 上浮 | — | `Button(.borderless)` |
+| 主 CTA 按鈕 / Brand Deep / Destructive | **Tactile Raised** | `.btn--primary` / `.btn--deep` / `.btn--destructive` (4-layer rc.9) | `TactileRaisedButtonStyle` (預設 `.primaryBrand`) / `TactileDestructiveButtonStyle` (`.earthRed` base) |
+| 次 CTA / Hybrid button | **Tactile Secondary** (Hybrid) | `.btn--secondary` (neumorphic, `var(--shadow-soft-sm)`) | `TactileSecondaryButtonStyle` / `.tactileSecondary()` (raised-style directional shadow + bg fill + noise) |
+| Ghost button | 純文字 + color hover | `.btn--ghost` | `TactileGhostButtonStyle` (foregroundStyle + opacity) |
+| Editorial card / Article tile | **Tactile Base** | `.card--editorial` (4-layer Tactile-Heavy) | `.tactileBase(radius:isPressed:)` (`Color.surface1` + 軟漫射 shadow) |
+| List view / 安靜容器 | **Tactile Plain** (Hybrid) | `.card--plain` (neumorphic + hairline border) | `.tactilePlain(radius:)` (bg + hairline + 1 層 directional drop) |
+| Hero / Landing tile | **Tactile Base 加大** | `.card--editorial` 拉長版 | `.tactileBase(radius: LMRadius.card)` (radius 20) |
+| Pill / Chip / Tag | **Tactile Pill** (Capsule) | `.chip` (6-layer Tactile-Heavy) | `.tactilePill(color:isFilled:)` |
+| Badge | **Tactile Badge** (5-layer 縮減) | `.badge` (5-layer) | `.tactilePill(color:)` 共用 (size 自動縮) |
+| Avatar | **Tactile Circle** (Circle) | `.avatar` (6-layer Tactile-Heavy) | `.tactileCircle(color:)` |
+| Modal / Overlay card | 無 noise + soft drop shadow | `.modal` (純 box-shadow + bg) | `lmOverlayCardChrome(radius:)` (`Color.surface2` + border + radius/12 shadow) |
+| Input / Textarea | **Soft Inset** | `.input` (`var(--shadow-soft-inset)`) | `.tactileInset(radius:)` (4 層 stroke + blur + offset 模擬凹陷) |
+| Switch / Toggle | **Soft Inset** (track) + Tactile fill (on) | `.switch` (custom CSS) | `LMSwitchToggleStyle` (自繪、對齊 web custom switch + Tactile fill on) |
+| Slider | **Soft Inset** (track) + Tactile thumb | `.slider` + `.slider__thumb` | iOS `Slider().tint(.primaryBrand)` 或自繪 `LMSlider` |
+| Checkbox / Radio | **Soft Inset** (unchecked) → **Tactile Pressed** (checked) | `.checkbox` / `.radio` | iOS `Toggle(.checkbox)` + `.tint(...)` |
+| Pressed / Selected toggle | **Tactile Pressed** | `.btn--primary:active` / `.chip--selected` | `TactilePressedButtonStyle` / `.tactilePressed(radius:)` |
+| Pure text link | 只 color hover、不加 shadow / 上浮 | `.btn--ghost` | `Button` + `.foregroundStyle(.primaryBrand)` |
 
-**SwiftUI 原生元件優先**：Switch / Slider / Checkbox 用 SwiftUI 內建 `Toggle()` / `Slider()`，只調 `.tint(Color("Primary"))` 套 brand color，不重造輪子。Apple 的 native control 自動跟系統 Dynamic Type / Accessibility / Reduce Motion 整合。
+**SwiftUI 原生元件優先**：Switch / Slider / Checkbox 在 SwiftUI 端優先用內建 `Toggle()` / `Slider()`，只調 `.tint(.primaryBrand)` 套 brand color，不重造輪子 — Apple 的 native control 自動跟系統 Dynamic Type / Accessibility / Reduce Motion 整合。需要視覺對齊 web custom 樣式時才用 LM* 自繪元件（[LM 元件家族 catalog](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/) 內 `LMSlider` / `LMSwitchToggleStyle` / `LMSegmentedPicker` 等）。
 
 **禁止：** 同一個元件同時用 Tactile + Soft inset（例如 input 框體用 Soft、focus 套 Tactile drop shadow）—— 看起來像 bug。
 
@@ -986,94 +998,76 @@ enum AppearancePreference: String, CaseIterable {
 
 UI 偏好：Settings 內提供「系統 / 淺色 / 深色」三態切換（不要強迫 user 跟系統，但預設跟系統）。Dark mode 互換規則跟 §2.4 一致。
 
-#### 7.2.9 Tactile material 跨平台等價（v0.2.0 起）
+#### 7.2.9 Tactile material SwiftUI 落地（v0.2.0 起）
 
-v0.2.0 把 Tactile 重新校準為跨平台共通配方（見 §5.4），iOS 用 SwiftUI 完整等價實作 —— 不再「opt-out」或「降強度模擬」，而是**跟 web 用同一份 PNG noise tile + 同套六件 building blocks**，視覺氣質「分不太出來」。
+v0.2.0 起 Tactile material 走 **雙軌等價**（見 §5.4）：web 維持 v0.1.x Tactile-Heavy、SwiftUI 用 ViewModifier 校到「視覺氣質接近」（同樣的浮雕感、雕刻感、質地感、不要求 pixel-perfect 數值對齊）。SwiftUI 端 8 個 modifier 涵蓋四態材質 + 4 個 iOS-only 變體，集中在 [`preview-ios/.../TactileMaterial.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift) (v0.2.0-rc.9) 跟 [`TactileButtonStyles.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileButtonStyles.swift)。
 
-**前置：** bundle [`assets/tactile-noise.png`](../../assets/tactile-noise.png) 進 `Assets.xcassets` 命名 `TactileNoise`（256×256 RGBA、stitchable）。
+##### 前置
 
-##### Tactile Raised（主 CTA · ViewModifier）
+1. Bundle [`assets/tactile-noise.png`](assets/tactile-noise.png) 進 `Assets.xcassets`、imageset 命名 `TactileNoise`（256×256 RGBA、stitchable）— 跟 web `--noise-bg` 同源 PNG
+2. 引入共用常數 namespace `LMTactile`（在 [`LMDesignTokens.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDesignTokens.swift)）：
 
 ```swift
-import SwiftUI
+enum LMTactile {
+    static let gradientStart = UnitPoint(x: 0.413, y: 0.008)  // 近垂直、約 10° 偏移
+    static let gradientEnd = UnitPoint(x: 0.587, y: 0.993)
+    static let raisedNoiseOpacity: Double = 0.30
+    static let baseNoiseLight: Double = 0.55
+    static let baseNoiseDark: Double = 0.75
+    static let secondaryNoiseLight: Double = 0.55
+    static let secondaryNoiseDark: Double = 0.70
+    static let smallNoiseLight: Double = 0.30
+    static let smallNoiseDark: Double = 0.20
 
-extension View {
-    func tactileRaised(radius: CGFloat = 12) -> some View {
-        modifier(TactileRaisedModifier(radius: radius))
-    }
-}
-
-struct TactileRaisedModifier: ViewModifier {
-    let radius: CGFloat
-    @Environment(\.colorScheme) var colorScheme
-
-    func body(content: Content) -> some View {
-        content
-            .padding(.vertical, 12)
-            .padding(.horizontal, 22)
-            .foregroundStyle(Color("Bg"))
-            .shadow(color: colorScheme == .dark
-                    ? .black.opacity(0.40) : .black.opacity(0.30),
-                    radius: 0, y: 1) // text shadow
-            .background {
-                ZStack {
-                    Color("Primary")
-                    LinearGradient(
-                        colors: [
-                            .white.opacity(colorScheme == .dark ? 0.04 : 0.06),
-                            .clear,
-                            .black.opacity(colorScheme == .dark ? 0.30 : 0.22)
-                        ],
-                        startPoint: .topLeading, endPoint: .bottomTrailing
-                    )
-                    Image("TactileNoise")
-                        .resizable(resizingMode: .tile)
-                        .opacity(colorScheme == .dark ? 0.10 : 0.08)
-                        .blendMode(.softLight)
-                        .allowsHitTesting(false)
-                }
-            }
-            .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                .white.opacity(colorScheme == .dark ? 0.15 : 0.30),
-                                .black.opacity(colorScheme == .dark ? 0.40 : 0.20)
-                            ],
-                            startPoint: .top, endPoint: .bottom
-                        ),
-                        lineWidth: 1
-                    )
-            }
-            .shadow(color: .black.opacity(colorScheme == .dark ? 0.25 : 0.15),
-                    radius: 4, y: 2)
-            .shadow(color: .black.opacity(colorScheme == .dark ? 0.20 : 0.10),
-                    radius: 12, y: 6)
+    static func shadowInk(_ colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? .black : Color.ink
     }
 }
 ```
 
-##### Tactile Base / Inset / Pressed
+##### 8 個 ViewModifier
 
-四態 ViewModifier 對應 §5.4.1 web 規格：
-- `.tactileBase()` — 弱 drop shadow（radius 4 + 8 兩層）、`Color("BgRaised")` 底
-- `.tactileInset()` — 反向光源（頂緣 dark stroke、底緣 light stroke）、無 drop shadow、無 noise
-- `.tactilePressed()` — `Color("Stone")` 底 + 1 層淺 drop shadow + 反向 stroke
+| Modifier | 用途 | 視覺結構簡述 |
+|---|---|---|
+| `.tactileRaised(radius:)` | 主 CTA / Hero tile / 強調 panel | `baseColor` (預設 `.primaryBrand`) + 近垂直 LinearGradient (`white 0.10 → clear → black 0.10`) + `TactileNoise` PNG tile (`raisedNoiseOpacity=0.30`, blend `light=overlay/dark=softLight`) + continuous `RoundedRectangle` clip + 1pt `Color.black.opacity(0.10)` strokeBorder + 兩層 directional shadow (`shadowInk × 0.50`, radius 3, offset (3, 3)) + text shadow (`black 0.80, y=2`) |
+| `.tactileBase(radius:isPressed:)` | 一般卡片 / 容器 / page surface | `Color.surface1` (page bg +1 階) + 近垂直 LinearGradient (`white 0.08/0.04 → clear → black 0.04/0.10` 跨 light/dark) + `TactileNoise` (`baseNoiseLight=0.55 / baseNoiseDark=0.75`) + 1pt 跨 mode 不同 strokeBorder + 單層軟漫射 shadow (radius 14, offset (4, 6), opacity 0.12/0.45 跨 mode) |
+| `.tactilePlain(radius:)` | List / table 容器 / 安靜卡片 | `Color.bg` + 1pt `Color.hairline` strokeBorder + 1 層 directional drop shadow (`black 0.10/0.35` 跨 mode, radius 3, offset (2, 2))。**無 noise**、最低調 |
+| `.tactileSecondary(radius:isPressed:)` | 次 CTA / Hybrid button | `Color.bg` + `TactileNoise` (`secondaryNoiseLight=0.55 / secondaryNoiseDark=0.70`) + 1pt `Color.hairline`/`.border` strokeBorder + 兩層 directional shadow (同 raised, `shadowInk × 0.50`, radius 3, offset (3, 3))。**無 baseColor fill**、透出 page bg |
+| `.tactileInset(radius:)` | 表單輸入 / 容器內凹槽 | `Color.bg` + 4 層 stroke 模擬凹陷：左上深 (`black 0.28/0.55`, stroke 3, blur 1.5, offset (+1.5, +1.5)) + 右下亮 (`white 0.55/0.05`, stroke 2, blur 1, offset (-1, -1)) + 1pt outer `black 0.18/0.40` strokeBorder。**無 drop shadow**、**無 noise**。對齊 `LMSwitchToggleStyle.trackInsetShadow` 跨「凹陷」元件視覺一致 |
+| `.tactilePressed(radius:)` | active / selected toggle | `Color.stone` + 反向 LinearGradient (`black 0.15 → clear → white 0.06`) + `TactileNoise` (opacity 0.20/0.15 跨 light/dark) + 1pt `black 0.20` strokeBorder + 1 層 directional shadow (`black 0.30`, radius 1, offset (1, 1)) + text shadow (`black 0.50, y=1`) |
+| `.tactilePill(color:isFilled:)` | Chip / badge / inline status (Capsule shape) | `color` 或 `Color.bgMuted` (unfilled) + 近垂直 gradient + `TactileNoise` (`smallNoiseLight=0.30 / smallNoiseDark=0.20`) + 1pt `black 0.10/0.20` strokeBorder + 1 層 shadow (`black 0.30/0.40`, radius 2, offset (3, 3)) + text shadow |
+| `.tactileCircle(color:)` | Avatar / status dot (Circle shape) | 結構同 `tactilePill` (filled)，shape 換 `Circle`。給小 size avatar (28-48pt) 用 |
 
-完整四態 reference impl 見 [`preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift)（v0.2.0 起 ship）。
+完整實作見 [`TactileMaterial.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift)。
+
+##### Button 對應 ButtonStyle
+
+四個 raised-style button 各自包成 `ButtonStyle`，自動拿到 `configuration.isPressed` 觸發結構變形（gradient 反向 / stroke 加深 / drop shadow 縮小）+ press 動畫 (`scaleEffect(0.985)` + `offset(y: 1)` + `LMMotion.press` easeOut 0.12s)：
+
+| ButtonStyle | 對應 modifier | base color | 用途 |
+|---|---|---|---|
+| `TactileRaisedButtonStyle` | `TactileRaisedModifier` | `.primaryBrand` | 主 CTA |
+| `TactileDestructiveButtonStyle` | `TactileRaisedModifier` (複用) | `.earthRed` | Destructive action |
+| `TactileSecondaryButtonStyle` | `TactileSecondaryModifier` | (透 page bg) | 次 CTA |
+| `TactilePressedButtonStyle` | `TactilePressedModifier` | `.stone` | Selected toggle (本身就是 pressed 視覺、`configuration.isPressed` 額外 scale/offset) |
+| `TactileBaseButtonStyle` | `tactileBase()` | `.surface1` | 整塊可點擊容器 (expand/collapse / 設定 card) |
+| `TactileGhostButtonStyle` | (純 foregroundStyle + opacity) | — | 文字 link |
+| `LMGhostIconButtonStyle` | (雙層 shadow 浮雕 + 按下壓平) | — | Stepper ± / DatePicker 月份箭頭等容器內 inline icon |
+
+##### 校準工具
+
+[`preview-ios/.../TunerView.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Sections/TunerView.swift) 提供 21 個 `@AppStorage` 持久化參數 + 5 個 component 切換 + 3 態 appearance toggle，可即時調 ViewModifier 內部數值對齊 web 視覺。校好後手動把數值寫進 `LMTactile` namespace 跟 modifier 內部。校到 v0.2.0-rc.9 視覺氣質已接近 web v0.1.x Tactile-Heavy。
 
 ##### 視覺一致性驗證
 
-`preview-ios/screenshots/` 內 commit web vs iOS side-by-side screenshot 作 visual regression baseline。每次改動 §5.4 配方都要重截、確認跨平台「分不太出來」。
+肉眼校對 [`preview/components-preview.html`](preview/components-preview.html) 跟 preview-ios app 對應 component。預期視覺氣質接近、不要求 pixel-perfect 數值對齊（雙軌策略已不承諾「分不太出來」）。改動 §5.4 spec / `LMTactile` 數值 / `TactileMaterial.swift` 任一處後都要肉眼比對一次。
 
 ### 7.3 macOS（SwiftUI / AppKit）
 
-完全沿用 §7.2 iOS 規範（Color / Typography / Spacing / Surface tier / Tactile material 共通配方），只在以下幾點 macOS 專屬調整：
+完全沿用 §7.2 iOS 規範（Color / Typography / Spacing / Surface tier / Tactile material 雙軌等價），只在以下幾點 macOS 專屬調整：
 
 - **`accentColor`** 設 Petrol `#46647C`（同 iOS）
-- **Tactile 共通配方**：`.tactileRaised()` / `.tactileBase()` / `.tactileInset()` / `.tactilePressed()` ViewModifier 完全跨 iOS / macOS 通用（SwiftUI 同份 code）
+- **Tactile material**：§7.2.9 的 8 個 ViewModifier (`.tactileRaised` / `.tactileBase` / `.tactilePlain` / `.tactileSecondary` / `.tactileInset` / `.tactilePressed` / `.tactilePill` / `.tactileCircle`) 完全跨 iOS / macOS 通用（SwiftUI 同份 code）
 - **Window chrome**：保持 macOS 原生 traffic light + title bar，**不要**自繪
 - **Sidebar**：用 `.background(.regularMaterial)` 取得原生 macOS sidebar 質感，再疊 `tactileBase()` 內容卡片
 - **長文件 / note-taking app**：可強化「書房感」，側邊欄用 `Surface Raised` token，hairline 用 Stone 色 `#967459`
