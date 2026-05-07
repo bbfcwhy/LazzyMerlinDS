@@ -948,6 +948,41 @@ iOS 使用 SF Pro + PingFang TC（不用 Geist，換取系統整合感、Dynamic
 
 **Dynamic Type**：SwiftUI `.body` / `.title` 等 semantic style 自動跟隨 user 字級偏好放大，**優先使用 semantic style 而非 `.system(size:)`**，accessibility 一併過。
 
+##### iOS Typography 2-tier 規則（v0.2.0 起）
+
+iOS 端 typography 走 **2-tier 規則**（跟 web §3 4-tier 不同），對應 token 在 [`BrandTypography.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/BrandTypography.swift)：
+
+| Tier | 字體 | 用途 | Token |
+|---|---|---|---|
+| **Brand identity** | LXGW WenKai TC Medium · 永遠 LXGW | Hero display / wordmark / empty state ✦ / 404 大字 / about | `.lmDisplayXL` (56pt) / `.lmDisplayLarge` (48pt) / `.lmDisplay` (40pt) / `.lmEmptyVisual` (52pt) / `.lmEmptyCode` (48pt) |
+| **Functional UI** | 系統字 (SF Pro / PingFang TC) · dev toggle 可切到 LXGW | Page heading / body / caption / button / form / stat | `.lmH1-H3` / `.lmBody*` / `.lmCaption` / `.lmLabel` / `.lmButton*` / `.lmControlLabel` / `.lmStatNumber` |
+
+**Production bundle size 取捨**：iOS app production 真正需要 bundle 的 LXGW weight 只剩 `Medium` 一個（~150KB subset），其他 5 個 .ttf（Light / Regular / Mono / Mono Medium）留 preview app dev toggle 試驗用、production 落地時可以 opt-out 減 bundle size。Dev toggle: `LMFontMode.useAllLXGW`（在 [`TypographyView`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Sections/TypographyView.swift) 內可切換、體感「全 LXGW」風格）。
+
+##### Tracking / Line spacing 標準
+
+uppercase 英文 label 用，集中在 `LMTracking` namespace：
+
+| Token | Value | 用途 |
+|---|---|---|
+| `LMTracking.chip` | `0.6` | Status chip uppercase（`INFO` / `SUCCESS` / `ERROR`） |
+| `LMTracking.badge` | `0.8` | Filter chip / badge uppercase（`ALL` / `DRAFTS` / `BETA`） |
+| `LMTracking.loose` | `1.0` | Subtitle / spacious header |
+| `LMTracking.eyebrow` | `1.2` | Section label / eyebrow uppercase emphasis |
+
+Line spacing (`LMLineSpacing`)：`tight: 2pt`（alert message）/ `normal: 4pt`（預設 body）/ `loose: 6pt`（modal body / 長文）。
+
+##### Compound modifiers
+
+預先打包的 `.font + .textCase + .tracking + .foregroundStyle` modifier，散落在 [`BrandTypography.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/BrandTypography.swift)：
+
+| Modifier | 用途 |
+|---|---|
+| `.sectionLabel()` | Section eyebrow · `lmLabel` + uppercase + tracking 1.2 + `Color.primaryBrand` |
+| `.chipLabel()` | Filter chip / badge · `lmLabel` + uppercase + tracking 0.8 |
+| `.statusChipLabel()` | Status chip · `lmLabel` + uppercase + tracking 0.6 |
+| `.eyebrow()` | Eyebrow / micro-heading · `lmLabel` + uppercase + tracking 1.2 + `Color.inkMuted`（跟 `sectionLabel` 差別在不用 brand 色） |
+
 #### 7.2.5 Display 字型 · LXGW WenKai TC bundle
 
 - **Bundle 方式**：下載 OTF / WOFF2 → 拖進 Xcode target → `Info.plist` 加 `Fonts provided by application`（Xcode 16 PBXFileSystemSynchronizedRootGroup 模式下 Info.plist 須在 source folder 外，見 §16.5 / landing-checklist Phase 0）→ SwiftUI `.font(.custom("LXGWWenKaiTC-Regular", size: 56))`
@@ -1062,6 +1097,78 @@ enum LMTactile {
 
 肉眼校對 [`preview/components-preview.html`](preview/components-preview.html) 跟 preview-ios app 對應 component。預期視覺氣質接近、不要求 pixel-perfect 數值對齊（雙軌策略已不承諾「分不太出來」）。改動 §5.4 spec / `LMTactile` 數值 / `TactileMaterial.swift` 任一處後都要肉眼比對一次。
 
+#### 7.2.10 LM* SwiftUI 元件家族 catalog
+
+LazzyMerlin DS 在 [`preview-ios/.../Tokens/`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/) 提供 28 個元件 / token / modifier 集中檔案 (v0.2.0-rc.9)，跟 §15 設計層級規範對應。子專案落地時可選擇直接 copy / git submodule / 將來抽 SPM package。
+
+**Foundation tokens**（5 檔）：
+
+| 檔名 | 內容 | 對應規範 |
+|---|---|---|
+| [`Color+Brand.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/Color+Brand.swift) | Color extensions (`.bg` / `.ink` / `.primaryBrand` / `.surface1/2` / `.earthRed/Green/Ochre` / `.inkOnBrand` / `.hairline` / `.border`) | §2 Color Palette |
+| [`BrandTypography.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/BrandTypography.swift) | Font extensions（Brand identity + Functional UI 2-tier）+ `LMTracking` + `LMLineSpacing` + 4 個 compound modifier (`sectionLabel` / `chipLabel` / `statusChipLabel` / `eyebrow`) | §3 / §7.2.4 |
+| [`LMDesignTokens.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDesignTokens.swift) | Numeric / motion / chrome tokens（`LMSpacing` / `LMRadius` / `LMControlSize` / `LMOpacity` / `LMMotion` / `LMTactile` / `LMOverlayChrome`） | §4 Spacing / Radius / §5 Motion / §5.4 Tactile |
+| [`LMFontLoader.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMFontLoader.swift) | LXGW WenKai TC 字體 register at app launch（`CTFontManagerRegisterGraphicsFont`） | §7.2.5 |
+| [`BrandPage.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/BrandPage.swift) | Page-level brand wrapper（bg + ambient orbs + grain overlay 對齊 §5.3） | §5.3 Ambient |
+
+**Tactile material**（2 檔、見 §7.2.9）：
+
+| 檔名 | 內容 |
+|---|---|
+| [`TactileMaterial.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileMaterial.swift) | 8 個 ViewModifier（Raised / Base / Plain / Secondary / Inset / Pressed / Pill / Circle） |
+| [`TactileButtonStyles.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/TactileButtonStyles.swift) | 7 個 ButtonStyle（Raised / Destructive / Secondary / Pressed / Base / Ghost / LMGhostIcon） |
+
+**Layout / Content**（5 檔）：
+
+| 檔名 | 用途 | 對應規範 |
+|---|---|---|
+| [`LMSection.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSection.swift) | Section header / wrapper · 統一 page-level section 結構 | — |
+| [`LMDivider.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDivider.swift) | Divider / hairline · 跨平台 hairline 厚度跟對比 | §6.2 |
+| [`LMAlert.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMAlert.swift) | Inline alert / banner（info / success / warning / error 4 variant） | §15.7.1 |
+| [`LMAvatar.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMAvatar.swift) | Avatar（xs / sm / md / lg / xl 5 size）· 用 `tactileCircle` modifier | §15.5.4 / §15.8.4 |
+| [`LMSkeleton.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSkeleton.swift) | Loading skeleton · `LMMotion.skeletonPulse` 動畫 | §15.7.3 |
+
+**Form / Input**（7 檔）：
+
+| 檔名 | 用途 | 對應規範 |
+|---|---|---|
+| [`LMColorPicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMColorPicker.swift) | Color picker | §15.3 Form |
+| [`LMDatePicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDatePicker.swift) | Date picker · 月份箭頭用 `LMGhostIconButtonStyle` | §15.3 Form |
+| [`LMMenuPicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMMenuPicker.swift) | Menu picker（dropdown） | §15.6.3 Dropdown |
+| [`LMSegmentedPicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSegmentedPicker.swift) | Segmented control · 跨「凹陷」元件對齊 inset stroke | §15.3 Form |
+| [`LMSlider.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSlider.swift) | Custom slider（track + thumb）· 對齊 web `.slider` | §5.6 Soft Inset / §15.3 |
+| [`LMStepper.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMStepper.swift) | Stepper +/- · 用 `LMGhostIconButtonStyle` | §15.3 Form |
+| [`LMSwitchToggleStyle.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSwitchToggleStyle.swift) | Custom Toggle ToggleStyle（inset track + Tactile fill on）· 對齊 web `.switch` | §5.7 / §15.3 |
+
+**Navigation**（5 檔）：
+
+| 檔名 | 用途 | 對應規範 |
+|---|---|---|
+| [`LMBackButton.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMBackButton.swift) | Navigation back button · 自動隱藏 system back | iOS HIG nav |
+| [`LMBreadcrumb.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMBreadcrumb.swift) | Breadcrumb · 對齊 web `.breadcrumb` | §15.8.2 |
+| [`LMPagination.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMPagination.swift) | Pagination · active 頁用 `tactilePressed` 36×36 button | §15.8.3 |
+| [`LMTabBar.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTabBar.swift) | Bottom tab bar · iOS-native style | §15.8.1 |
+| [`LMTabStrip.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTabStrip.swift) | Top scrollable tab strip · 對齊 web `.tabs` | §15.8.1 |
+
+**Overlay / Status / Data**（6 檔）：
+
+| 檔名 | 用途 | 對應規範 |
+|---|---|---|
+| [`LMSheetChrome.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSheetChrome.swift) | Sheet chrome wrapper · drawer / modal / action sheet 共用 | §15.6.4 / §15.6.5 |
+| [`LMTooltip.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTooltip.swift) | Tooltip · 走 mode-翻轉 bg/text pattern（不套 §15.5.4 ink-on-brand） | §15.6.1 |
+| [`LMSpinner.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSpinner.swift) | Loading spinner · 對齊 web `.btn[data-state="loading"]::before` 700ms linear infinite | §5.8 / §15.7.2 |
+| [`LMStatusChip.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMStatusChip.swift) | Status chip（INFO / SUCCESS / WARNING / ERROR）· 用 `tactilePill(isFilled: false)` | §15.5.1 |
+| [`LMToast.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMToast.swift) | Toast / Snackbar · 1.6s auto-dismiss + soft drop shadow | §15.6.6 |
+| [`LMList.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMList.swift) | List view · row chrome / hairline divider / leading-trailing accessory layout | §15.9.2 |
+
+##### 子專案落地建議
+
+iOS 子專案落地時不一定要全 28 個都 bundle，按需選用：
+- **最低需求**（utility app 常用 set）：`Color+Brand` + `BrandTypography` + `LMDesignTokens` + `LMFontLoader` + `BrandPage` + `TactileMaterial` + `TactileButtonStyles` + 用到的 LM*（如 `LMAlert` / `LMToast` / `LMSpinner`）
+- **完整 28 個**：適合 design-heavy / cross-platform consumer 用
+
+子專案 reference 例子：QuickTimeLapse v1.0 落地時 pin DS v0.1.4、用最低需求 set + `LMSlider` + `LMStatusChip`（總 ~10 個檔）。
+
 ### 7.3 macOS（SwiftUI / AppKit）
 
 完全沿用 §7.2 iOS 規範（Color / Typography / Spacing / Surface tier / Tactile material 雙軌等價），只在以下幾點 macOS 專屬調整：
@@ -1149,17 +1256,21 @@ App icon 不是 favicon 放大版。各平台對「應用 icon」有強硬規範
 1024×1024 app store                 1×（master）
 ```
 
-實作流程：
-1. 在 Figma / 任何向量工具畫 1024×1024 master
-2. 主元素內縮 10%（內容區 ~922×922）
+實作流程（v0.2.0 起 · LazzyMerlinLogo3D 整顆當 visible content）：
+1. Logo 來源：[`assets/Lazzy Merlin Logo_3D.png`](assets/Lazzy%20Merlin%20Logo_3D.png)（1742×1747 透明背景 PNG）
+2. Python PIL resize 到 1024×1024 master + **11% padding per side**（visible content 78% icon square、對齊 Apple icon grid spec）
 3. **不畫圓底**（iOS 自動套圓角 mask，半徑 ~22.5%）
-4. 用 [Bakery](https://apps.apple.com/app/bakery) / `xcrun actool` 批量產出 `Assets.xcassets`
-5. iOS 18 額外加 `Dark` 與 `Tinted` 兩個 variant
+4. 三 variant 各自 paste：Light → parchment 底 / Dark → navy 底 / Tinted → grayscale + 保留 transparent alpha
+5. 三 PNG 直接放進 `AppIcon.appiconset/` + 更新 `Contents.json` 的 `filename` field（Xcode 會自動抓）
 
-LazzyMerlin iOS icon 設計：
-- **Light**：Parchment `#F5EFE4` 底 + Petrol `#46647C` 巫師帽 + 米白星芒 `✦`
-- **Dark**：Midnight Petrol `#0F1C26` 底 + Parchment 巫師帽 + Sky Petrol 星芒
-- **Tinted**：灰階主元素 +  `✦` 星芒留白讓系統染色（iOS 自動）
+> **替代方案**：如果未來重做 stylized icon、可走 Figma 1024×1024 master + [Bakery](https://apps.apple.com/app/bakery) / `xcrun actool` 批量產出 pipeline。當前 v0.2.0 直接用 Logo 3D 整顆、走 PIL resize 流程。
+
+LazzyMerlin iOS icon 設計（v0.2.0 起）：
+- **Light**：Parchment `#F5EFE4` 底 + LazzyMerlinLogo3D 整顆（78% logo size、11% padding per side）
+- **Dark**：Midnight Petrol `#0F1C26` 底 + 同 logo
+- **Tinted**：灰階主元素 + 原 alpha（transparent bg）· iOS 自動套 home screen tint
+
+> v0.1.4 階段用 stylized 巫師帽 + `✦` 星芒設計（Petrol fill + Sky Petrol accent），v0.2.0 改用 LazzyMerlinLogo3D 整顆 logo（更完整的 brand identity 表達 + 跟 §8.2 logo 家族統一視覺）。歷史 stylized 設計 spec 見 `git show v0.1.4:DESIGN.md`。
 
 ##### AI 生成 iOS icon · prompt template + 雙層輪廓警告
 
@@ -1188,22 +1299,23 @@ beautiful iOS app icon design, modern, clean, with shadow
 
 #### 8.3.3 macOS App Icon
 
-macOS 給更多空間玩立體感、陰影、深度（不像 iOS 那麼平）。
-
-尺寸：
+尺寸（v0.2.0 起 · 5 size × 2 scale = 10 個 PNG，從 1024 master LANCZOS 縮）：
 ```
-16, 32, 64, 128, 256, 512, 1024 (各 @1x @2x)
-最大 1024×1024 @2x = 2048×2048 master
+16×16, 32×32, 128×128, 256×256, 512×512    各 @1x @2x
+最大 512×512 @2x = 1024×1024（跟 iOS master 同源）
 ```
 
-實作：
-- macOS 14+ 支援 `Liquid Glass` 風格（多層、可帶陰影投射）
-- LazzyMerlin macOS icon **可以**畫圓底 + 厚度陰影（跟 iOS 平面風格不同）
-- Source 出 `.icns` 用 `iconutil -c icns`，或直接在 Xcode Assets
+實作（v0.2.0 起 · 跟 iOS 同 logo、不另繪 macOS-specific 立體版）：
+1. 從 §8.3.2 iOS Light variant 1024×1024 master 起算（LazzyMerlinLogo3D + parchment 底 + 11% padding）
+2. Python PIL `Image.resize(LANCZOS)` 縮到 5 size × 2 scale = 10 個 PNG
+3. 直接放進同個 `AppIcon.appiconset/` + `Contents.json` 補 macOS 對應 idiom 跟 filename field
+4. `.icns` 不需要手動產（Xcode build 時自動）
 
-LazzyMerlin macOS icon 設計：
-- 多層構圖：背景 Petrol 漸層 + 中層巫師帽 + 前景 `✦`
-- 模仿 macOS Sequoia 的 multi-plane 美學，但克制（不過度堆疊）
+LazzyMerlin macOS icon 設計（v0.2.0 起）：
+- 跟 iOS Light variant 視覺一致（Parchment `#F5EFE4` 底 + LazzyMerlinLogo3D 整顆）
+- macOS 不另畫圓底 + 厚度陰影（跟 iOS 走 flat / 不過度堆疊）
+
+> **未來重做選項**：macOS 14+ 支援 `Liquid Glass` 風格（多層、可帶陰影投射），如果之後想做 macOS-specific 立體版本（背景 Petrol 漸層 + 中層 logo + 前景 `✦` 的 multi-plane 美學、模仿 macOS Sequoia），可以另開一輪 design + source 出 `.icns` 用 `iconutil -c icns`。當前 v0.2.0 直接用 iOS 同源 logo 縮放、保持兩平台視覺統一。
 
 #### 8.3.4 Android Adaptive Icon
 
