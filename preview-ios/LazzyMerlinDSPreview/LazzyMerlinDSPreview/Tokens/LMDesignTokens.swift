@@ -46,6 +46,14 @@ enum LMOpacity {
     static let backdrop: Double = 0.42
 }
 
+/// 頁面層 layout 約束（content centering、tablet 寬螢幕適配）
+/// 跟 `LMSpacing`（控制元件間距）不同層；跟 `LMOverlayChrome.cardMaxWidth`（420pt overlay-only）也不同 register
+enum LMLayout {
+    /// Main content max width · 448pt (Tailwind max-w-md 等義)
+    /// 用於 centered narrative content、editorial reading column；超過此寬度時內容靠左留白
+    static let contentMaxWidth: CGFloat = 448
+}
+
 enum LMMotion {
     static let press = Animation.easeOut(duration: 0.12)
     static let quickDismiss = Animation.easeOut(duration: 0.18)

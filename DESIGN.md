@@ -423,6 +423,18 @@ xl   24px
 - **斷點**：`sm 640 / md 768 / lg 1024 / xl 1280`
 - **Hero 對齊**：一律左對齊。不置中。
 
+#### 4.3.1 iOS 端 layout-tier token
+
+iOS 的「頁面層 layout 約束」跟 `LMSpacing`（控制元件間距）是不同 register，獨立放在 `LMLayout` enum：
+
+| Token | 值 | 用途 |
+|---|---|---|
+| `LMLayout.contentMaxWidth` | 448pt | Main content max width，centered narrative content、editorial reading column |
+
+**動機**：iPad、橫向、Mac Catalyst 寬螢幕時，main content 不能整版鋪滿（閱讀行長過長），需要 cap 一個合理閱讀寬度並置中。448pt ≈ Tailwind `max-w-md`，對應 web 端「editorial 窄欄」的同類概念但用 pt scale。
+
+**跟 `LMOverlayChrome.cardMaxWidth`（420pt）的差別**：後者只給 overlay / alert card 用，是 elevation +2 surface 的固定寬度；前者是 main content area 的 cap，兩者不能互換。
+
 ### 4.4 Z-index Scale
 
 跨專案會有 progress / modal / toast / tooltip 同時存在的場景，必須有共通的層級規範，避免各專案自己亂寫導致 toast 被 modal 蓋住、tooltip 被 grain overlay 蓋住等 bug。
