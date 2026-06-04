@@ -423,6 +423,18 @@ xl   24px
 - **斷點**：`sm 640 / md 768 / lg 1024 / xl 1280`
 - **Hero 對齊**：一律左對齊。不置中。
 
+#### 4.3.1 iOS 端 layout-tier token
+
+iOS 的「頁面層 layout 約束」跟 `LMSpacing`（控制元件間距）是不同 register，獨立放在 `LMLayout` enum：
+
+| Token | 值 | 用途 |
+|---|---|---|
+| `LMLayout.contentMaxWidth` | 448pt | Main content max width，centered narrative content、editorial reading column |
+
+**動機**：iPad、橫向、Mac Catalyst 寬螢幕時，main content 不能整版鋪滿（閱讀行長過長），需要 cap 一個合理閱讀寬度並置中。448pt ≈ Tailwind `max-w-md`，對應 web 端「editorial 窄欄」的同類概念但用 pt scale。
+
+**跟 `LMOverlayChrome.cardMaxWidth`（420pt）的差別**：後者只給 overlay / alert card 用，是 elevation +2 surface 的固定寬度；前者是 main content area 的 cap，兩者不能互換。
+
 ### 4.4 Z-index Scale
 
 跨專案會有 progress / modal / toast / tooltip 同時存在的場景，必須有共通的層級規範，避免各專案自己亂寫導致 toast 被 modal 蓋住、tooltip 被 grain overlay 蓋住等 bug。
@@ -1133,7 +1145,7 @@ LazzyMerlin DS 在 [`preview-ios/.../Tokens/`](preview-ios/LazzyMerlinDSPreview/
 | 檔名 | 用途 | 對應規範 |
 |---|---|---|
 | [`LMColorPicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMColorPicker.swift) | Color picker | §15.3 Form |
-| [`LMDatePicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDatePicker.swift) | Date picker · 月份箭頭用 `LMGhostIconButtonStyle` | §15.3 Form |
+| [`LMDatePicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDatePicker.swift) | Date picker · 月份箭頭用 `LMGhostIconButtonStyle` · `components: .date/.dateAndTime/.time`（時間雙欄 DS 自建） | §15.3 Form |
 | [`LMMenuPicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMMenuPicker.swift) | Menu picker（dropdown） | §15.6.3 Dropdown |
 | [`LMSegmentedPicker.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSegmentedPicker.swift) | Segmented control · 跨「凹陷」元件對齊 inset stroke | §15.3 Form |
 | [`LMSlider.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSlider.swift) | Custom slider（track + thumb）· 對齊 web `.slider` | §5.6 Soft Inset / §15.3 |
@@ -1150,11 +1162,12 @@ LazzyMerlin DS 在 [`preview-ios/.../Tokens/`](preview-ios/LazzyMerlinDSPreview/
 | [`LMTabBar.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTabBar.swift) | Bottom tab bar · iOS-native style | §15.8.1 |
 | [`LMTabStrip.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTabStrip.swift) | Top scrollable tab strip · 對齊 web `.tabs` | §15.8.1 |
 
-**Overlay / Status / Data**（6 檔）：
+**Overlay / Status / Data**（7 檔）：
 
 | 檔名 | 用途 | 對應規範 |
 |---|---|---|
 | [`LMSheetChrome.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSheetChrome.swift) | Sheet chrome wrapper · drawer / modal / action sheet 共用 | §15.6.4 / §15.6.5 |
+| [`LMProgressBar.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMProgressBar.swift) | Determinate 進度條 · capsule track + brand 漸層 fill + tactile noise（ChronoPath landing 回饋補 iOS 實作） | §15.7.2 |
 | [`LMTooltip.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTooltip.swift) | Tooltip · 走 mode-翻轉 bg/text pattern（不套 §15.5.4 ink-on-brand） | §15.6.1 |
 | [`LMSpinner.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMSpinner.swift) | Loading spinner · 對齊 web `.btn[data-state="loading"]::before` 700ms linear infinite | §5.8 / §15.7.2 |
 | [`LMStatusChip.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMStatusChip.swift) | Status chip（INFO / SUCCESS / WARNING / ERROR）· 用 `tactilePill(isFilled: false)` | §15.5.1 |
@@ -2304,6 +2317,7 @@ SVG turbulence 的 noise 是「黑色像素 + alpha」（為了讓 overlay blend
 - **Linear progress**：3px 高，背景 hairline、填充 `--primary`，有兩種模式：
   - Determinate（已知百分比）：`scaleX` 平滑前進
   - Indeterminate（未知）：固定一段往返移動（reduced-motion 改為脈動 opacity）
+  - **iOS 實作**：determinate 見 `LMProgressBar.swift`（capsule track + brand 漸層 fill + tactile noise · ChronoPath landing 回饋補上）；indeterminate 用 `LMSpinner`。
 - **Circular spinner**：12-24px，§5.8 已定義（border-top primary、`spin 700ms linear`）
 
 頁面層 reading progress（§5.3 A-1）走專屬 token（fixed top, z-progress）。

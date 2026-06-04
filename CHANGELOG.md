@@ -6,6 +6,19 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 ## [Unreleased]
 
+### Added
+
+來源：ChronoPath landing 回饋（2026-06 · G11–G27）。詳見 `docs/feedback/chronopath-landing-2026-06.md`。
+
+**iOS 參考實作（preview-ios）**
+- **`LMProgressBar`（新增）**：determinate 進度條 · capsule track + brand 漸層 fill + tactile noise · 對應 §15.7.2 的 iOS 實作（DS 原本只有 web spec）。`LMProgressBar(value:height:track:)`。
+- **`LMDatePicker` 擴充 `components` 模式**：`.date`（預設 · 向後相容）/ `.dateAndTime`（月曆 + 時間雙欄）/ `.time`（純時間）。時間 UI DS 自建（雙欄 chevron + tactileInset、不嵌原生 wheel）。
+
+### Notes
+
+- ChronoPath 落地時發現 `LMAlert` / `LMActionSheet` / `LMSpinner` 有平行重複實作（drift）→ 另案由 ChronoPath 反向採用 DS 正版。
+- Pattern 回饋（Form/List 壓平、tactileInset 輸入框）見 feedback 文件，建議後續補 `.lmFormChrome()` / `LMTextField`。
+
 ## [0.2.0] — 2026-05-07
 
 LazzyMerlin DS v0.2.0 主菜：**Tactile-Heavy 雙軌等價策略** + iOS SwiftUI multiplatform reference impl + 28 個 LM* 元件家族 catalog。
