@@ -26,3 +26,6 @@
 
 # Playwright MCP cache
 .playwright-mcp/
+
+# 一次性 HTML 工作頁 / 截圖（不歸檔）
+tmp/
