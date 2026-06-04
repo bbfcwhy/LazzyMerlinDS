@@ -14,9 +14,13 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 - **`LMProgressBar`（新增）**：determinate 進度條 · capsule track + brand 漸層 fill + tactile noise · 對應 §15.7.2 的 iOS 實作（DS 原本只有 web spec）。`LMProgressBar(value:height:track:)`。
 - **`LMDatePicker` 擴充 `components` 模式**：`.date`（預設 · 向後相容）/ `.dateAndTime`（月曆 + 時間雙欄）/ `.time`（純時間）。時間 UI DS 自建（雙欄 chevron + tactileInset、不嵌原生 wheel）。
 
+### Changed
+
+- **`LMSpinner` 採用 ChronoPath 版**（drift 收斂 · 主人拍板以 CP 為正版）：加 optional `label`（對齊原生 `ProgressView("…")`）+ arc 上 tactile noise + reduceMotion 停轉。保留 `lineWidth` 顯式覆寫（向後相容既有 `LMSpinner(size:lineWidth:)` 呼叫）。
+
 ### Notes
 
-- ChronoPath 落地時發現 `LMAlert` / `LMActionSheet` / `LMSpinner` 有平行重複實作（drift）→ 另案由 ChronoPath 反向採用 DS 正版。
+- Drift 收斂決定：`LMSpinner` 以 ChronoPath 版為正版（本 PR 收斂進 DS）；`LMAlert` / `LMActionSheet` 以 DS 為正版（另案由 ChronoPath 改用 DS 版）。
 - Pattern 回饋（Form/List 壓平、tactileInset 輸入框）見 feedback 文件，建議後續補 `.lmFormChrome()` / `LMTextField`。
 
 ## [0.2.0] — 2026-05-07
