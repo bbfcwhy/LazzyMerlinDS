@@ -13,11 +13,13 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 **iOS 參考實作（preview-ios）**
 - **`LMProgressBar`（新增）**：determinate 進度條 · capsule track + brand 漸層 fill + tactile noise · 對應 §15.7.2 的 iOS 實作（DS 原本只有 web spec）。`LMProgressBar(value:height:track:)`。
 - **`LMDatePicker` 擴充 `components` 模式**：`.date`（預設 · 向後相容）/ `.dateAndTime`（月曆 + 時間雙欄）/ `.time`（純時間）。時間 UI DS 自建（雙欄 chevron + tactileInset、不嵌原生 wheel）。
+- **`LMTextField` / `LMTextEditor`（新增）**：包原生 `TextField`（單行）/ `TextEditor`（多行）成 DS inset 輸入框（`.scrollContentBackground(.hidden)` + tokenized padding + `.tactileInset(radius:)`、文字色 `Color.ink`、placeholder 自畫 `Color.inkMuted`），帶 `isInvalid`（earthRed 外框）/ `isDisabled`（變灰）+ 可傳 a11y label。`radius` 預設 `LMRadius.xl`、`LMTextEditor.minHeight` 預設 96。對應 §15.3.2 的 iOS 實作。收自 §3.2 pattern 回饋（各專案重複手刻 `TextEditor + tactileInset`）。
+- **`.lmFormChrome()` / `.lmListChrome()` + `.lmListRow()`（新增）**：把原生 `Form`/`List` 容器層灰底壓平成 DS 米色（`.scrollContentBackground(.hidden)` + `.background(Color.bg)`）+ 配套 `.lmListRow()`（逐 Section/row 清白卡 + 系統分隔線）。⚠️ 已實測：`.listRowBackground(.clear)` 無法從容器層 propagate 到 cell，故白卡必須靠 `.lmListRow()` 逐項套（容器層 modifier 蓋不到 row 背景）。收自 §3.1 pattern 回饋。
 
 ### Notes
 
 - ChronoPath 落地時發現 `LMAlert` / `LMActionSheet` / `LMSpinner` 有平行重複實作（drift）→ 另案由 ChronoPath 反向採用 DS 正版。
-- Pattern 回饋（Form/List 壓平、tactileInset 輸入框）見 feedback 文件，建議後續補 `.lmFormChrome()` / `LMTextField`。
+- Pattern 回饋（Form/List 壓平、tactileInset 輸入框）已收成 DS 正式 helper（`LMTextField`/`LMTextEditor` + `.lmFormChrome()`/`.lmListRow()`，見上方 Added）。
 
 ## [0.2.0] — 2026-05-07
 

@@ -12,9 +12,47 @@ struct FormView: View {
     @State private var pickedDate: Date = Date()
     @State private var pickedColor: Color = .primaryBrand
 
+    // DS helper demo（LMTextField / LMTextEditor）
+    @State private var dsEmail: String = ""
+    @State private var dsName: String = "lazzymerlin"
+    @State private var dsNote: String = ""
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: LMSpacing.section) {
+
+                LMSection("DS HELPER · LMTEXTFIELD / LMTEXTEDITOR") {
+                    formField("Email（LMTextField）", helper: "DS 正式輸入框、自帶 inset 材質") {
+                        LMTextField("name@example.com", text: $dsEmail)
+                    }
+                    formField("使用者名稱（isInvalid）") {
+                        LMTextField("使用者名稱", text: $dsName, isInvalid: true)
+                    }
+                    formField("已鎖欄位（isDisabled）") {
+                        LMTextField("只能看，動不了", text: .constant(""), isDisabled: true)
+                    }
+                    formField("想說什麼（LMTextEditor）") {
+                        LMTextEditor("懶人沒空寫，但還是寫一下吧…", text: $dsNote)
+                    }
+
+                    NavigationLink {
+                        FormChromeDemo()
+                    } label: {
+                        HStack {
+                            Text("原生 Form 壓平 · lmFormChrome 實證")
+                                .font(.lmBodySmall.weight(.medium))
+                                .foregroundStyle(Color.ink)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.lmCaption.weight(.semibold))
+                                .foregroundStyle(Color.inkMuted)
+                        }
+                        .padding(.vertical, LMSpacing.controlGap)
+                        .padding(.horizontal, 18)
+                        .tactileBase(radius: 12)
+                    }
+                    .buttonStyle(.plain)
+                }
 
                 LMSection("INPUT · DEFAULT / ERROR / SUCCESS") {
                     formField("Email", required: true, helper: "我們不會傳行銷信。懶人沒空寫。") {
@@ -198,8 +236,63 @@ struct FormView: View {
 
 }
 
+// MARK: - lmFormChrome 實證
+// 原生 Form 套 .lmFormChrome() 後容器層變米色；白卡靠每個 Section 加 .lmListRow() 消除。
+// 故意留一個 Section「不套配套」、對照證明：容器層 modifier 蓋不到 cell 白卡（SwiftUI 限制）。
+
+struct FormChromeDemo: View {
+    @State private var note: String = ""
+    @State private var notify: Bool = true
+
+    var body: some View {
+        Form {
+            Section {
+                Text("套 .lmFormChrome() 後容器灰底 → 米色")
+                    .font(.lmBodySmall)
+                    .foregroundStyle(Color.ink)
+                LMTextField("name@example.com", text: .constant(""))
+                Toggle("提醒我", isOn: $notify)
+                    .toggleStyle(.lmSwitch)
+                    .font(.lmBodySmall)
+            } header: {
+                Text("已套 .lmListRow()（白卡消失）")
+            }
+            .lmListRow()
+
+            Section {
+                LMTextEditor("DS 輸入框在原生 Form 裡也成立…", text: $note, minHeight: 80)
+            } header: {
+                Text("已套 .lmListRow()")
+            }
+            .lmListRow()
+
+            Section {
+                Text("這段刻意不套 .lmListRow()")
+                    .font(.lmBodySmall)
+                    .foregroundStyle(Color.ink)
+                Text("→ cell 白卡仍在（證明容器層蓋不到 row 背景）")
+                    .font(.lmCaption)
+                    .foregroundStyle(Color.inkMuted)
+            } header: {
+                Text("對照組 · 未套配套")
+            }
+        }
+        .lmFormChrome()
+        #if os(iOS)
+        .navigationTitle("lmFormChrome")
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
+    }
+}
+
 #Preview {
     NavigationStack {
         FormView()
+    }
+}
+
+#Preview("FormChromeDemo") {
+    NavigationStack {
+        FormChromeDemo()
     }
 }

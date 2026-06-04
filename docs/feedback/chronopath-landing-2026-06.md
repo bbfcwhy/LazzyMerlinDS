@@ -48,6 +48,8 @@ DS `LMActionSheet` 是**底部 slide-up**（傳統 iOS action-sheet 語意）；
 
 ## 3. Pattern 回饋（DS spec 未明載、建議補進落地指南）
 
+> **更新 2026-06-04：兩個 pattern 已收成 DS 正式 helper**（`feature/form-chrome-textfield`）。下方原始觀察保留作 paper trail，收編內容見各小節結尾。
+
 ### 3.1 原生 `Form` / `List` 壓平成 DS 米色
 
 iOS 原生 `Form`/`List` 預設灰底分組 + 白卡 cell，與 DS 米色背景衝突。ChronoPath 確立的食譜：
@@ -62,6 +64,8 @@ Form { Section { ... }.listRowBackground(Color.clear) }   // 每個 section 都�
 - List 的 row 另需 `.listRowSeparator(.hidden)` 去系統分隔線。
 - 建議 DS 補一個 `.lmFormChrome()` / `.lmListChrome()` modifier 封裝這組，免得每個專案重踩。
 
+> **已收（2026-06-04）**：`Tokens/LMFormChrome.swift` 提供 `.lmFormChrome()` / `.lmListChrome()`（容器層米色）+ 配套 `.lmListRow()`（逐 Section/row 清白卡 + 分隔線）。**模擬器實測確認** propagate 限制屬實：容器層 modifier 蓋不到 cell 白卡，白卡必須靠 `.lmListRow()` 逐項套（FormView gallery 的 `FormChromeDemo` 含「未套配套 → 白卡仍在」對照組截圖佐證）。對應 DESIGN.md §15.3.2。
+
 ### 3.2 `tactileInset` 當文字輸入框
 
 `TextEditor` / 搜尋 `TextField` 原生白底與 DS 衝突。食譜：
@@ -75,6 +79,8 @@ TextEditor(text: $text)
 
 建議 DS 補一個 `LMTextField` / `LMTextEditor` wrapper 或 `.lmInputChrome()` modifier。
 
+> **已收（2026-06-04）**：`Tokens/LMTextField.swift` 提供 `LMTextField`（單行）/ `LMTextEditor`（多行）wrapper，內建 inset 材質 + 自畫 `inkMuted` placeholder + `isInvalid` / `isDisabled` state + 可傳 a11y label。對應 DESIGN.md §15.3.2。
+
 ---
 
 ## 4. 驗證
@@ -85,5 +91,6 @@ TextEditor(text: $text)
 ## 5. 後續
 
 - [ ] Merlin 拍板：LMProgressBar noise 去留、modal overlay 置中/底部規範。
-- [ ] DESIGN.md §15.7.2 / §15.3 補 iOS 實作引用（本 PR 已輕觸）。
+- [ ] DESIGN.md §15.7.2 補 iOS 實作引用（progress 部分）。
+- [x] §3.1 / §3.2 兩個 pattern 已收成 DS 正式 helper（`feature/form-chrome-textfield`）：`LMTextField`/`LMTextEditor` + `.lmFormChrome()`/`.lmListRow()`；DESIGN.md §15.3.2 + §7.2.10 catalog 已補。
 - [ ] **另案**：ChronoPath 去-drift（採用 DS 正版 LMAlert / LMActionSheet / LMSpinner）。
