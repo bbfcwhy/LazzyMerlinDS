@@ -16,9 +16,13 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 - **`LMTextField` / `LMTextEditor`（新增）**：包原生 `TextField`（單行）/ `TextEditor`（多行）成 DS inset 輸入框（`.scrollContentBackground(.hidden)` + tokenized padding + `.tactileInset(radius:)`、文字色 `Color.ink`、placeholder 自畫 `Color.inkMuted`），帶 `isInvalid`（earthRed 外框）/ `isDisabled`（變灰）+ 可傳 a11y label。`radius` 預設 `LMRadius.xl`、`LMTextEditor.minHeight` 預設 96。對應 §15.3.2 的 iOS 實作。收自 §3.2 pattern 回饋（各專案重複手刻 `TextEditor + tactileInset`）。
 - **`.lmFormChrome()` / `.lmListChrome()` + `.lmListRow()`（新增）**：把原生 `Form`/`List` 容器層灰底壓平成 DS 米色（`.scrollContentBackground(.hidden)` + `.background(Color.bg)`）+ 配套 `.lmListRow()`（逐 Section/row 清白卡 + 系統分隔線）。⚠️ 已實測：`.listRowBackground(.clear)` 無法從容器層 propagate 到 cell，故白卡必須靠 `.lmListRow()` 逐項套（容器層 modifier 蓋不到 row 背景）。收自 §3.1 pattern 回饋。
 
+### Changed
+
+- **`LMSpinner` 採用 ChronoPath 版**（drift 收斂 · 主人拍板以 CP 為正版）：加 optional `label`（對齊原生 `ProgressView("…")`）+ arc 上 tactile noise + reduceMotion 停轉。保留 `lineWidth` 顯式覆寫（向後相容既有 `LMSpinner(size:lineWidth:)` 呼叫）。
+
 ### Notes
 
-- ChronoPath 落地時發現 `LMAlert` / `LMActionSheet` / `LMSpinner` 有平行重複實作（drift）→ 另案由 ChronoPath 反向採用 DS 正版。
+- Drift 收斂決定：`LMSpinner` 以 ChronoPath 版為正版（已收斂進 DS）；`LMAlert` / `LMActionSheet` 以 DS 為正版（另案由 ChronoPath 改用 DS 版）。
 - Pattern 回饋（Form/List 壓平、tactileInset 輸入框）已收成 DS 正式 helper（`LMTextField`/`LMTextEditor` + `.lmFormChrome()`/`.lmListRow()`，見上方 Added）。
 
 ## [0.2.0] — 2026-05-07
