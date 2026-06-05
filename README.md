@@ -12,6 +12,23 @@ LazzyMerlin 是一個「二人（+ 雙貓）實驗室」—— 梅林出主意�
 - **未來合作者 / contractor** —— 不用問也能照做的視覺規範
 - **AI 助理（包括我）** —— 跨 session、跨專案套用品牌時的 reference
 
+## 怎麼套用（先選一種 · 定案規則）
+
+套 LazzyMerlin DS **一律先二選一**。這是定案，不是建議 —— 自己接 case 或別人來借都按這個分類選：
+
+| | **Tier 1 · Full Brand** | **Tier 2 · Palette-Only**（配色中間版） |
+|---|---|---|
+| **什麼時候用** | 自己的 idea / 給自己用的 App（小工具、個人專案、portfolio、玩具） | 別人的委託 / 給別人用的 App（保險業、客戶交付、B2B、給長輩用） |
+| **套什麼** | 整套：palette + typography + spacing + radius + button style + 材質 | **只套 palette**（wood 8 色 + earth status 3 色 + light/dark role token） |
+| **其餘部分** | 全走 LazzyMerlin | 走平台原生（iOS SF、tab bar、NavigationStack、HIG dimensions） |
+| **識別來源** | 整個 brand 氣質 | 純靠配色保留「慵懶梅林實驗室出品」的錨 |
+| **怎麼拿 token** | 複製整個 [`tokens/`](tokens/) 目錄 | **只複製 [`tokens/color.json`](tokens/color.json)** 一個檔 |
+
+**為什麼要分兩種**：Tier 1 把整套 brand 個性（serif、暖色紙質、特殊 button shape）套到別人的 App 上，等於借那個 App 強推自己的 brand —— 不是使用者想要的，是你想要的；而且 serif title 撞 NavigationStack、mono 字級撞 tab bar、自有 button shape 對不齊 iOS chrome，維護成本不對等。所以給別人用的只套配色，**保留識別但不強迫對方接受整個 brand**。
+
+> 判準一句話：**這個 App 是「我想要它長這樣」還是「使用者需要它好用」？** 前者 Tier 1，後者 Tier 2。
+> Tier 2 的完整落地指南見 [`DESIGN.md §7.0`](DESIGN.md)；token 怎麼只取 palette 見 [`tokens/README.md`](tokens/README.md)。
+
 ## 主要文件
 
 | 檔案 | 內容 |
