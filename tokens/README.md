@@ -32,6 +32,32 @@ Tokens 分三層，從原始值往語意層 reference：
 
 要加新色或調整 shadow 數值，**只動基礎層**（wood / earth）。語意層自動跟著 swap。
 
+## 兩種套用 tier（決定你 import 哪幾個檔）
+
+套 LazzyMerlin DS 一律先二選一（定案規則，完整說明見 [`../README.md`](../README.md)）。**檔案邊界就是 tier 邊界** —— 每個 token 檔頂層用 W3C `$extensions` 標了它屬於哪個 tier，機器可讀：
+
+| 檔案 | `com.lazzymerlin.tier` | Tier 1 Full Brand | Tier 2 Palette-Only |
+|---|---|---|---|
+| `color.json` | `palette` | ✅ | ✅ **（只要這一個）** |
+| `typography.json` | `full` | ✅ | ❌ 走平台原生 |
+| `dimension.json` | `full` | ✅ | ❌ 走平台原生 |
+| `shadow.json` | `full` | ✅ | ❌ 走平台原生 |
+| `motion.json` | `full` | ✅ | ❌ 走平台原生 |
+
+- **Tier 1（自己的 idea / 給自己用）**：複製整個 `tokens/` 目錄。
+- **Tier 2（別人委託 / 給別人用 / B2B / 長輩）**：**只複製 `color.json` 一個檔**，typography / spacing / radius / button / 材質全走平台原生。`color.json` 本身就是完整的 palette bundle，不依賴其餘四檔（語意層 reference 都在檔內閉環）。
+
+機器化篩選範例（拉出所有 palette-tier 檔）：
+
+```bash
+# 列出 tier=palette 的 token 檔 = Tier 2 該複製的
+for f in tokens/*.json; do
+  tier=$(python3 -c "import json,sys;print(json.load(open('$f')).get('\$extensions',{}).get('com.lazzymerlin.tier',''))")
+  [ "$tier" = "palette" ] && echo "$f"
+done
+# → tokens/color.json
+```
+
 ## 跨平台用法
 
 ### Web / CSS

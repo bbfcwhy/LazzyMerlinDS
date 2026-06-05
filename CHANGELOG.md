@@ -8,6 +8,11 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 ### Added
 
+**DS 套用規則 · 兩 tier 定案（governance）** — 來源：YourlyOmamori 借用回饋（2026-06）。
+- **新增「Full Brand vs Palette-Only」二分套用規則**（定案、非建議）：自己的 idea / 給自己用 → **Tier 1** 完整套（palette + typography + spacing + radius + button + 材質）；別人委託 / 給別人用 / B2B / 長輩 → **Tier 2** 只套配色（palette），其餘走平台原生。理由見 `DESIGN.md §16`（2026-06-05）。
+- **`tokens/` 五檔頂層加 W3C `$extensions.com.lazzymerlin.tier`**：`color.json = palette`、`typography/dimension/shadow/motion.json = full`。讓「只取 palette」成 machine-readable first-class export —— Tier 2 只需複製 `color.json` 一個檔（不依賴其餘四檔，語意層 reference 檔內閉環）。零 hex / token 值變更，非 breaking。
+- **文件**：`README.md` 第一屏加兩 tier 決策表、`DESIGN.md` 新增 §7.0 套用前選 tier 總則、`tokens/README.md` 加 tier 對照表 + 篩選範例。
+
 來源：ChronoPath landing 回饋（2026-06 · G11–G27）。詳見 `docs/feedback/chronopath-landing-2026-06.md`。
 
 **iOS 參考實作（preview-ios）**

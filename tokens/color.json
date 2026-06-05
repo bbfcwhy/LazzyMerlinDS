@@ -1,5 +1,9 @@
 {
   "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
+  "$extensions": {
+    "com.lazzymerlin.tier": "palette",
+    "com.lazzymerlin.description": "Tier 2 'Palette-Only' bundle。這一個檔 = 給別人用的 App（委託 / B2B / 長輩）唯一要 import 的東西，不必帶 typography / dimension / shadow / motion。兩種套用方式見 ../README.md。"
+  },
   "color": {
     "wood": {
       "$description": "Brand Core 8 色 wood palette（§2.1）。所有其他色都從這裡 reference 出來，不做新 hex。",
