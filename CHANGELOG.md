@@ -4,7 +4,7 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 > Breaking change 政策、版本 bump 規則見 `DESIGN.md §17 Versioning`。
 
-## [0.3.0] — 2026-07-31
+## [0.4.0] — 2026-07-31
 
 ### Added
 
@@ -12,6 +12,13 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 - **新增「Full Brand vs Palette-Only」二分套用規則**（定案、非建議）：自己的 idea / 給自己用 → **Tier 1** 完整套（palette + typography + spacing + radius + button + 材質）；別人委託 / 給別人用 / B2B / 長輩 → **Tier 2** 只套配色（palette），其餘走平台原生。理由見 `DESIGN.md §16`（2026-06-05）。
 - **`tokens/` 五檔頂層加 W3C `$extensions.com.lazzymerlin.tier`**：`color.json = palette`、`typography/dimension/shadow/motion.json = full`。讓「只取 palette」成 machine-readable first-class export —— Tier 2 只需複製 `color.json` 一個檔（不依賴其餘四檔，語意層 reference 檔內閉環）。零 hex / token 值變更，非 breaking。
 - **文件**：`README.md` 第一屏加兩 tier 決策表、`DESIGN.md` 新增 §7.0 套用前選 tier 總則、`tokens/README.md` 加 tier 對照表 + 篩選範例。
+- **components preview 補元件互動狀態與無障礙焦點**（`preview/components-preview.html`）。
+
+> **為什麼跟 v0.3.0 同日拆成兩版**：這兩批本來一起躺在 `[Unreleased]`，但 v0.3.0 的 tag 先打在只含 iOS 元件那批的 commit 上（打 tag 前沒有先 fetch，撞上 PR #4／#5 剛合併進 main）。已推送的 tag 不回頭改，改以本版承接治理層那批。**子專案要 pin 的是 v0.4.0**——它才同時包含表單元件與 §7.0 選 tier 總則。
+
+## [0.3.0] — 2026-07-31
+
+### Added
 
 來源：ChronoPath landing 回饋（2026-06 · G11–G27）。詳見 `docs/feedback/chronopath-landing-2026-06.md`。
 
