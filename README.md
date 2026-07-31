@@ -77,10 +77,10 @@ LazzyMerlin 是一個「二人（+ 雙貓）實驗室」—— 梅林出主意�
 
 ## 版本與貢獻
 
-- 當前版本：**v0.2.0**
+- 當前版本：**v0.3.0**
 - 版本政策見 `DESIGN.md §17` 跟 `CHANGELOG.md`
 - 任何 hex / breaking 改動都先寫進 `DESIGN.md §16 Decisions Log` 留 paper trail
-- 各子專案 pin 特定版本：`git tag v0.2.0`
+- 各子專案 pin 特定版本：`git tag v0.3.0`
 
 ## 子專案位置
 

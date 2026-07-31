@@ -4,7 +4,7 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 > Breaking change 政策、版本 bump 規則見 `DESIGN.md §17 Versioning`。
 
-## [Unreleased]
+## [0.3.0] — 2026-07-31
 
 ### Added
 
@@ -19,6 +19,11 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 ### Changed
 
 - **`LMSpinner` 採用 ChronoPath 版**（drift 收斂 · 主人拍板以 CP 為正版）：加 optional `label`（對齊原生 `ProgressView("…")`）+ arc 上 tactile noise + reduceMotion 停轉。保留 `lineWidth` 顯式覆寫（向後相容既有 `LMSpinner(size:lineWidth:)` 呼叫）。
+
+### Fixed
+
+- **`LMDatePicker` 非西曆年份顯示錯誤**（回流自 QuotationAssistant 的本地修正，該修正掛 TODO backport 已久）：`DateFormatter` 沒有顯式設 `calendar`，一律退回 Gregorian——呼叫端傳 `.republicOfChina` 時仍顯示西元年。同一個 bug 在 `accessibilityValueText` 也有一份（畫面顯示民國年、VoiceOver 卻念西元年），一併修掉。年份格式由 `yyyy` 改為 `y`，因為民國 114 年會被 `yyyy` 補零成 `0114`。
+  - ⚠️ 只回流 bug 修正，**不回流 QuotationAssistant 把標題改成「y 年 M 月」的在地化格式**——DS 是跨語系資產，標題不寫死中文字。QA 若要保留中文標題，請在自己的 `Imported/` 標記為 LOCALLY MODIFIED。
 
 ### Notes
 
