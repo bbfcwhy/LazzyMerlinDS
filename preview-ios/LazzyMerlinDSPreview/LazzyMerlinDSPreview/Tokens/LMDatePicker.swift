@@ -54,12 +54,16 @@ struct LMDatePicker: View {
     }
 
     private var accessibilityValueText: String {
+        // calendar 必須顯式傳給 DateFormatter，否則它一律用 Gregorian——
+        // 呼叫端傳 .republicOfChina 時畫面顯示民國年、VoiceOver 卻念西元年。
+        // 年份用 y 不用 yyyy：民國 114 年會被 yyyy 補零成 0114。
         let f = DateFormatter()
         f.locale = locale
+        f.calendar = calendar
         switch components {
         case .time: f.dateFormat = "HH:mm"
-        case .dateAndTime: f.dateFormat = "yyyy/MM/dd HH:mm"
-        case .date: f.dateFormat = "yyyy/MM/dd"
+        case .dateAndTime: f.dateFormat = "y/MM/dd HH:mm"
+        case .date: f.dateFormat = "y/MM/dd"
         }
         return f.string(from: selection)
     }
@@ -191,9 +195,11 @@ struct LMDatePicker: View {
     }
 
     private var monthTitle: String {
+        // 同 accessibilityValueText：沒設 calendar 就會退回 Gregorian。
         let f = DateFormatter()
         f.locale = locale
-        f.dateFormat = "yyyy.MM"
+        f.calendar = calendar
+        f.dateFormat = "y.MM"
         return f.string(from: displayedMonth)
     }
 
