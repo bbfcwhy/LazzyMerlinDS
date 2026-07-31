@@ -1,5 +1,9 @@
 {
   "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
+  "$extensions": {
+    "com.lazzymerlin.tier": "full",
+    "com.lazzymerlin.description": "Tier 1 'Full Brand' only。給別人用的 App（Tier 2 Palette-Only）跳過本檔、走平台原生 elevation / material。兩種套用方式見 ../README.md。"
+  },
   "shadow": {
     "$description": "材質系統（§5）· 三層 register：Tactile / Hybrid / Soft Inset。完整 box-shadow 多層列表見 DESIGN.md §5.4。本檔僅列 token alias，完整 CSS 見 preview/components-preview.html。",
     "soft": {

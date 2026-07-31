@@ -735,7 +735,7 @@
       opacity: 0;
       pointer-events: none;
       transition: transform 320ms cubic-bezier(0.34, 1.4, 0.64, 1), opacity 200ms ease-out;
-      z-index: 9999;
+      z-index: var(--z-toast);
     }
     .copy-toast.is-visible {
       transform: translateX(-50%) translateY(0);
@@ -1105,6 +1105,22 @@
     .textarea { min-height: 96px; resize: vertical; line-height: 1.55; }
     .input--sm { padding: 10px 14px; font-size: 13px; border-radius: var(--radius-lg); }
 
+    /* Hover — 輕微 hairline 內圈提示可輸入 */
+    .input:hover:not([disabled]),
+    .textarea:hover:not([disabled]),
+    .select:hover:not([disabled]) {
+      box-shadow: var(--shadow-soft-inset), inset 0 0 0 1px var(--hairline);
+    }
+    /* Focus — base 用 outline:none 蓋掉全域 focus ring，這裡補回 inset primary 環 */
+    .input:focus, .textarea:focus, .select:focus {
+      box-shadow: var(--shadow-soft-inset), inset 0 0 0 1.5px var(--primary);
+    }
+    [data-theme="dark"] .input:focus,
+    [data-theme="dark"] .textarea:focus,
+    [data-theme="dark"] .select:focus {
+      box-shadow: var(--shadow-soft-inset), inset 0 0 0 1.5px var(--primary-soft);
+    }
+
     /* Error state — earth-red terracotta（§2.2 Status Extension）*/
     .input[aria-invalid="true"], .textarea[aria-invalid="true"] {
       box-shadow:
@@ -1166,12 +1182,26 @@
       background: var(--bg);
     }
     .radio input:checked ~ .radio__mark svg { display: none; }
+    /* Hover — 未勾選時 mark 補 hairline 內圈；勾選態保留 pressed 陰影不覆蓋 */
+    .checkbox:hover input:not(:checked) ~ .checkbox__mark,
+    .radio:hover input:not(:checked) ~ .radio__mark {
+      box-shadow: var(--shadow-soft-inset), inset 0 0 0 1px var(--hairline);
+    }
+    /* Focus — 真 input 被 opacity:0 隱藏，焦點環改畫在可見的 mark 上 */
+    .checkbox input:focus-visible ~ .checkbox__mark,
+    .radio input:focus-visible ~ .radio__mark {
+      outline: 2px solid var(--primary); outline-offset: 3px;
+    }
+    [data-theme="dark"] .checkbox input:focus-visible ~ .checkbox__mark,
+    [data-theme="dark"] .radio input:focus-visible ~ .radio__mark {
+      outline-color: var(--primary-soft);
+    }
 
     /* Switch — <button> 需要 reset user-agent 樣式，否則 thumb 會被 default border 推歪 */
     .switch {
       width: 52px; height: 28px; border-radius: var(--radius-full);
       background: var(--bg); padding: 3px; cursor: pointer;
-      position: relative; transition: background 300ms ease;
+      position: relative; transition: background 300ms ease, box-shadow 200ms ease;
       border: none;
       appearance: none;
       -webkit-appearance: none;
@@ -1221,6 +1251,10 @@
       opacity: 0.20;
     }
     .switch[aria-checked="true"]::after { transform: translateX(24px); }
+    /* Hover — 補 hairline 內圈；Active — thumb squish 出物理按壓感 */
+    .switch:hover { box-shadow: var(--shadow-soft-inset), inset 0 0 0 1px var(--hairline); }
+    .switch:active::after { transform: scale(0.92); }
+    .switch[aria-checked="true"]:active::after { transform: translateX(24px) scale(0.92); }
 
     .switch-row {
       display: flex; align-items: center; justify-content: space-between;
@@ -1274,7 +1308,10 @@
         0 2px 4px rgba(15, 28, 38, 0.20),
         inset 0 0 0 1px rgba(0, 0, 0, 0.18);
       cursor: grab;
+      transition: transform 140ms ease, box-shadow 200ms ease;
     }
+    .slider__thumb:hover { transform: translate(-50%, -50%) scale(1.12); }
+    .slider__thumb:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.05); }
     [data-theme="dark"] .slider__thumb {
       box-shadow:
         0 2px 4px rgba(0, 0, 0, 0.40),
@@ -1410,6 +1447,7 @@
       opacity: 0.20;
     }
     .chip:hover { transform: translateY(-2px); }
+    .chip:active { transform: translateY(0) scale(0.97); transition: transform 80ms ease; }
     /* 彩色底（深 / 中）一律配米色字 + 黑 text-shadow（raised letter）；淺底 Tan 才配深字 + 白 text-shadow */
     .chip--primary { background-color: var(--primary); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
     .chip--soft { background-color: var(--primary-soft); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
@@ -1555,7 +1593,8 @@
     /* Modal */
     .modal-backdrop {
       position: fixed; inset: 0; z-index: var(--z-modal);
-      background: rgba(15, 28, 38, 0.55); backdrop-filter: blur(4px);
+      background: rgba(15, 28, 38, 0.55);
+      -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center;
       animation: fadeIn 250ms ease;
     }
@@ -1707,6 +1746,7 @@
       transition: color 250ms ease;
     }
     .tabs__item:hover { color: var(--ink); }
+    .tabs__item:active { transform: scale(0.97); transition: transform 80ms ease, color 250ms ease; }
     .tabs__item[aria-selected="true"] { color: var(--ink); }
     .tabs__item[aria-selected="true"]::after {
       content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
@@ -1937,7 +1977,7 @@
     </header>
 
     <div class="layout-with-toc">
-      <aside class="toc" aria-label="目錄">
+      <aside class="toc" role="navigation" aria-label="目錄">
         <h4>Brand</h4>
         <ol>
           <li><a href="#brand-story">Brand Story</a></li>

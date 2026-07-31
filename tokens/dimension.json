@@ -1,5 +1,9 @@
 {
   "$schema": "https://schemas.tokens-studio.com/latest/tokens-schema.json",
+  "$extensions": {
+    "com.lazzymerlin.tier": "full",
+    "com.lazzymerlin.description": "Tier 1 'Full Brand' only。給別人用的 App（Tier 2 Palette-Only）跳過本檔、走平台原生 spacing / radius。兩種套用方式見 ../README.md。"
+  },
   "spacing": {
     "$description": "Spacing scale base 4px（§4.1）",
     "2xs": { "$value": "2px",   "$type": "dimension" },
