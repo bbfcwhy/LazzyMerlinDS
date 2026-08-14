@@ -30,7 +30,8 @@
 ## 相關資產
 
 - `~/.gstack/projects/LazzyMerlin/designs/design-system-20260422/`：design system 建立時的 mockup + preview 原檔
-- `v3/preview-v4.html`：可點擊的品牌預覽頁（含 light/dark toggle）
+- `preview/components-preview.html`：可點擊的品牌預覽頁（含 light/dark toggle），§15 Components 的 canonical reference
+- 線上預覽（GitHub Pages，公開）：https://bbfcwhy.github.io/LazzyMerlinDS/preview/components-preview.html
 
 ## 其他 LazzyMerlin 子專案位置
 
