@@ -6,6 +6,8 @@
 
 LazzyMerlin 是一個「二人（+ 雙貓）實驗室」—— 梅林出主意、威爾用 AI 把它實現出來。這個 repo 是所有跨專案視覺決策的單一事實來源（single source of truth）：色彩、字體、間距、Tactile 材質、Components、跨平台落地。
 
+**線上預覽** → **[LazzyMerlin DS · Components](https://bbfcwhy.github.io/LazzyMerlinDS/preview/components-preview.html)** —— §15 元件視覺實作，含 light / dark 切換，不用 clone 直接看。
+
 ## 給誰用
 
 - **威爾自己** —— 跨多個 indie 專案維持品牌一致（個人網站、web app、iOS / macOS app、未來新專案）
@@ -35,7 +37,7 @@ LazzyMerlin 是一個「二人（+ 雙貓）實驗室」—— 梅林出主意�
 |---|---|
 | **[`DESIGN.md`](DESIGN.md)** | 完整規範（§1～§17）· spec source of truth |
 | **[`tokens/`](tokens/)** | 結構化 design tokens（W3C 格式 · 相容 Figma Tokens Studio / Style Dictionary） |
-| **[`preview/components-preview.html`](preview/components-preview.html)** | §15 Components 視覺實作（canonical reference） |
+| **[`preview/components-preview.html`](preview/components-preview.html)** | §15 Components 視覺實作（canonical reference）· **[線上版](https://bbfcwhy.github.io/LazzyMerlinDS/preview/components-preview.html)** |
 | **[`CHANGELOG.md`](CHANGELOG.md)** | 版本紀錄 |
 | **[`assets/`](assets/)** | 品牌 logo（2D + 3D） |
 
