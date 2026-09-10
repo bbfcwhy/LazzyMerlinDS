@@ -287,7 +287,7 @@ struct LMDatePicker: View {
 
     private func shiftMonth(by months: Int) {
         if let next = calendar.date(byAdding: .month, value: months, to: displayedMonth) {
-            withAnimation(.easeOut(duration: 0.18)) {
+            withAnimation(LMMotion.quickDismiss) {
                 displayedMonth = next
             }
         }

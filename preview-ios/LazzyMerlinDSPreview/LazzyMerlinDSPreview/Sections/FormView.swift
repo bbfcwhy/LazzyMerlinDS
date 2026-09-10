@@ -48,8 +48,8 @@ struct FormView: View {
                                 .foregroundStyle(Color.inkMuted)
                         }
                         .padding(.vertical, LMSpacing.controlGap)
-                        .padding(.horizontal, 18)
-                        .tactileBase(radius: 12)
+                            .padding(.horizontal, LMControlSize.inputHorizontal)
+                            .tactileBase(radius: LMRadius.button)
                     }
                     .buttonStyle(.plain)
                 }
@@ -70,14 +70,7 @@ struct FormView: View {
 
                 LMSection("TEXTAREA · SELECT · DISABLED") {
                     formField("想說什麼") {
-                        TextEditor(text: $note)
-                            .scrollContentBackground(.hidden)
-                            .frame(minHeight: 96)
-                            .font(.lmBodySmall)
-                            .foregroundStyle(Color.ink)
-                            .padding(.vertical, 10)
-                            .padding(.horizontal, LMSpacing.controlGap)
-                            .tactileInset(radius: 16)
+                        LMTextEditor(text: $note)
                     }
 
                     formField("你是哪種懶") {
@@ -91,8 +84,8 @@ struct FormView: View {
                                 .foregroundStyle(Color.ink)
                         }
                         .padding(.vertical, LMSpacing.controlGap)
-                        .padding(.horizontal, 18)
-                        .tactileInset(radius: 16)
+                        .padding(.horizontal, LMControlSize.inputHorizontal)
+                        .tactileInset(radius: LMRadius.xl)
                     }
 
                     formField("已鎖欄位") {
@@ -107,11 +100,11 @@ struct FormView: View {
                         .foregroundStyle(Color.ink)
                         .padding(.vertical, LMSpacing.md)
                         .padding(.horizontal, LMSpacing.lg)
-                        .tactileBase(radius: 12)
+                        .tactileBase(radius: LMRadius.button)
                 }
 
                 LMSection("SLIDER") {
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: LMSpacing.md) {
                         HStack {
                             Text("音量")
                                 .font(.lmBodySmall)
@@ -125,7 +118,7 @@ struct FormView: View {
                     }
                     .padding(.vertical, LMSpacing.md)
                     .padding(.horizontal, LMSpacing.controlGap)
-                    .tactileBase(radius: 12)
+                    .tactileBase(radius: LMRadius.button)
                 }
 
                 LMSection("STEPPER") {
@@ -138,7 +131,7 @@ struct FormView: View {
                     }
                     .padding(.vertical, LMSpacing.sm)
                     .padding(.horizontal, LMSpacing.controlGap)
-                    .tactileBase(radius: 12)
+                    .tactileBase(radius: LMRadius.button)
                 }
 
                 LMSection("COLOR PICKER") {
@@ -147,14 +140,14 @@ struct FormView: View {
                             .padding(.vertical, LMSpacing.md)
                             .padding(.horizontal, LMSpacing.controlGap)
                     }
-                    .tactileBase(radius: 12)
+                    .tactileBase(radius: LMRadius.button)
                 }
 
                 LMSection("DATE PICKER") {
                     LMDatePicker(selection: $pickedDate)
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }
@@ -222,15 +215,15 @@ struct FormView: View {
             .font(.lmBodySmall)
             .foregroundStyle(isDisabled ? Color.inkMuted.opacity(0.60) : Color.ink)
             .padding(.vertical, LMSpacing.controlGap)
-            .padding(.horizontal, 18)
-            .tactileInset(radius: 16)
+            .padding(.horizontal, LMControlSize.inputHorizontal)
+            .tactileInset(radius: LMRadius.xl)
             .overlay {
                 if isInvalid {
                     RoundedRectangle(cornerRadius: LMRadius.xl, style: .continuous)
                         .strokeBorder(Color.earthRed, lineWidth: 1.5)
                 }
             }
-            .opacity(isDisabled ? 0.60 : 1)
+            .opacity(isDisabled ? LMOpacity.disabled : 1)
             .disabled(isDisabled)
     }
 

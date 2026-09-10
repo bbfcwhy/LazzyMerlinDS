@@ -5,7 +5,7 @@ import SwiftUI
 // 2-tier 字體規則 (brand vs functional · 跨 iOS / macOS / Web 三平台)
 //
 //   Brand identity tier  → LXGW WenKai TC Medium · 永遠 LXGW
-//     · 用在 brand 聲量時刻：hero display / wordmark / empty state ✦ / 404 / about
+//     · 用在 brand 聲量時刻：hero display / wordmark / empty state MoonStars / 404 / about
 //     · 對應 token: lmDisplayXL / lmDisplayLarge / lmDisplay / lmEmptyVisual / lmEmptyCode
 //
 //   Functional UI tier   → 系統字 (SF Pro / PingFang TC)、dev toggle 可切到 LXGW
@@ -43,7 +43,7 @@ extension Font {
     static let lmDisplayXL    = Font.custom(lmBrandFontMedium, size: 56)  // hero / wordmark
     static let lmDisplayLarge = Font.custom(lmBrandFontMedium, size: 48)  // splash / 大型 brand 訊息
     static let lmDisplay      = Font.custom(lmBrandFontMedium, size: 40)  // section 級 brand 訊息
-    static let lmEmptyVisual  = Font.custom(lmBrandFontMedium, size: 52)  // empty state hero ✦
+    static let lmEmptyVisual  = Font.custom(lmBrandFontMedium, size: 52)  // empty state hero MoonStars
     static let lmEmptyCode    = Font.custom(lmBrandFontMedium, size: 48)  // 404 / 大字 code
 
     // MARK: - Functional UI tier · 預設 system、dev toggle 可切 LXGW

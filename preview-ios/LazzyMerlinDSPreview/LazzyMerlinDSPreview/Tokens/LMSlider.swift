@@ -45,14 +45,14 @@ struct LMSlider: View {
                 DragGesture(minimumDistance: 0)
                     .onChanged { drag in
                         if !isDragging {
-                            withAnimation(.easeOut(duration: 0.1)) {
+                            withAnimation(LMMotion.quickPress) {
                                 isDragging = true
                             }
                         }
                         updateValue(at: drag.location.x, width: trackWidth)
                     }
                     .onEnded { _ in
-                        withAnimation(.spring(response: 0.28, dampingFraction: 0.78)) {
+                        withAnimation(LMMotion.controlSpring) {
                             isDragging = false
                         }
                     }

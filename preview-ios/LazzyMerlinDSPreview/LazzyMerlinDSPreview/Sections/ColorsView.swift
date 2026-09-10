@@ -45,7 +45,7 @@ struct ColorsView: View {
                     }
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }
@@ -55,7 +55,7 @@ struct ColorsView: View {
 
     @ViewBuilder
     private func swatchCard(_ swatch: ColorSwatch) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: LMSpacing.md) {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(swatch.color)
                 .frame(height: 84)
@@ -71,12 +71,12 @@ struct ColorsView: View {
                 .foregroundStyle(Color.inkMuted)
         }
         .padding(LMSpacing.md)
-        .tactilePlain(radius: 12)
+        .tactilePlain(radius: LMRadius.button)
     }
 
     @ViewBuilder
     private func alphaCard(_ name: String, base: Color, fill: Color) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: LMSpacing.md) {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(base)
                 .overlay {
@@ -95,7 +95,7 @@ struct ColorsView: View {
         }
         .padding(LMSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .tactilePlain(radius: 12)
+        .tactilePlain(radius: LMRadius.button)
     }
 
 }

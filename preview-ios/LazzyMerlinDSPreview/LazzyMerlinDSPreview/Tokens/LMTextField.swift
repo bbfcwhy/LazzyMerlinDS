@@ -52,14 +52,14 @@ struct LMTextField: View {
                     .font(.lmBodySmall)
                     .foregroundStyle(Color.inkMuted)
                     .padding(.vertical, LMSpacing.controlGap)
-                    .padding(.horizontal, 18)
+                    .padding(.horizontal, LMControlSize.inputHorizontal)
                     .allowsHitTesting(false)
             }
             TextField("", text: $text)
                 .font(.lmBodySmall)
                 .foregroundStyle(isDisabled ? Color.inkMutedDisabled : Color.ink)
                 .padding(.vertical, LMSpacing.controlGap)
-                .padding(.horizontal, 18)
+                .padding(.horizontal, LMControlSize.inputHorizontal)
         }
         .tactileInset(radius: radius)
         .overlay {
@@ -109,8 +109,8 @@ struct LMTextEditor: View {
                 Text(placeholder)
                     .font(.lmBodySmall)
                     .foregroundStyle(Color.inkMuted)
-                    .padding(.vertical, 10 + 8)
-                    .padding(.horizontal, LMSpacing.controlGap + 5)
+                    .padding(.vertical, LMControlSize.textEditorVertical + LMControlSize.textEditorInsetCompensation)
+                    .padding(.horizontal, LMSpacing.controlGap + LMControlSize.textEditorHorizontalInsetCompensation)
                     .allowsHitTesting(false)
             }
             TextEditor(text: $text)
@@ -118,7 +118,7 @@ struct LMTextEditor: View {
                 .font(.lmBodySmall)
                 .foregroundStyle(isDisabled ? Color.inkMutedDisabled : Color.ink)
                 .frame(minHeight: minHeight)
-                .padding(.vertical, 10)
+                .padding(.vertical, LMControlSize.textEditorVertical)
                 .padding(.horizontal, LMSpacing.controlGap)
         }
         .tactileInset(radius: radius)

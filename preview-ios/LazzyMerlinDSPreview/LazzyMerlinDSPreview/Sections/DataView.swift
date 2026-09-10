@@ -19,7 +19,7 @@ struct DataView: View {
                         }
                     }
                     .padding(.vertical, LMSpacing.sm)
-                    .tactilePlain(radius: 14)
+                    .tactilePlain(radius: LMRadius.control)
                 }
 
                 LMSection("LIST") {
@@ -30,10 +30,10 @@ struct DataView: View {
                         Divider().overlay(Color.border)
                         listRow(initial: nil, title: "寫今日手札", meta: "還沒開始", color: .earthGreen, usesMoonStar: true)
                     }
-                    .tactilePlain(radius: 14)
+                    .tactilePlain(radius: LMRadius.control)
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }
@@ -51,12 +51,12 @@ struct DataView: View {
         .font(.lmLabel)
         .foregroundStyle(Color.inkMuted)
         .padding(.horizontal, LMSpacing.controlGap)
-        .padding(.vertical, 10)
+        .padding(.vertical, LMControlSize.buttonCompactV)
     }
 
     @ViewBuilder
     private func tableRow(_ row: ProjectRow) -> some View {
-        HStack(spacing: 10) {
+        HStack(spacing: LMRadius.md) {
             Text(row.project)
                 .font(.lmBodySmall.weight(.semibold))
                 .foregroundStyle(Color.ink)

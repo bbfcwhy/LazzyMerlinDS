@@ -21,6 +21,7 @@ enum LMRadius {
     static let sm: CGFloat = 6
     static let md: CGFloat = 10
     static let button: CGFloat = 12
+    static let control: CGFloat = 14
     static let xl: CGFloat = 16
     static let navCapsule: CGFloat = 18
     static let card: CGFloat = 20
@@ -30,13 +31,20 @@ enum LMRadius {
 enum LMControlSize {
     static let buttonSmallV: CGFloat = 8
     static let buttonSmallH: CGFloat = 14
+    static let buttonCompactV: CGFloat = 10
     static let buttonMediumV: CGFloat = 12
     static let buttonMediumH: CGFloat = 22
     static let buttonLargeV: CGFloat = 16
     static let buttonLargeH: CGFloat = 28
     static let alertButtonV: CGFloat = 11
     static let alertButtonH: CGFloat = 18
+    static let inputHorizontal: CGFloat = 18
+    static let textEditorVertical: CGFloat = 10
+    static let textEditorInsetCompensation: CGFloat = 8
+    static let textEditorHorizontalInsetCompensation: CGFloat = 5
     static let iconButton: CGFloat = 36
+    static let tabIndicatorWidth: CGFloat = 24
+    static let tabIndicatorHeight: CGFloat = 2.5
 }
 
 enum LMOpacity {

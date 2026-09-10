@@ -26,11 +26,11 @@ struct LMTabStrip<Selection: Hashable, Label: View>: View {
     private func tabButton(_ opt: Selection) -> some View {
         let isSelected = (selection == opt)
         Button {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+            withAnimation(LMMotion.selectionSpring) {
                 selection = opt
             }
         } label: {
-            VStack(spacing: 8) {
+            VStack(spacing: LMSpacing.sm) {
                 label(opt)
                     .font(.lmBodySmall.weight(isSelected ? .semibold : .regular))
                 indicator(isSelected: isSelected)

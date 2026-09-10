@@ -19,16 +19,16 @@ struct LMMenuPicker<Selection: Hashable, Label: View, OptionLabel: View>: View {
         Button {
             showSheet = true
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: LMSpacing.sm) {
                 label(selection)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.lmBodySmall.weight(.medium))
                 Image(systemName: "chevron.up.chevron.down")
-                    .font(.system(size: 11, weight: .semibold))
-                    .opacity(0.55)
+                    .font(.lmCaption.weight(.semibold))
+                    .opacity(LMOpacity.iconMuted)
             }
         }
         // Tactile secondary chrome · 跟其他 secondary CTA 同氣質 (雙層 shadow + press 動畫)
-        .buttonStyle(TactileSecondaryButtonStyle(radius: 10, paddingV: 8, paddingH: 14))
+        .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.md, paddingV: LMControlSize.buttonSmallV, paddingH: LMControlSize.buttonSmallH))
         .sheet(isPresented: $showSheet) {
             sheetContent
                 .lmSheetChrome()
@@ -47,15 +47,15 @@ struct LMMenuPicker<Selection: Hashable, Label: View, OptionLabel: View>: View {
                     showSheet = false
                 } label: {
                     Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.lmBodySmall.weight(.semibold))
                         .foregroundStyle(Color.inkMuted)
-                        .frame(width: 32, height: 32)
+                        .frame(width: LMSpacing.section, height: LMSpacing.section)
                         .background(Circle().fill(Color.bgMuted))
                 }
                 .buttonStyle(.plain)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(.horizontal, LMSpacing.page)
+            .padding(.vertical, LMSpacing.lg)
 
             Divider().overlay(Color.border)
 
@@ -68,17 +68,17 @@ struct LMMenuPicker<Selection: Hashable, Label: View, OptionLabel: View>: View {
                         } label: {
                             HStack {
                                 optionLabel(opt)
-                                    .font(.system(size: 16))
+                                    .font(.lmBodySmall)
                                     .foregroundStyle(Color.ink)
                                 Spacer()
                                 if selection == opt {
                                     Image(systemName: "checkmark")
-                                        .font(.system(size: 14, weight: .semibold))
+                                        .font(.lmBodySmall.weight(.semibold))
                                         .foregroundStyle(Color.primaryBrand)
                                 }
                             }
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 14)
+                            .padding(.horizontal, LMSpacing.page)
+                            .padding(.vertical, LMSpacing.controlGap)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .contentShape(Rectangle())
                         }
@@ -87,7 +87,7 @@ struct LMMenuPicker<Selection: Hashable, Label: View, OptionLabel: View>: View {
                         if idx < options.count - 1 {
                             Divider()
                                 .overlay(Color.border)
-                                .padding(.leading, 20)
+                                .padding(.leading, LMSpacing.page)
                         }
                     }
                 }

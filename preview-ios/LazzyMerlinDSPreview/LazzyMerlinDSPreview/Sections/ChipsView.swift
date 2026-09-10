@@ -51,7 +51,7 @@ struct ChipsView: View {
                     }
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }

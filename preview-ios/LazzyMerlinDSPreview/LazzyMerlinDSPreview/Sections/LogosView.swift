@@ -28,10 +28,10 @@ struct LogosView: View {
                         .foregroundStyle(Color.ink)
                         .padding(LMSpacing.card)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .tactilePlain(radius: 14)
+                        .tactilePlain(radius: LMRadius.control)
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }
@@ -72,7 +72,7 @@ struct LogosView: View {
         }
         .padding(LMSpacing.card)
         .frame(maxWidth: .infinity)
-        .tactileBase(radius: 20)
+        .tactileBase(radius: LMRadius.card)
     }
 
     @ViewBuilder
@@ -113,7 +113,7 @@ struct LogosView: View {
         }
         .padding(LMSpacing.card)
         .frame(maxWidth: .infinity)
-        .tactileBase(radius: 20)
+        .tactileBase(radius: LMRadius.card)
     }
 
 }

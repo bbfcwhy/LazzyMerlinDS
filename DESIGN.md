@@ -1,6 +1,6 @@
 # LazzyMerlin Design System
 
-> *Laziness sets your soul free.* ✦
+> *Laziness sets your soul free.* MoonStars
 
 **慵懶梅林實驗室 · LazzyMerlin Lab** 跨平台品牌核心設計系統。
 任何專案做視覺決策前都先讀這份檔案。有衝突時，以此為準。
@@ -64,7 +64,7 @@
 
 顏色系統是克制的冷暖藍系（對齊 shadcn oklab 主題）。魔法氛圍來自：
 1. **手寫楷體 display**（霞鶩文楷 TC） — 像手抄本、羊皮紙卷
-2. **Unicode 裝飾字**（✦ ◈ ❦ ☾）作為 section separator
+2. **MoonStars 專屬 glyph** 作為品牌 sigil；Unicode 裝飾字（◈ ❦ ☾）只作一般文字分隔，不再把 `✦` 當 logo
 3. **雙語混排**（中文楷體 + 英文）展現跨文化質感
 4. **Small-caps label + 羅馬數字**（MMXXVI）— 古卷感
 5. **結尾簽名句**「Laziness sets your soul free.」
@@ -135,8 +135,8 @@ Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone E
 | Token | Hex（跨 mode 共用）| Light surface 對比 | Dark surface 對比 |
 |---|---|---|---|
 | **Earth Red** Terracotta | `#9E5949` | ~5.3:1 ✓ AA | ~3.4:1 邊緣 AA Large |
-| **Earth Green** Sage / Moss | `#6A7A60` | ~5.0:1 ✓ AA | ~4.0:1 ✓ AA Large |
-| **Earth Ochre** Burnt Ochre | `#D4AB6E` | **~2.0:1 ⚠️ 不過 AA** | ~7.5:1 ✓ AA |
+| **Earth Green** Sage / Moss | `#596751` | ~5.3:1 ✓ AA | ~2.7:1 ⚠️ 不過 AA Large |
+| **Earth Ochre** Burnt Ochre | `#CB9B52` | ~2.2:1 ⚠️ 不過 AA | ~6.6:1 ✓ AA |
 
 **為什麼是大地色不是鮮色：**
 - 跟 wood palette 同調 —— 跟 Stone `#967459` 同 saturation 量級，同個畫面不會跳出來
@@ -184,8 +184,8 @@ Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone E
 :root {
   /* Earth tone Status Extension */
   --earth-red:   #9E5949;
-  --earth-green: #6A7A60;
-  --earth-ochre: #8E6E37;
+  --earth-green: #596751;
+  --earth-ochre: #CB9B52;
 
   /* Semantic alias */
   --info: var(--primary);
@@ -195,10 +195,7 @@ Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone E
   --destructive: var(--earth-red);
 }
 [data-theme="dark"] {
-  --earth-red:   #C58775;
-  --earth-green: #A8B898;
-  --earth-ochre: #D4AB6E;
-  /* Semantic alias 不重寫 — var() 動態 resolve 自動跟著 earth-* 切 */
+  /* Earth tone 跨 mode 同 hex，不再提供 dark 提亮版。 */
 }
 ```
 
@@ -852,10 +849,12 @@ Input / Switch / Slider 這類控制元件不適合 Tactile（太厚重會擋視
 
 這些是 LazzyMerlin 的「氛圍細節」，適度點綴讓品牌一眼可辨。**這一層是魔法感的主要承載**。
 
-### 6.1 Unicode Glyphs
+### 6.1 Unicode Glyphs / Brand Sigil
+MoonStars 是品牌 sigil，使用 image / mask asset 呈現；Unicode 字元只作文字分隔與輕裝飾，不把 `✦` 當 logo。
+
 用於 section separator、decorative accent：
 ```
-✦  （星芒，主要）
+MoonStars asset（品牌 sigil，主要）
 ◈  （菱形，次要）
 ❦  （花飾，用在文末 / 長文分段）
 ☾  （弦月，特殊頁面）
@@ -864,7 +863,8 @@ Input / Switch / Slider 這類控制元件不適合 Tactile（太厚重會擋視
 ```
 
 用法：
-- Section separator：`✦` 置中，兩側 hairline
+- Brand separator：MoonStars 置中，兩側 hairline
+- Text-only separator：`◈` / `❦` / `☾` 依情境使用
 - Label 分隔：`LAZZYMERLIN · 威爾的懶人主義 · EST. MMXXVI`
 
 ### 6.2 Hairline 系統
@@ -938,17 +938,17 @@ iOS 平台優先順序：**遵循 Apple HIG > 套用 LazzyMerlin DS tokens > 硬
 - **`accentColor`** 設為 Petrol `#46647C`（Light）/ Mid Petrol `#5E7A8D`（Dark），對齊 §1 wood palette + §2.4 dark mode 互換規則
 - 在 Asset Catalog `AccentColor.colorset` 設 Any Appearance（light）+ Dark Appearance 兩值
 - **Tab bar / nav**：遵循 iOS 原生樣式，只染 `accentColor`，不自定 background
-- **Unicode glyphs**：SF Symbols 有 `star.fill`（相當於 ✦）可取代使用，size config 用 `.symbolRenderingMode(.hierarchical)` 取得自然層次
+- **Brand glyph**：品牌 sigil 一律使用 `MoonStars` asset；SF Symbols 只用於功能 icon，不再用 `star.fill` 或 `✦` 扮演 logo
 
 #### 7.2.2 Card surface tier · §2.2.1 iOS 對應
 
 | DS Token | SwiftUI 對應 | 用途 |
 |---|---|---|
 | `--bg`（page surface） | `Color(uiColor: .systemBackground)` 或自訂 `Color("Bg")` | 全屏底色 |
-| `--surface-1`（一階 card） | `.background(.regularMaterial)` 或同色 + `.shadow(radius: 8, y: 4)` | 主 card / container |
-| `--surface-2`（二階 popover） | `.background(.thickMaterial)` 或 luminance +5% 純色 | Nested card / dropdown / popover |
+| `--surface-1`（一階 card） | `Color.surface1` + `.tactileBase()` | 主 card / container |
+| `--surface-2`（二階 popover） | `Color.surface2` + `lmOverlayCardChrome()` 或 tooltip chrome | Nested card / dropdown / popover |
 
-**Light mode**：偏好同色 + `.shadow()` 創造階層（Tactile 影子語言的 iOS 等價）；**Dark mode**：偏好用純色亮度差（dark mode 下 shadow 視覺 affordance 弱），`Color("Surface1Dark")` 比 `--bg` 提亮 ~5%。
+**Light mode**：偏好同色 + `.shadow()` 創造階層（Tactile 影子語言的 iOS 等價）；**Dark mode**：偏好用純色亮度差（dark mode 下 shadow 視覺 affordance 弱）。SwiftUI preview 已落地 `Surface1.colorset` / `Surface2.colorset`，由 Xcode 產生 `Color.surface1` / `Color.surface2`。
 
 #### 7.2.3 Spacing · DS 4px scale 與 HIG 8pt grid 對齊
 
@@ -965,6 +965,8 @@ iOS 使用 pt 單位，HIG 推薦 8pt grid。LazzyMerlin DS 用 4px scale（base
 | `3xl` | 48 | 48 | hero padding |
 
 **與 HIG 8pt grid 妥協**：DS 的 `xs:4` / `md:12` 不在 8pt grid 上，但 4 / 12 是 HIG 內 `compact` 場景常用 minor unit（HIG 例外允許），落地時優先 DS scale。Container padding 至少 `lg:16`（HIG `.padding()` 預設）。
+
+SwiftUI preview 對應 namespace：`LMSpacing.xxs/xs/sm/md/controlGap/lg/page/card/editorial/section/stateVertical`、`LMRadius.sm/md/button/xl/navCapsule/card/sheet`、`LMControlSize.buttonSmall/Medium/Large`。component 內避免裸寫 `12` / `20` / `28` 這類重複數字，除非是該元件的內容尺寸（例如 image frame）。
 
 #### 7.2.4 Type Scale · DS web px 與 iOS pt 對照
 
@@ -990,7 +992,7 @@ iOS 端 typography 走 **2-tier 規則**（跟 web §3 4-tier 不同），對應
 
 | Tier | 字體 | 用途 | Token |
 |---|---|---|---|
-| **Brand identity** | LXGW WenKai TC Medium · 永遠 LXGW | Hero display / wordmark / empty state ✦ / 404 大字 / about | `.lmDisplayXL` (56pt) / `.lmDisplayLarge` (48pt) / `.lmDisplay` (40pt) / `.lmEmptyVisual` (52pt) / `.lmEmptyCode` (48pt) |
+| **Brand identity** | LXGW WenKai TC Medium · 永遠 LXGW | Hero display / wordmark / empty state MoonStars / 404 大字 / about | `.lmDisplayXL` (56pt) / `.lmDisplayLarge` (48pt) / `.lmDisplay` (40pt) / `.lmEmptyVisual` (52pt) / `.lmEmptyCode` (48pt) |
 | **Functional UI** | 系統字 (SF Pro / PingFang TC) · dev toggle 可切到 LXGW | Page heading / body / caption / button / form / stat | `.lmH1-H3` / `.lmBody*` / `.lmCaption` / `.lmLabel` / `.lmButton*` / `.lmControlLabel` / `.lmStatNumber` |
 
 **Production bundle size 取捨**：iOS app production 真正需要 bundle 的 LXGW weight 只剩 `Medium` 一個（~150KB subset），其他 5 個 .ttf（Light / Regular / Mono / Mono Medium）留 preview app dev toggle 試驗用、production 落地時可以 opt-out 減 bundle size。Dev toggle: `LMFontMode.useAllLXGW`（在 [`TypographyView`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Sections/TypographyView.swift) 內可切換、體感「全 LXGW」風格）。
@@ -1051,6 +1053,8 @@ RoundedRectangle(cornerRadius: 16)  // 預設 .circular
 ```
 
 DS radius scale 對應：`radius-sm 6` / `md 10` / `lg 12` / `xl 16` / `2xl 20` 全部用 `.continuous`。
+
+SwiftUI preview 對應 namespace：`LMRadius.sm = 6`、`LMRadius.md = 10`、`LMRadius.button = 12`、`LMRadius.xl = 16`、`LMRadius.navCapsule = 18`、`LMRadius.card = 20`、`LMRadius.sheet = 28`。
 
 #### 7.2.8 Dark mode 偏好 · 跟系統為主、提供三態 override
 
@@ -1224,11 +1228,11 @@ iOS 子專案落地時不一定要全 28 個都 bundle，按需選用：
 
 ### 7.4 Notion 模板
 Notion 沒自訂 CSS，只能靠以下元素傳達品牌：
-- **頁面 Icon**：使用 `✦` 或 LazzyMerlin 專屬 emoji
+- **頁面 Icon**：使用 MoonStars 或 LazzyMerlin 專屬 emoji
 - **Cover**：奶茶米底 + 頁名（標題留左對齊，H1 用「嗨，我是 威爾 · Hey, I am Will.」風格）
 - **頁面顏色 tag**：使用 Notion 的 blue（對齊 Primary）、gray（Stone）、brown（Surface Muted）
 - **H1 排版**：遵守中英混排的雙語格式
-- **區塊分隔**：用 `✦` 或 `---`
+- **區塊分隔**：用 MoonStars、`◈`、`❦` 或 `---`
 - **Callout 區塊**：用 blue 背景 + 星星 icon 作為「懶人提示」
 
 ### 7.5 Chrome Extension
@@ -1237,15 +1241,15 @@ Notion 沒自訂 CSS，只能靠以下元素傳達品牌：
 - Dark mode 必做（Chrome extension 使用情境常是夜晚）
 
 ### 7.6 Instagram（內容版型）
-- **貼文模板**：奶茶米底 + 大字楷體中文標題 + 右下角 `✦ LazzyMerlin` 小簽名（Petrol 色）
+- **貼文模板**：奶茶米底 + 大字楷體中文標題 + 右下角 MoonStars + `LazzyMerlin` 小簽名（Petrol 色）
 - **IG Story**：Deep Ink 深底 + Warm Ivory 文字 + Sky Petrol 重點
-- **Highlight cover**：Petrol Ink 圓底 + Parchment 色楷體字 + 小 `✦` 符號
+- **Highlight cover**：Petrol Ink 圓底 + Parchment 色楷體字 + 小 MoonStars 符號
 - **頭像**：LazzyMerlin icon，奶茶米底 + Petrol 圖示
 - **限制**：IG 壓縮會讓細字讀性下降，字級要比 web 大 2 級
 
 ### 7.7 Game（Opt-out）
 - 遊戲 UI 元件通常跟遊戲本身有關，**不強制**使用 LazzyMerlin 設計元素
-- 建議：**splash screen 與 About 頁**帶入品牌色（Petrol + Parchment）與 `✦ LazzyMerlin` 簽名
+- 建議：**splash screen 與 About 頁**帶入品牌色（Petrol + Parchment）與 MoonStars + `LazzyMerlin` 簽名
 - 遊戲選單 typography 不必強用楷體
 
 ---
@@ -1271,8 +1275,8 @@ Logo 內容：戴藍色巫師帽的女巫（= 梅林）+ 兩隻貓（虎斑 + �
 | **Favicon** | 主 logo 直接縮小（不做 simplified sigil） | 瀏覽器 tab、bookmark |
 | **App icon**（含家族）| 詳見 §8.3 | iOS / macOS / Android 應用程式 |
 | **Watermark / decorative** | 主 logo 縮小 + opacity 0.4-0.6 | IG 貼文角落簽名、footer 浮印 |
-| **Wordmark-only** | `✦ 威爾的懶人主義 · LazzyMerlin`（霞鶩文楷 + Geist Mono） | logo 放不下、純文字場景、email signature |
-| **Sigil-only**（極簡簽名）| 單一 `✦` glyph，Petrol 色 | 文末分節、loading dot、bullet 替代 |
+| **Wordmark-only** | MoonStars + `威爾的懶人主義 · LazzyMerlin`（霞鶩文楷 + Geist Mono） | logo 放不下、純文字場景、email signature |
+| **Sigil-only**（極簡簽名）| 單一 MoonStars asset，Petrol 色 | 文末分節、loading dot、bullet 替代 |
 
 ### 8.3 App Icon 家族規範
 
@@ -1434,7 +1438,7 @@ Home / About / Projects / Notebook / Contact
 
 | 位置 | 文案 |
 |---|---|
-| Footer 固定句 | `Laziness sets your soul free. ✦` |
+| Footer 固定句 | `Laziness sets your soul free.` + MoonStars |
 | About tagline | `梅林出主意，威爾用 AI 把她的魔法實現出來` |
 | Hero 副標 | `把一萬小時的功夫，壓縮成一個下午` |
 
@@ -1445,25 +1449,25 @@ Home / About / Projects / Notebook / Contact
 | **404** | 「頁面沒了。可能我當初就沒做出來。」`回首頁 →` |
 | **Empty list** | 「這裡還沒寫東西。懶人通常這樣。」 |
 | **Empty search** | 「找不到。換個字試試？」 |
-| **Loading** | 動畫 `✦ ◈ ❦` 循環，不寫字 |
-| **Success toast** | `好了 ✦` |
+| **Loading** | MoonStars / `◈` / `❦` 循環，不寫字 |
+| **Success toast** | `好了` + MoonStars |
 | **Error** | 「壞了。可能是我沒做對 — 再試試看 ↻」 |
 | **Offline** | 「網路斷了。會回來的。」 |
-| **Rate limited** | 「點太快了。慢一點 ✦」 |
+| **Rate limited** | 「點太快了。慢一點」+ MoonStars |
 | **Delete confirm** | 「真的要刪？刪掉就沒了。」 |
 | **Coming soon** | 「還沒做完。但會做完的。」 |
 | **Form 空欄** | 「填一下這個？」 |
 | **Email 格式錯** | 「Email 好像寫錯了。」 |
 | **Paywall / locked** | 「這裡需要一把鑰匙。」 |
-| **Subscribe success** | 「已經記下你了 ✦」 |
-| **Log out** | 「掰。隨時回來 ✦」 |
-| **Under construction** | 「施工中 — 但沒很認真 ✦」 |
+| **Subscribe success** | 「已經記下你了」+ MoonStars |
+| **Log out** | 「掰。隨時回來」+ MoonStars |
+| **Under construction** | 「施工中 — 但沒很認真」+ MoonStars |
 
 ### 10.4 禁用詞彙
 - `Oops!` / `Whoops!` / `Oh no!` — 太美式滑稽
 - 「系統錯誤」/「請稍後再試」— 企業官腔
 - 「施法」/「咒語」/「魔法」作為 UI 動詞 — RPG cosplay 感
-- `emoji` 取代 icon（除了 `✦ ◈ ❦ → ↻` 這類字符）
+- `emoji` 取代 icon（除了 MoonStars / `◈` / `❦` / `☾` / `→` / `↻` 這類品牌或操作字符）
 
 ---
 
@@ -1510,7 +1514,7 @@ Home / About / Projects / Notebook / Contact
 **模板結構**：
 ```
 ┌────────────────────────────────────┐
-│ ✦  威爾的懶人主義 LazzyMerlin      │ ← 左上角 sigil + wordmark
+│ MoonStars  威爾的懶人主義 LazzyMerlin │ ← 左上角 sigil + wordmark
 │                                    │
 │ ─── FEATURED                       │ ← kicker（small-caps, primary）
 │                                    │
@@ -1600,7 +1604,7 @@ Home / About / Projects / Notebook / Contact
 | 搜尋 | `search` |
 | 外觀切換 | `sun` / `moon`（不用 `circle-half`） |
 
-避免：用 emoji 當 icon（除了 §6.1 定義的 unicode glyphs `✦ ◈ ❦ ☾`）。
+避免：用 emoji 當 icon（除了 §6.1 定義的 MoonStars 與 unicode glyphs `◈ ❦ ☾`）。
 
 ---
 
@@ -2004,7 +2008,7 @@ Summary error 用 §15.7.1 Alert（Error variant），第一行寫「請修正�
 - **Async 驗證通過**（如 username 可用）：欄位右側 `check-circle` icon、`--success` 色
 - **Submit 後留在原頁**：用 §15.6.6 Toast，**不**用 inline alert（inline 會跟下一次填寫的欄位打架）
 
-**禁止：** 整片綠色 banner 寫「成功！」（太誇張、太美式）。LazzyMerlin 走 §10.3 冷面笑匠 tone，成功訊息用 `好了 ✦` 配 toast 即可。
+**禁止：** 整片綠色 banner 寫「成功！」（太誇張、太美式）。LazzyMerlin 走 §10.3 冷面笑匠 tone，成功訊息用 `好了` + MoonStars 配 toast 即可。
 
 #### 15.3.10 Async / Loading 期間的表單
 
@@ -2013,7 +2017,7 @@ Summary error 用 §15.7.1 Alert（Error variant），第一行寫「請修正�
 - Submit 按鈕進入 loading state（§5.8）—— 文字保留、加 spinner、`disabled`
 - Cancel 按鈕**保持可用**（讓 user 可以中止）
 - Loading > 3 秒未回應：在 button 旁加文字 `處理中…`
-- Loading > 10 秒：顯示「比預期久一點，再等一下 ✦」
+- Loading > 10 秒：顯示「比預期久一點，再等一下」+ MoonStars
 
 ### 15.4 Cards
 
@@ -2474,7 +2478,7 @@ Reduced-motion：`animation: none; opacity: 0.5;` 靜態顯示。
 
 | 場景 | Visual element | 文案來源 |
 |---|---|---|
-| 列表為空 | `✦` 大字（48px、`--ink-muted`） | §10.3「這裡還沒寫東西。懶人通常這樣。」 |
+| 列表為空 | MoonStars（48px、`--ink-muted`） | §10.3「這裡還沒寫東西。懶人通常這樣。」 |
 | 搜尋無結果 | `search` icon-2xl + 細線描邊圓 | §10.3「找不到。換個字試試？」 |
 | 新建初始 | 主 logo 縮放版 + 引導文案 | 自訂 |
 | Filter 過濾後空 | `filter-x` icon | 「條件太嚴。鬆一點？」+ 重設按鈕 |
@@ -2495,7 +2499,7 @@ Visual element 統一規範：
 
 Centered spinner layout：
 - Spinner 24px（§5.8）+ 下方 `Geist Mono 12px small-caps` 標籤
-- 標籤文案：`LOADING ✦`、`正在準備…`、絕不寫「請稍候」
+- 標籤文案：`LOADING` + MoonStars、`正在準備…`、絕不寫「請稍候」
 - 整體 `min-height: 320px` 置中
 
 **Loading 持續 > 8 秒**：附帶可選文案「比預期久一點，再等一下」（§15.3.10 表單版本同邏輯）
@@ -2516,7 +2520,7 @@ Centered spinner layout：
 
 | Status | Visual | 文案 |
 |---|---|---|
-| **404** Not Found | `✦` 飄移 ambient（單顆 orb）+ 大字 `404` LXGW 88px | 「頁面沒了。可能我當初就沒做出來。」 |
+| **404** Not Found | MoonStars 飄移 ambient（單顆）+ 大字 `404` LXGW 88px | 「頁面沒了。可能我當初就沒做出來。」 |
 | **410** Gone（曾存在） | hairline 描邊空框 | 「這頁以前在，現在沒了。」 |
 | **403** Forbidden | 鎖頭 `lock` icon-2xl | 「這裡需要一把鑰匙。」（§10.3） |
 | **500** Server Error | `alert-triangle` | 同 §15.10.3 |
@@ -2530,8 +2534,8 @@ Centered spinner layout：
 
 施工中、即將推出狀態的視覺：
 
-- Visual：`✦ ◈ ❦` 三個 unicode glyph 並排（§5.8 spinner 不適合，因為這是長期狀態）
-- Title：「施工中 — 但沒很認真 ✦」 / 「還沒做完。但會做完的。」（§10.3）
+- Visual：MoonStars / `◈` / `❦` 三個 glyph 並排（§5.8 spinner 不適合，因為這是長期狀態）
+- Title：「施工中 — 但沒很認真」+ MoonStars / 「還沒做完。但會做完的。」（§10.3）
 - 可選：訂閱 email 表單（§15.3）讓 user 留聯絡方式
 
 ---
@@ -2617,6 +2621,7 @@ Centered spinner layout：
 | 2026-05-07 | **v0.2.0 release · 雙軌 spec finalize · LM* SwiftUI 元件家族 catalog 落地** | 觸發點：使用者 Tuner 校到 v0.2.0-rc.9、SwiftUI 端視覺氣質已接近 web v0.1.x Tactile-Heavy。落實 §16 2026-05-05 v0.2.0-rc.5「待主人 Tuner 校好 SwiftUI 接近版本後 batch revisit、寫成雙軌 spec」TODO。**修法**：(1) **DESIGN.md §5.4 / §5.4.1 / §5.4.2 / §5.4.3 / §5.7 / §7.2.9 全面改寫**：rc.1「跨平台共通配方 / 視覺氣質分不太出來 / web -30%」narrative 退役、改寫成「Tactile-Heavy 雙軌等價」（web 維持 v0.1.x + SwiftUI 校到視覺氣質接近、跨平台一致 = 視覺氣質一致而非 pixel-perfect 數值對齊）。§7.2.9 整段重寫為 Tactile material SwiftUI 落地、附 8 modifier 結構表 + 7 ButtonStyle 表 + LMTactile namespace + Tuner 校準工具段。(2) **§7.2.4 補 iOS Typography 2-tier 規則**（Brand identity LXGW 永遠 / Functional UI system 字 dev toggle）+ Tracking / Line spacing / 4 個 compound modifier。Production iOS app 真正需要 bundle 的 LXGW weight 只剩 Medium ~150KB subset。(3) **§7.2.10 新增「LM* SwiftUI 元件家族 catalog」**：preview-ios/.../Tokens/ 28 個檔案分 6 group（Foundation 5 / Tactile 2 / Layout-Content 5 / Form-Input 7 / Navigation 5 / Overlay-Status-Data 6）+ 子專案落地建議（最低需求 ~10 個 vs 完整 28 個）。(4) **§8.3.2 / §8.3.3 App Icon 對齊 commit `7f5f7e3`**：iOS padding 10% → 11%、stylized 巫師帽 + ✦ → LazzyMerlinLogo3D 整顆；macOS 5 size × 2 scale = 10 個 PNG 從 1024 master LANCZOS 縮、不另繪 macOS-specific 立體版（保留 future work option）。(5) **`tokens/shadow.json`**：button-light/dark 4-layer rc.9 對齊（取代 rc.1 / v0.1.4 殘留 9-layer）+ noise-overlay 加 size token + opacity 0.55/0.75 → 0.30/0.30 收斂。(6) **`preview/components-preview.html`**：noise PNG tile 同源化（cross-platform 同 asset）+ dead variable `--noise-bg-blend` → active var refactor + 3 個 inline SVG 特例（card-editorial / modal / logo-card）統一收進 var pattern + 拿掉 2D Flat Logo card / Tuner Reference section（階段任務完成）+ MoonStars mask path 從 `.xcassets` 改 `assets/` 平面位置（修瀏覽器 fetch 失敗）。(7) **`assets/moon-stars-glyph.png` 新增**（從 preview-ios MoonStars.imageset 24pt@3x copy）。**v1.0 路徑第 6 條達成 ✓**：跨平台 Tactile 視覺氣質一致落地驗證（preview-ios SwiftUI multiplatform app + 28 個 LM* 元件 + Tuner 校到 rc.9 視覺氣質接近 web）。本 release 不含 token 結構 breaking change（§17.6 第 2 條觀察期延續 v0.1.1 起點 2026-04-27）。 |
 | 2026-06-04 | **收編 ChronoPath landing 兩個 pattern 成 DS 正式 helper（`LMTextField`/`LMTextEditor` + `lmFormChrome`）** | 觸發點：ChronoPath landing 回饋（`docs/feedback/chronopath-landing-2026-06.md` §3）指出兩個「各專案重複手刻」的 pattern 值得收進 DS。**修法**：(1) 新增 [`Tokens/LMTextField.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTextField.swift)：`LMTextField`（單行）/ `LMTextEditor`（多行）包原生 `TextField`/`TextEditor` 成 DS inset 輸入框（`.scrollContentBackground(.hidden)` + tokenized padding + `.tactileInset(radius:)`、文字色 `Color.ink`、placeholder 自畫 `Color.inkMuted`），帶 `isInvalid`（earthRed 外框）/ `isDisabled`（變灰）state + 可傳 a11y label。`radius` 預設 `LMRadius.xl`、`minHeight` 預設 96，對齊 §15.3.2。(2) 新增 [`Tokens/LMFormChrome.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMFormChrome.swift)：`.lmFormChrome()` / `.lmListChrome()` 把原生 `Form`/`List` 容器層灰底壓平成米色 + 配套 `.lmListRow()`（逐 Section/row 清白卡 + 系統分隔線）。**關鍵限制（已在模擬器實測、含對照組截圖）**：`.listRowBackground(.clear)` 無法從 Form/List **容器層 propagate** 到 cell，cell 白卡必須逐 Section/row 套 `.lmListRow()` 才會消失——故 `.lmFormChrome()` 只負責容器背景、`.lmListRow()` 是必要配套，非 over-engineering。(3) §15.3.2 補 iOS 實作引用、§7.2.10 catalog Form/Input group 7 → 9 檔。(4) FormView gallery 加新元件展示 + `FormChromeDemo`（含「未套配套 → 白卡仍在」對照）。純新增，無既有元件 / token 變更，非 breaking。 |
 | 2026-06-05 | **DS 套用方式定案為兩 tier：Full Brand（自己用）vs Palette-Only（給別人用）** | 觸發點：YourlyOmamori（保險業務員客戶管理 iOS App，屬「給別人用」）原本嘗試套整套 LazzyMerlin DS，實測兩個問題：(1) **太刻意**——使用者沒要求 serif / 暖色紙質 / 特殊 button shape 那種視覺，硬套等於借 App 強推作者自己的 brand；(2) **開發複雜度不對等**——serif title 撞 iOS NavigationStack、mono 字級撞 tab bar、自有 button shape 對不齊 iOS 17+ chrome dimensions，要寫額外 workaround。**決定**：以後套 DS 一律先二選一——自己的 idea / 給自己用 → Tier 1 完整套；別人委託 / 給別人用 / B2B / 長輩 → Tier 2 **只套配色**（palette），typography / spacing / radius / button 走平台原生，保留識別但不強迫對方接受整個 brand。Tier 2 配色含 earth status 三色（大地色 status 是 palette 最有辨識度的部分）。**修法**：(1) §7.0 新增兩 tier 總則 + 判準；(2) `README.md` 第一屏加決策表（借用者一眼知道選哪個）；(3) `tokens/` 五檔頂層加 W3C `$extensions.com.lazzymerlin.tier`（`color.json=palette`、其餘四檔 `=full`），讓「只取 palette」成 machine-readable first-class export——Tier 2 只複製 `color.json` 一個檔；(4) `tokens/README.md` 加 tier 對照表 + 篩選範例。**不再細分**：兩 tier 剛好，三層以上只增加每次接 case 的選擇成本。純文件 + metadata，零 hex / token 值變更，非 breaking。實作參照：YourlyOmamori `Theme.swift > LazzyMerlinPaletteOnlyTheme`。 |
+| 2026-09-10 | **SwiftUI token layer 收斂 + MoonStars sigil 現行規格定案** | 觸發點：SwiftUI preview app 經過多輪調參與 Claude 正規化後，仍有 spacing / radius / motion / overlay chrome / tactile recipe 分散在各元件，且現行 spec 仍殘留把 `✦` 當品牌 logo 的文字。修法：(1) 新增 `LMDesignTokens.swift`，集中 `LMSpacing` / `LMRadius` / `LMControlSize` / `LMMotion` / `LMTactile` / `LMOverlayChrome` / `LMLayout`，讓 button、tab bar、alert、action sheet、toast、skeleton、cards、states 不再各自寫 magic number。(2) 新增 `Surface1.colorset` / `Surface2.colorset`，把 editorial card 與 overlay chrome 的 elevation tier 從口頭規格落到 SwiftUI token。(3) `TactileMaterial.swift` 改吃 `LMTactile` recipe，overlay / tooltip / action sheet 改用純色 `surface2` chrome，不套 tactile-noise。(4) `DESIGN.md` 現行規格改為 MoonStars asset 是品牌 sigil；`✦` 只保留在歷史 Decisions Log 與一般舊紀錄，不再是新元件或 logo 指引。 |
 
 ---
 

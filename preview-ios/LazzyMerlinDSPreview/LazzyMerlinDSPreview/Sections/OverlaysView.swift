@@ -12,11 +12,11 @@ struct OverlaysView: View {
                 LMSection("TOOLTIP / POPOVER") {
                     HStack(spacing: LMSpacing.sm) {
                         Button("短提示") {
-                            withAnimation(.spring(response: 0.32, dampingFraction: 0.78)) {
+                            withAnimation(LMMotion.controlSpring) {
                                 showPopover.toggle()
                             }
                         }
-                        .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
+                        .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button))
 
                         if showPopover {
                             LMTooltipBubble(edge: .leading) {
@@ -30,13 +30,13 @@ struct OverlaysView: View {
                         Spacer()
 
                         Button {
-                            withAnimation(.spring(response: 0.32, dampingFraction: 0.78)) {
+                            withAnimation(LMMotion.controlSpring) {
                                 showPopover.toggle()
                             }
                         } label: {
                             Image(systemName: "questionmark.circle")
                         }
-                        .buttonStyle(TactileSecondaryButtonStyle(radius: 12, paddingV: 12, paddingH: 12))
+                        .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button, paddingV: LMControlSize.buttonMediumV, paddingH: LMControlSize.buttonMediumV))
                     }
                 }
 
@@ -45,14 +45,14 @@ struct OverlaysView: View {
                         Button("打開 Modal") {
                             showSheet = true
                         }
-                        .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+                        .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
 
                         Button("叫一個 Toast") {
-                            withAnimation(.easeOut(duration: 0.2)) {
+                            withAnimation(LMMotion.quickDismiss) {
                                 showToast = true
                             }
                         }
-                        .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
+                        .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button))
                     }
                 }
 
@@ -61,14 +61,14 @@ struct OverlaysView: View {
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                withAnimation(.easeOut(duration: 0.2)) {
-                                    showToast = false
-                                }
+                            withAnimation(LMMotion.quickDismiss) {
+                                showToast = false
                             }
                         }
+                    }
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }
@@ -95,7 +95,7 @@ struct OverlaysView: View {
                         Text("好了")
                         // ★ Color.clear 容器鎖死可見尺寸、避免 MoonStars template image 被 parent .font() 自動 scale
                         Color.clear
-                            .frame(width: 16, height: 16)
+                            .frame(width: LMSpacing.lg, height: LMSpacing.lg)
                             .overlay {
                                 Image("MoonStars")
                                     .resizable()
@@ -103,10 +103,10 @@ struct OverlaysView: View {
                             }
                     }
                 }
-                .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+                .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
             }
             .padding(LMSpacing.editorial)
-            .background(Color.bgRaised.ignoresSafeArea())
+            .background(Color.bg.ignoresSafeArea())
         }
     }
 }

@@ -42,12 +42,12 @@ struct LMTooltipBubble<Content: View>: View {
 
     private var bubble: some View {
         content()
-            .padding(.vertical, 10)
-            .padding(.horizontal, 14)
+            .padding(.vertical, LMControlSize.buttonCompactV)
+            .padding(.horizontal, LMSpacing.controlGap)
             .background {
                 // 乾淨純色 bg · tooltip 是輕量提示、不套 tactile noise (避免太重)
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .fill(Color.bgRaised)
+                    .fill(Color.surface2)
             }
             .overlay {
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
@@ -67,7 +67,7 @@ struct LMTooltipBubble<Content: View>: View {
                 p.addLine(to: CGPoint(x: s, y: s * 2))
                 p.closeSubpath()
             }
-            .fill(Color.bgRaised)
+            .fill(Color.surface2)
             .frame(width: s, height: s * 2)
         case .trailing:
             Path { p in
@@ -76,7 +76,7 @@ struct LMTooltipBubble<Content: View>: View {
                 p.addLine(to: CGPoint(x: 0, y: s * 2))
                 p.closeSubpath()
             }
-            .fill(Color.bgRaised)
+            .fill(Color.surface2)
             .frame(width: s, height: s * 2)
         case .top:
             Path { p in
@@ -85,7 +85,7 @@ struct LMTooltipBubble<Content: View>: View {
                 p.addLine(to: CGPoint(x: s * 2, y: s))
                 p.closeSubpath()
             }
-            .fill(Color.bgRaised)
+            .fill(Color.surface2)
             .frame(width: s * 2, height: s)
         case .bottom:
             Path { p in
@@ -94,7 +94,7 @@ struct LMTooltipBubble<Content: View>: View {
                 p.addLine(to: CGPoint(x: s * 2, y: 0))
                 p.closeSubpath()
             }
-            .fill(Color.bgRaised)
+            .fill(Color.surface2)
             .frame(width: s * 2, height: s)
         }
     }

@@ -49,10 +49,10 @@ struct FeedbackView: View {
                     }
                     .padding(LMSpacing.page)
                     .frame(maxWidth: .infinity)
-                    .tactileBase(radius: 12)
+                    .tactileBase(radius: LMRadius.button)
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }

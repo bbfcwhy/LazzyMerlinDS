@@ -6,7 +6,7 @@ import SwiftUI
 
 // MARK: - Base fill color choice
 // §2.1 Wood Palette 8 色 RAW VALUES (兩 mode 共用、不翻轉)
-// + 主人選定 3 色 Earth Tone (#9E5949 / #6A7A60 / #D4AB6E、跨 mode 同 hex)
+// + 主人選定 3 色 Earth Tone (#9E5949 / #596751 / #CB9B52、跨 mode 同 hex)
 // Tuner 用固定 hex 不從 asset 翻轉，方便看每色在 light/dark surface 上各別效果
 
 enum BaseFillChoice: String, CaseIterable, Identifiable {
@@ -520,7 +520,7 @@ struct TunerView: View {
                 } header: {
                     Text("BASE FILL · 主色 + 暗化").sectionLabel()
                 } footer: {
-                    Text("§2.1 Wood Palette 8 色 RAW VALUES (跨 mode 共用、不翻轉) + 3 色 Earth Tone (#9E5949 / #6A7A60 / #D4AB6E)。\n⚠️ Ochre #D4AB6E 在 light surface 上對比 ~2:1 不過 WCAG AA、僅適合 status icon / chip 小面積、不建議大面積 button fill。\n⚠️ Parchment / Tan 通常作 surface 用、作 fill 看起來像 hollow button。Midnight / Espresso 是 dark 版深色、light mode 上看起來會很重。")
+                    Text("§2.1 Wood Palette 8 色 RAW VALUES (跨 mode 共用、不翻轉) + 3 色 Earth Tone (#9E5949 / #596751 / #CB9B52)。\n⚠️ Earth Green #596751 在 dark surface 上對比 ~2.7:1 不過 AA、Earth Ochre #CB9B52 在 light surface 上對比 ~2.2:1 不過 AA；兩者只適合 status icon / chip 小面積，不建議大面積 button fill。\n⚠️ Parchment / Tan 通常作 surface 用、作 fill 看起來像 hollow button。Midnight / Espresso 是 dark 版深色、light mode 上看起來會很重。")
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }

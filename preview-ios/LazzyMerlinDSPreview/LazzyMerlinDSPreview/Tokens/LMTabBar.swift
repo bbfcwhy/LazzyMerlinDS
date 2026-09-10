@@ -33,9 +33,8 @@ struct LMTabBar<Tag: Hashable>: View {
                 tabButton(item)
             }
         }
-        .padding(.horizontal, 6)
-        .padding(.top, 4)
-        .padding(.bottom, 4)
+        .padding(.horizontal, LMSpacing.xs)
+        .padding(.vertical, LMSpacing.xxs)
         .background(barBackground)
         .overlay(alignment: .top) {
             Rectangle()
@@ -50,19 +49,19 @@ struct LMTabBar<Tag: Hashable>: View {
         let iconName = isSelected ? (item.selectedIcon ?? item.icon) : item.icon
 
         Button {
-            withAnimation(.spring(response: 0.32, dampingFraction: 0.78)) {
+            withAnimation(LMMotion.controlSpring) {
                 selection = item.tag
             }
         } label: {
-            VStack(spacing: 4) {
+            VStack(spacing: LMSpacing.xxs) {
                 Image(systemName: iconName)
                     .font(.system(size: 19, weight: .medium))
                 Text(item.label)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.lmCaption.weight(.medium))
             }
             .foregroundStyle(isSelected ? Color.primaryBrand : Color.inkMuted)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
+            .padding(.vertical, LMControlSize.buttonCompactV)
             .contentShape(Rectangle())
             .overlay(alignment: .top) { tabIndicator(isSelected: isSelected) }
         }
@@ -74,7 +73,7 @@ struct LMTabBar<Tag: Hashable>: View {
         if isSelected {
             Capsule()
                 .fill(Color.primaryBrand)
-                .frame(width: 24, height: 2.5)
+                .frame(width: LMControlSize.tabIndicatorWidth, height: LMControlSize.tabIndicatorHeight)
                 .matchedGeometryEffect(id: "lmTabIndicator", in: ns)
         }
     }

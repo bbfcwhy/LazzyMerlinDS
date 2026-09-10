@@ -14,24 +14,24 @@ struct ModalView: View {
                     Button("打開魔法書") {
                         showSheet = true
                     }
-                    .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+                    .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
                 }
 
                 LMSection("MODAL · Alert") {
                     Button("確認危險操作") {
                         showAlert = true
                     }
-                    .buttonStyle(TactileDestructiveButtonStyle(radius: 12))
+                    .buttonStyle(TactileDestructiveButtonStyle(radius: LMRadius.button))
                 }
 
                 LMSection("MODAL · Confirmation Dialog") {
                     Button("更多選項") {
                         showConfirmation = true
                     }
-                    .buttonStyle(TactileSecondaryButtonStyle(radius: 12))
+                    .buttonStyle(TactileSecondaryButtonStyle(radius: LMRadius.button))
                 }
 
-                Spacer(minLength: 32)
+                Spacer(minLength: LMSpacing.section)
             }
             .padding(LMSpacing.page)
         }
@@ -107,7 +107,7 @@ struct ModalView: View {
                         Text("好了")
                         // ★ Color.clear 容器鎖死可見尺寸、避免 MoonStars template image 被 parent .font() 自動 scale
                         Color.clear
-                            .frame(width: 16, height: 16)
+                            .frame(width: LMSpacing.lg, height: LMSpacing.lg)
                             .overlay {
                                 Image("MoonStars")
                                     .resizable()
@@ -115,12 +115,12 @@ struct ModalView: View {
                             }
                     }
                 }
-                .buttonStyle(TactileRaisedButtonStyle(radius: 12))
+                .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
             }
         }
         .padding(LMSpacing.editorial)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(Color.bgRaised.ignoresSafeArea())
+        .background(Color.bg.ignoresSafeArea())
     }
 
 }

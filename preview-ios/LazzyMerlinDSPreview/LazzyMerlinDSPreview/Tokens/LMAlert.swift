@@ -206,7 +206,7 @@ private struct LMActionSheetCard: View {
                     }
                 }
             }
-            .background(sheetBackground(corner: 18))
+            .background(sheetBackground(corner: LMRadius.navCapsule))
 
             // Cancel separated
             if let cancelButton {
@@ -217,19 +217,19 @@ private struct LMActionSheetCard: View {
                     Text(cancelButton.title)
                         .font(.lmBody.weight(.semibold))
                         .foregroundStyle(Color.ink)
-                        .frame(maxWidth: .infinity)
+                            .frame(maxWidth: .infinity)
                             .padding(.vertical, LMSpacing.lg)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .background(sheetBackground(corner: 18))
+                .background(sheetBackground(corner: LMRadius.navCapsule))
             }
         }
     }
 
     private func sheetBackground(corner: CGFloat) -> some View {
         RoundedRectangle(cornerRadius: corner, style: .continuous)
-            .fill(Color.bgRaised)
+            .fill(Color.surface2)
             .overlay {
                 RoundedRectangle(cornerRadius: corner, style: .continuous)
                     .strokeBorder(LMOverlayChrome.actionSheetBorder(colorScheme), lineWidth: 1)

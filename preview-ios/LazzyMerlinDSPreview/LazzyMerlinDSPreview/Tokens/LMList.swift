@@ -117,11 +117,11 @@ struct LMListRowLink<Destination: View, Leading: View, Trailing: View>: View {
                 subtitle: subtitle,
                 leading: leading,
                 trailing: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: LMSpacing.xs) {
                         trailing()
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(Color.inkMuted.opacity(0.55))
+                            .font(.lmCaption.weight(.semibold))
+                            .foregroundStyle(Color.inkMuted.opacity(LMOpacity.iconMuted))
                     }
                 }
             )
@@ -132,11 +132,11 @@ struct LMListRowLink<Destination: View, Leading: View, Trailing: View>: View {
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
                     if !isPressed {
-                        withAnimation(.easeOut(duration: 0.08)) { isPressed = true }
+                        withAnimation(LMMotion.quickPress) { isPressed = true }
                     }
                 }
                 .onEnded { _ in
-                    withAnimation(.easeOut(duration: 0.18)) { isPressed = false }
+                    withAnimation(LMMotion.quickDismiss) { isPressed = false }
                 }
         )
     }

@@ -12,7 +12,7 @@ struct LMToast: View {
     var radius: CGFloat = LMRadius.button
 
     var body: some View {
-        HStack(spacing: LMRadius.md) {
+        HStack(spacing: LMSpacing.md) {
             Image(systemName: icon)
                 .font(.lmBodySmall.weight(.semibold))
                 .foregroundStyle(iconColor)

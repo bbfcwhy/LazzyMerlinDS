@@ -19,7 +19,7 @@ struct LMSwitchToggleStyle: ToggleStyle {
             switchControl(isOn: configuration.isOn)
                 .contentShape(Capsule())
                 .onTapGesture {
-                    withAnimation(.spring(response: 0.30, dampingFraction: 0.78)) {
+                    withAnimation(LMMotion.controlSpring) {
                         configuration.isOn.toggle()
                     }
                 }

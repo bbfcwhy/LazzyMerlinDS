@@ -44,8 +44,8 @@ struct LMColorPicker: View {
                     .font(.system(.footnote, design: .monospaced))
                     .foregroundStyle(Color.inkMuted)
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Color.inkMuted.opacity(0.55))
+                    .font(.lmCaption.weight(.semibold))
+                    .foregroundStyle(Color.inkMuted.opacity(LMOpacity.iconMuted))
             }
             .contentShape(Rectangle())
         }
@@ -80,13 +80,13 @@ private struct LMColorPickerSheet: View {
         VStack(spacing: 0) {
             header
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: LMSpacing.card) {
                     preview
                     hexSection
                     rgbSection
                     paletteSection
                 }
-                .padding(20)
+                .padding(LMSpacing.page)
             }
         }
         .onAppear { sync(from: color) }
@@ -102,29 +102,29 @@ private struct LMColorPickerSheet: View {
                 dismiss()
             } label: {
                 Image(systemName: "xmark")
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.lmBodySmall.weight(.semibold))
                     .foregroundStyle(Color.inkMuted)
-                    .frame(width: 32, height: 32)
+                    .frame(width: LMSpacing.section, height: LMSpacing.section)
                     .background(Circle().fill(Color.bgMuted))
             }
             .buttonStyle(.plain)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 16)
+        .padding(.horizontal, LMSpacing.page)
+        .padding(.vertical, LMSpacing.lg)
     }
 
     private var preview: some View {
-        RoundedRectangle(cornerRadius: 14, style: .continuous)
+        RoundedRectangle(cornerRadius: LMRadius.control, style: .continuous)
             .fill(color)
             .frame(height: 88)
             .overlay {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                RoundedRectangle(cornerRadius: LMRadius.control, style: .continuous)
                     .strokeBorder(Color.black.opacity(0.10), lineWidth: 1)
             }
     }
 
     private var hexSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: LMSpacing.sm) {
             Text("HEX")
                 .font(.lmCaption)
                 .foregroundStyle(Color.inkMuted)
@@ -144,14 +144,14 @@ private struct LMColorPickerSheet: View {
                         if new.count == 6 { applyHex() }
                     }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 14)
-            .tactileInset(radius: 12)
+            .padding(.vertical, LMControlSize.buttonMediumV)
+            .padding(.horizontal, LMSpacing.controlGap)
+            .tactileInset(radius: LMRadius.button)
         }
     }
 
     private var rgbSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: LMSpacing.md) {
             Text("RGB")
                 .font(.lmCaption)
                 .foregroundStyle(Color.inkMuted)
@@ -163,12 +163,12 @@ private struct LMColorPickerSheet: View {
 
     @ViewBuilder
     private func rgbSlider(_ label: String, value: Binding<Double>) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: LMSpacing.xxs) {
             HStack {
                 Text(label)
                     .font(.system(.footnote, design: .monospaced).weight(.semibold))
                     .foregroundStyle(Color.ink)
-                    .frame(width: 18, alignment: .leading)
+                    .frame(width: LMControlSize.inputHorizontal, alignment: .leading)
                 Spacer()
                 Text(String(format: "%.0f", value.wrappedValue))
                     .font(.system(.footnote, design: .monospaced))
@@ -182,13 +182,13 @@ private struct LMColorPickerSheet: View {
     }
 
     private var paletteSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: LMSpacing.md) {
             Text("BRAND PALETTE")
                 .font(.lmCaption)
                 .foregroundStyle(Color.inkMuted)
             LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 6),
-                spacing: 8
+                columns: Array(repeating: GridItem(.flexible(), spacing: LMSpacing.sm), count: 6),
+                spacing: LMSpacing.sm
             ) {
                 ForEach(palette, id: \.self) { hex in
                     Button {
