@@ -19,19 +19,26 @@
       --primary-deep: #334D5C;
       --primary: #46647C;
       --primary-soft: #5E7A8D;
-      --stone: #967459;
-      --hairline: rgba(150, 116, 89, 0.30);
+      --stone: #83664E;
+      --hairline: rgba(131, 102, 78, 0.30);
       --border: rgba(15, 28, 38, 0.10);
       --shadow-ink: rgba(33, 23, 21, 0.70);
 
-      /* Earth Tone v0.4.0 主人選定 3 hex 跨 mode 同值 (sage 596751 / ochre CB9B52)
-         ⚠️ Ochre 對 light surface 對比 ~2.2:1、Sage 對 dark surface 對比 ~2.7:1、僅適合 status icon / chip / dot 小面積 */
+      /* Earth Tone v0.5.0 主人選定 3 hex 跨 mode 同值 (sage 596751 / ochre CB9B52)
+         ⚠️ Ochre 對 light surface 2.20:1、Sage 對 dark surface 2.87:1 → 不當文字色、僅適合 status icon / chip / dot 小面積；ochre 當底時字用 --ink-on-light */
       --earth-red:   #9E5949;
       --earth-green: #596751;
       --earth-ochre: #CB9B52;
 
       /* §15.5.4 ink-on-brand · 彩色底文字不翻轉、light + dark 都 Parchment */
       --ink-on-brand: #F5EFE4;
+      /* v0.5.0 · 文字對比修正（§14.3，數字見 tokens/check-contrast.py）
+         --primary-text：要當文字的藍（連結＋底線 / ghost / kicker / label），dark 改米色
+         --primary-fill：有字的藍底（主按鈕 / chip--primary / 分頁），兩 mode 同 #46647C、不互換
+         --ink-on-light：兩 mode 都淺的填色（ochre）上的深字，不翻轉 */
+      --primary-text: #46647C;
+      --primary-fill: #46647C;
+      --ink-on-light: #0F1C26;
 
       /* Semantic alias — 用 earth tone 表達 status，不用鮮豔紅綠黃 */
       --info: var(--primary);
@@ -95,12 +102,13 @@
       --primary-deep: #334D5C;
       --primary: #5E7A8D;
       --primary-soft: #46647C;
-      --stone: #967459;
+      --primary-text: #F5EFE4;  /* v0.5.0 · dark 沒有 palette 藍能在 #0F1C26 上過 4.5:1 */
+      --stone: #83664E;
       --hairline: rgba(94, 122, 141, 0.30);
       --border: rgba(245, 239, 228, 0.08);
       --shadow-ink: rgba(6, 12, 18, 0.70);
 
-      /* Earth tone v0.4.0 跨 mode 同 hex、不在 dark 重寫 (主人決定收斂為 3 hex)
+      /* Earth tone v0.5.0 跨 mode 同 hex、不在 dark 重寫 (主人決定收斂為 3 hex)
          之前 dark 提亮版 (#C58775 / #A8B898 / #D4AB6E) 廢棄、保留 git 歷史
          Semantic alias 不重寫 — var() 動態 resolve 跟著 :root earth-* / primary 自動切 */
 
@@ -160,7 +168,7 @@
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--primary);
+      color: var(--primary-text);
       padding-bottom: 8px;
       border-bottom: 1px solid var(--hairline);
     }
@@ -251,7 +259,7 @@
     .hero__text { min-width: 0; }
     .kicker {
       font-family: 'Geist Mono', monospace;
-      font-size: 12px; letter-spacing: 0.22em; color: var(--primary);
+      font-size: 12px; letter-spacing: 0.22em; color: var(--primary-text);
       text-transform: uppercase; display: flex; align-items: center; gap: 12px;
       margin-bottom: 10px;
     }
@@ -316,7 +324,7 @@
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--primary);
+      color: var(--primary-text);
     }
     .brand-card__body {
       color: var(--ink);
@@ -365,8 +373,8 @@
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--primary);
-      background: rgba(150, 116, 89, 0.06);
+      color: var(--primary-text);
+      background: rgba(131, 102, 78, 0.06);
     }
     .vibe-table--voice td:first-child { color: var(--ink-muted); text-decoration: line-through; }
     .vibe-table--voice td:last-child { color: var(--ink); font-family: var(--lm-font-display); font-size: 17px; }
@@ -387,7 +395,7 @@
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--primary);
+      color: var(--primary-text);
       margin-bottom: 12px;
     }
     @media (max-width: 720px) {
@@ -420,7 +428,7 @@
       color: var(--ink);
     }
     .spacing-meta strong {
-      color: var(--primary);
+      color: var(--primary-text);
       font-weight: 500;
     }
     .spacing-use {
@@ -456,7 +464,7 @@
       font-size: 12px;
       color: var(--ink);
     }
-    .radius-meta strong { color: var(--primary); font-weight: 500; }
+    .radius-meta strong { color: var(--primary-text); font-weight: 500; }
     .radius-use {
       font-size: 12px;
       color: var(--ink-muted);
@@ -482,7 +490,7 @@
       position: relative;
       width: 180px;
       height: 22px;
-      background: rgba(150, 116, 89, 0.16);
+      background: rgba(131, 102, 78, 0.16);
       border-radius: 11px;
     }
     .motion-ball {
@@ -520,14 +528,14 @@
     .motion-info strong {
       font-family: var(--lm-font-mono);
       font-size: 12px;
-      color: var(--primary);
+      color: var(--primary-text);
       font-weight: 500;
     }
     .motion-info__use { color: var(--ink-muted); font-size: 12px; }
 
     .motion-tap {
       padding: 8px 14px;
-      background: var(--primary);
+      background: var(--primary-fill);
       color: var(--ink-on-brand);
       border: none;
       border-radius: var(--radius-md);
@@ -620,7 +628,7 @@
     .asset-card__download {
       display: block;
       padding: 12px 20px;
-      background: var(--primary);
+      background: var(--primary-fill);
       color: var(--ink-on-brand);
       text-align: center;
       text-decoration: none;
@@ -634,12 +642,14 @@
     .asset-card__download:hover { opacity: 0.85; }
 
     .asset-link {
-      color: var(--primary);
+      color: var(--primary-text);
       text-decoration: underline;
       text-decoration-color: var(--hairline);
       text-underline-offset: 3px;
     }
     .asset-link:hover { text-decoration-color: var(--primary); }
+    /* v0.5.0 · dark 連結是米色、只靠底線跟內文區分 → 底線用字色 */
+    [data-theme="dark"] .asset-link { text-decoration-color: currentColor; }
 
     /* Quick Start code snippets */
     .qs-intro {
@@ -880,7 +890,6 @@
     /* ===== Focus ring (§14.1) ===== */
     button, a, [role="button"], input, textarea, select, [tabindex] { outline: none; }
     :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: inherit; }
-    [data-theme="dark"] :focus-visible { outline-color: var(--primary-soft); }
 
     /* ===================================================================
        §15.2 BUTTONS
@@ -938,7 +947,7 @@
         3px 3px 3px rgba(15, 28, 38, 0.50),
         3px 3px 3px rgba(15, 28, 38, 0.50);
     }
-    .btn--primary { background-color: var(--primary); }
+    .btn--primary { background-color: var(--primary-fill); }
     .btn--deep { background-color: var(--primary-deep); }
     .btn--destructive { background-color: var(--error); }
 
@@ -1044,8 +1053,9 @@
       background: transparent; color: var(--ink-muted); padding-inline: 12px;
       box-shadow: none;
     }
-    .btn--ghost:hover { color: var(--primary); }
+    .btn--ghost:hover { color: var(--primary-text); }
     .btn--ghost:active { color: var(--primary-deep); }
+    [data-theme="dark"] .btn--ghost:active { color: var(--ink); }  /* primary-deep 在 dark 只有 1.94:1 */
 
     /* Disabled */
     .btn[disabled], .btn[aria-disabled="true"] {
@@ -1086,10 +1096,13 @@
     .form-field { display: flex; flex-direction: column; gap: 6px; }
     .form-field + .form-field { margin-top: 20px; }
     .form-label { font-size: 14px; font-weight: 500; color: var(--ink); }
-    .form-label .required { color: var(--error); margin-left: 2px; }
+    .form-label .required { color: var(--ink); margin-left: 2px; }
     .form-helper { font-size: 13px; color: var(--ink-muted); }
-    .form-error { font-size: 13px; color: var(--error); display: flex; align-items: center; gap: 6px; }
-    .form-success { font-size: 13px; color: var(--success); display: flex; align-items: center; gap: 6px; }
+    /* v0.5.0 · earth tone 當 13px 字不過 4.5:1 → 文字用 ink，狀態色只給 icon（§2.2.2） */
+    .form-error { font-size: 13px; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+    .form-success { font-size: 13px; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+    .form-error svg { color: var(--error); }
+    .form-success svg { color: var(--success); }
 
     /* Input / Textarea — Soft Inset */
     .input, .textarea, .select {
@@ -1118,7 +1131,7 @@
     [data-theme="dark"] .input:focus,
     [data-theme="dark"] .textarea:focus,
     [data-theme="dark"] .select:focus {
-      box-shadow: var(--shadow-soft-inset), inset 0 0 0 1.5px var(--primary-soft);
+      box-shadow: var(--shadow-soft-inset), inset 0 0 0 1.5px var(--primary);
     }
 
     /* Error state — earth-red terracotta（§2.2 Status Extension）*/
@@ -1194,7 +1207,7 @@
     }
     [data-theme="dark"] .checkbox input:focus-visible ~ .checkbox__mark,
     [data-theme="dark"] .radio input:focus-visible ~ .radio__mark {
-      outline-color: var(--primary-soft);
+      outline-color: var(--primary);
     }
 
     /* Switch — <button> 需要 reset user-agent 樣式，否則 thumb 會被 default border 推歪 */
@@ -1383,7 +1396,7 @@
     .card__kicker {
       font-family: 'Geist Mono', monospace; font-size: 10px;
       letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--primary); margin-bottom: 12px; display: inline-block;
+      color: var(--primary-text); margin-bottom: 12px; display: inline-block;
     }
     .card__title { font-family: 'LXGW WenKai TC', serif; font-size: 22px; line-height: 1.3; margin-bottom: 6px; }
     .card__body { color: var(--ink-muted); font-size: 14px; margin-bottom: 18px; }
@@ -1400,8 +1413,8 @@
       font-size: 36px; font-weight: 600; letter-spacing: -0.02em;
       margin: 8px 0;
     }
-    .card--stat .stat-trend { font-size: 13px; color: var(--success); }
-    .card--stat .stat-trend.down { color: var(--error); }
+    /* v0.5.0 · 方向靠 ↑↓，earth tone 當字不過 4.5:1 */
+    .card--stat .stat-trend { font-size: 13px; color: var(--ink); }
 
     /* ===================================================================
        §15.5 CHIP / TAG / BADGE / AVATAR
@@ -1449,16 +1462,16 @@
     .chip:hover { transform: translateY(-2px); }
     .chip:active { transform: translateY(0) scale(0.97); transition: transform 80ms ease; }
     /* 彩色底（深 / 中）一律配米色字 + 黑 text-shadow（raised letter）；淺底 Tan 才配深字 + 白 text-shadow */
-    .chip--primary { background-color: var(--primary); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
-    .chip--soft { background-color: var(--primary-soft); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
+    .chip--primary { background-color: var(--primary-fill); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
+    .chip--soft { background-color: color-mix(in srgb, var(--primary-soft) 20%, var(--bg)); color: var(--ink); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); }  /* v0.5.0 · primary-soft 只做 tint（§2.3）*/
     .chip--stone { background-color: var(--stone); color: var(--ink-on-brand); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
     .chip--selected {
       box-shadow:
         inset 3px 4px 8px rgba(0, 0, 0, 0.25),
         inset -1px -1px 4px rgba(255, 255, 255, 0.15);
     }
-    /* dark mode chip--soft 跟 light mode 一致改用米色字 */
-    [data-theme="dark"] .chip--soft { color: var(--ink-on-brand); }
+    /* dark mode tint 是深色、字跟著 --ink 變米色，raised letter 改黑色 */
+    [data-theme="dark"] .chip--soft { text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25); }
 
     /* Badge — Tactile Raised 縮減版（小元件不能用太重的 shadow）*/
     .badge {
@@ -1754,8 +1767,8 @@
     }
 
     .breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; }
-    .breadcrumb a { color: var(--ink-muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--primary); }
+    .breadcrumb a { color: var(--ink-muted); text-decoration: underline; text-underline-offset: 3px; }  /* v0.5.0 · 連結常駐底線（§2.3） */
+    .breadcrumb a:hover { color: var(--primary-text); }
     .breadcrumb__sep { color: var(--ink-muted); opacity: 0.5; }
     .breadcrumb__current { color: var(--ink); font-weight: 500; }
 
@@ -1771,7 +1784,7 @@
             且 Raised 在 list 內顯得太重。Pressed inset shadow 表達「被選中」
             跟 §15.5.1 chip-selected 同邏輯。 */
     .pagination .btn--primary {
-      background-color: var(--primary);
+      background-color: var(--primary-fill);
       background-image: none;
       color: var(--ink-on-brand);
       box-shadow:
@@ -1863,7 +1876,7 @@
     .toc h4 {
       font-family: 'Geist Mono', monospace; font-size: 10px;
       letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--primary); margin-bottom: 8px; margin-top: 14px;
+      color: var(--primary-text); margin-bottom: 8px; margin-top: 14px;
     }
     .toc h4:first-of-type { margin-top: 0; }
     .toc ol { list-style: none; counter-reset: toc; }
@@ -1873,7 +1886,7 @@
       font-size: 12px; display: block; padding: 3px 0;
       line-height: 1.45;
     }
-    .toc a:hover { color: var(--primary); }
+    .toc a:hover { color: var(--primary-text); }
     .toc a::before { content: counter(toc) ". "; color: var(--ink-muted); opacity: 0.4; }
 
     /* TOC 寬度收緊 + 響應式：寬螢幕 sidebar、中螢幕收縮、窄螢幕完全隱藏 */
@@ -1929,7 +1942,7 @@
     .logo-card .logo-card__label {
       font-family: 'Geist Mono', monospace; font-size: 10px;
       letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--primary); margin-bottom: 0;
+      color: var(--primary-text); margin-bottom: 0;
     }
     .logo-card .logo-card__caption {
       font-family: 'LXGW WenKai TC', serif;
@@ -1949,7 +1962,7 @@
       font-family: 'Geist Mono', monospace; font-size: 11px;
       letter-spacing: 0.14em; color: var(--ink-muted); text-transform: uppercase;
     }
-    footer .brand { color: var(--primary); }
+    footer .brand { color: var(--primary-text); }
 
   </style>
 </head>
@@ -1970,7 +1983,7 @@
         <img src="../assets/Lazzy%20Merlin%20Logo_3D.png" alt="LazzyMerlin Logo">
       </div>
       <div class="hero__text">
-        <div class="kicker">LazzyMerlin DS · v0.4.0</div>
+        <div class="kicker">LazzyMerlin DS · v0.5.0</div>
         <h1 class="title">Lazzy Merlin · Design System<span class="title__zh">慵懶梅林實驗室 · 設計系統</span></h1>
         <p class="subtitle">本頁是 §15 Components 規範的視覺實作，沿用 v5-morandi Tactile material 與 ambient layer，跨平台落地時的元件參考實作。</p>
       </div>
@@ -2133,9 +2146,9 @@
               <div class="swatch__role">Light surface muted / Dark ink muted</div>
             </article>
             <article class="swatch">
-              <div class="swatch__chip" style="background:#967459"></div>
+              <div class="swatch__chip" style="background:#83664E"></div>
               <div class="swatch__name">Stone</div>
-              <div class="swatch__hex">#967459</div>
+              <div class="swatch__hex">#83664E</div>
               <div class="swatch__role">中性 muted accent · 兩 mode 共用</div>
             </article>
             <article class="swatch">
@@ -2213,9 +2226,9 @@
               <div class="swatch__hex">#334D5C</div>
             </article>
             <article class="swatch">
-              <div class="swatch__chip" style="background:#967459"></div>
+              <div class="swatch__chip" style="background:#83664E"></div>
               <div class="swatch__name">stone</div>
-              <div class="swatch__hex">#967459</div>
+              <div class="swatch__hex">#83664E</div>
             </article>
           </div>
 
@@ -2257,14 +2270,14 @@
               <div class="swatch__hex">#334D5C</div>
             </article>
             <article class="swatch">
-              <div class="swatch__chip" style="background:#967459"></div>
+              <div class="swatch__chip" style="background:#83664E"></div>
               <div class="swatch__name">stone</div>
-              <div class="swatch__hex">#967459</div>
+              <div class="swatch__hex">#83664E</div>
             </article>
           </div>
         </div>
 
-        <!-- Earth tone Status · 跨 mode 同 hex (v0.4.0 收斂為 3 hex 不翻轉) -->
+        <!-- Earth tone Status · 跨 mode 同 hex (v0.5.0 收斂為 3 hex 不翻轉) -->
         <div class="swatch-group">
           <div class="swatch-group__label">Earth Tone Status Extension · 跨 mode 同 hex 不翻轉（不用鮮豔紅綠黃 · light/dark 都是同一組值）</div>
           <div class="swatches">
@@ -2297,10 +2310,10 @@
           <div class="swatches role-tokens role-tokens--light">
             <article class="swatch">
               <div class="swatch__chip" style="background:#F5EFE4">
-                <div class="swatch__chip--alpha-inner" style="background:rgba(150,116,89,0.30);border:1px solid rgba(150,116,89,0.30)"></div>
+                <div class="swatch__chip--alpha-inner" style="background:rgba(131,102,78,0.30);border:1px solid rgba(131,102,78,0.30)"></div>
               </div>
               <div class="swatch__name">hairline</div>
-              <div class="swatch__hex">rgba(150,116,89,0.30)</div>
+              <div class="swatch__hex">rgba(131,102,78,0.30)</div>
               <div class="swatch__role">Stone @ 30% · divider / list separator</div>
             </article>
             <article class="swatch">
@@ -2847,22 +2860,22 @@
             <span class="badge" style="position: absolute; top: -4px; right: -4px;">3</span>
           </span>
           <span style="position: relative; display: inline-flex;">
-            <span class="avatar avatar--md" style="background-color: var(--primary);">威</span>
+            <span class="avatar avatar--md" style="background-color: var(--primary-fill);">威</span>
             <span class="badge badge--dot" style="position: absolute; bottom: 0; right: 0; background-color: var(--success);"></span>
           </span>
         </div>
 
         <div class="sub-label" style="margin-top: 28px;">Avatar sizes · Stack</div>
         <div class="row">
-          <span class="avatar avatar--xs" style="background-color: var(--primary);">威</span>
+          <span class="avatar avatar--xs" style="background-color: var(--primary-fill);">威</span>
           <span class="avatar avatar--sm" style="background-color: var(--stone);">梅</span>
           <span class="avatar avatar--md" style="background-color: var(--earth-green);">貓</span>
-          <span class="avatar avatar--lg" style="background-color: var(--primary);">L</span>
+          <span class="avatar avatar--lg" style="background-color: var(--primary-fill);">L</span>
           <span class="avatar avatar--xl" style="background-color: var(--primary-deep);">M</span>
         </div>
         <div class="row" style="margin-top: 16px;">
           <div class="avatar-stack">
-            <span class="avatar avatar--md" style="background-color: var(--primary);">威</span>
+            <span class="avatar avatar--md" style="background-color: var(--primary-fill);">威</span>
             <span class="avatar avatar--md" style="background-color: var(--stone);">梅</span>
             <span class="avatar avatar--md" style="background-color: var(--earth-green);">貓</span>
             <span class="avatar avatar--md" style="background-color: var(--primary-deep);">+5</span>
@@ -3062,7 +3075,7 @@
         <div class="card card--plain">
           <div class="list">
             <div class="list__item">
-              <span class="avatar avatar--md" style="background-color: var(--primary);">威</span>
+              <span class="avatar avatar--md" style="background-color: var(--primary-fill);">威</span>
               <div style="flex: 1;">
                 <div class="list__title">把網站重構成 LazzyMerlin DS v5</div>
                 <div class="list__meta">2026-04-25 · 預估 4 小時</div>
@@ -3162,9 +3175,11 @@
   /* Brand colors */
   --bg: #F5EFE4;
   --ink: #0F1C26;
-  --primary: #46647C;
+  --primary: #46647C;        /* 無字的強調：focus ring / icon / 邊框 */
+  --primary-text: #46647C;   /* 藍色文字：連結（加底線）/ label */
+  --primary-fill: #46647C;   /* 有字的藍底：主按鈕，字用 #F5EFE4 */
   --primary-deep: #334D5C;
-  --stone: #967459;
+  --stone: #83664E;
 
   /* Spacing scale (base 4px) */
   --space-md: 12px;
@@ -3181,6 +3196,7 @@
   --bg: #0F1C26;
   --ink: #F5EFE4;
   --primary: #5E7A8D;
+  --primary-text: #F5EFE4;   /* dark 藍字不過 4.5:1，改米色＋底線 */
 }
 
 body {
@@ -3217,8 +3233,11 @@ body {
   --color-ink:          #0F1C26;
   --color-ink-muted:    #4E3029;
   --color-primary:      #46647C;
+  --color-primary-text: #46647C;
+  --color-primary-fill: #46647C;
+  --color-ink-on-brand: #F5EFE4;
   --color-primary-deep: #334D5C;
-  --color-stone:        #967459;
+  --color-stone:        #83664E;
 
   /* Font families */
   --font-display: 'LXGW WenKai TC', serif;
@@ -3235,7 +3254,7 @@ body {
 /* Usage:
  * &lt;h1 class="font-display text-7xl"&gt;嗨，我是威爾&lt;/h1&gt;
  * &lt;article class="font-serif text-lg leading-loose"&gt;...&lt;/article&gt;
- * &lt;button class="bg-primary text-bg rounded-[var(--radius-button)]"&gt;送出&lt;/button&gt;
+ * &lt;button class="bg-primary-fill text-ink-on-brand rounded-[var(--radius-button)]"&gt;送出&lt;/button&gt;
  */</code></pre>
 
         <h3 class="subhead">SwiftUI · iOS / macOS</h3>
@@ -3268,7 +3287,7 @@ struct HelloView: View {
                 .buttonStyle(TactileRaisedButtonStyle(radius: LMRadius.button))
 
             // Inline status chip
-            LMStatusChip(text: "BETA", icon: "info.circle.fill", color: .primaryBrand)
+            LMStatusChip(text: "BETA", icon: "info.circle.fill", color: .primaryFill)
         }
         .padding(LMSpacing.page)
         .brandPage()  // bg + 自畫 brand header

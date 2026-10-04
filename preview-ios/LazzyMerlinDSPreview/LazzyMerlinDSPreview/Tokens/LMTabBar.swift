@@ -59,7 +59,7 @@ struct LMTabBar<Tag: Hashable>: View {
                 Text(item.label)
                     .font(.lmCaption.weight(.medium))
             }
-            .foregroundStyle(isSelected ? Color.primaryBrand : Color.inkMuted)
+            .foregroundStyle(isSelected ? Color.primaryText : Color.inkMuted)
             .frame(maxWidth: .infinity)
             .padding(.vertical, LMControlSize.buttonCompactV)
             .contentShape(Rectangle())

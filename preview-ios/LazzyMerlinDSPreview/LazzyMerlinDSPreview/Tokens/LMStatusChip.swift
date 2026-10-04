@@ -8,7 +8,9 @@ struct LMStatusChip: View {
 
     let text: String
     let icon: String        // SF Symbol name
-    var color: Color = .primaryBrand
+    var color: Color = .primaryFill
+    /// earthOchre（warning）傳 true：深字 inkOnLight，見 TactilePillModifier
+    var onLightFill: Bool = false
 
     var body: some View {
         HStack(spacing: LMSpacing.xs) {
@@ -19,6 +21,6 @@ struct LMStatusChip: View {
         }
         .padding(.vertical, LMSpacing.xs)
         .padding(.horizontal, LMRadius.md)
-        .modifier(TactilePillModifier(color: color, isFilled: true))
+        .modifier(TactilePillModifier(color: color, isFilled: true, onLightFill: onLightFill))
     }
 }

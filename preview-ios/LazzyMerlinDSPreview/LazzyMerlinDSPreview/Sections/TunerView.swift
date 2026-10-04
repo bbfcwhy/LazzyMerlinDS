@@ -47,7 +47,7 @@ enum BaseFillChoice: String, CaseIterable, Identifiable {
         case .bgMuted:      return "var(--bg-muted)"
         case .parchment:    return "#F5EFE4"
         case .tan:          return "#DECCA7"
-        case .stone:        return "#967459"
+        case .stone:        return "#83664E"
         case .espresso:     return "#4E3029"
         case .midnight:     return "#0F1C26"
         case .primaryDeep:  return "#334D5C"
@@ -1188,11 +1188,11 @@ struct TunerView: View {
     private func applySecondaryTarget() {
         setTarget(
             base: .bg, fill: 0, white: 0, black: 0,
-            strokeTop: colorScheme == .dark ? "F5EFE4" : "967459",
+            strokeTop: colorScheme == .dark ? "F5EFE4" : "83664E",
             strokeTopAlpha: colorScheme == .dark ? 0.08 : 0.30,
-            strokeBottom: colorScheme == .dark ? "F5EFE4" : "967459",
+            strokeBottom: colorScheme == .dark ? "F5EFE4" : "83664E",
             strokeBottomAlpha: colorScheme == .dark ? 0.08 : 0.30,
-            hairline: colorScheme == .dark ? "F5EFE4" : "967459",
+            hairline: colorScheme == .dark ? "F5EFE4" : "83664E",
             hairlineAlpha: colorScheme == .dark ? 0.08 : 0.30,
             shadow1Alpha: 0.50, shadow1Radius: 3, shadow1X: 5, shadow1Y: 5,
             shadow2Alpha: 0.50, shadow2Radius: 3, shadow2X: 5, shadow2Y: 5,
@@ -1226,11 +1226,11 @@ struct TunerView: View {
     private func applyPlainTarget() {
         setTarget(
             base: .bg, fill: 0, white: 0, black: 0,
-            strokeTop: colorScheme == .dark ? "5E7A8D" : "967459",
+            strokeTop: colorScheme == .dark ? "5E7A8D" : "83664E",
             strokeTopAlpha: 0.30,
-            strokeBottom: colorScheme == .dark ? "5E7A8D" : "967459",
+            strokeBottom: colorScheme == .dark ? "5E7A8D" : "83664E",
             strokeBottomAlpha: 0.30,
-            hairline: colorScheme == .dark ? "5E7A8D" : "967459",
+            hairline: colorScheme == .dark ? "5E7A8D" : "83664E",
             hairlineAlpha: 0.30,
             shadow1: "000000",
             shadow1Alpha: colorScheme == .dark ? 0.35 : 0.10,

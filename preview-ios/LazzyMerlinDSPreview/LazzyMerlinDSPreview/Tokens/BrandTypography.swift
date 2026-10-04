@@ -151,7 +151,7 @@ struct SectionLabelStyle: ViewModifier {
             .font(.lmLabel)
             .textCase(.uppercase)
             .tracking(LMTracking.eyebrow)
-            .foregroundStyle(Color.primaryBrand)
+            .foregroundStyle(Color.primaryText)
     }
 }
 

@@ -208,12 +208,18 @@ npx style-dictionary build
   --primary-deep: #334D5C;
   --primary: #46647C;
   --primary-soft: #5E7A8D;
-  --stone: #967459;
+  --stone: #83664E;
+
+  /* === 文字配對（§15.5.4 · v0.5.0）=== */
+  --ink-on-brand: #F5EFE4;   /* 彩色底上的字，不翻轉 */
+  --ink-on-light: #0F1C26;   /* ochre 底上的字，不翻轉 */
+  --primary-text: #46647C;   /* 藍色文字：連結（加底線）/ label */
+  --primary-fill: #46647C;   /* 有字的藍底：主按鈕 / chip，不互換 */
 
   /* === Earth tone Status Extension === */
   --earth-red:   #9E5949;
-  --earth-green: #6A7A60;
-  --earth-ochre: #8E6E37;
+  --earth-green: #596751;
+  --earth-ochre: #CB9B52;
 
   /* === Semantic alias === */
   --info: var(--primary);
@@ -223,7 +229,7 @@ npx style-dictionary build
   --destructive: var(--earth-red);
 
   /* === Hairline / Border === */
-  --hairline: rgba(150, 116, 89, 0.30);
+  --hairline: rgba(131, 102, 78, 0.30);
   --border: rgba(15, 28, 38, 0.10);
 
   /* === Tactile noise overlay === */
@@ -250,11 +256,9 @@ npx style-dictionary build
   --primary-deep: #334D5C;
   --primary: #5E7A8D;        /* 互換 */
   --primary-soft: #46647C;   /* 互換 */
-  --stone: #967459;
-
-  --earth-red:   #C58775;
-  --earth-green: #A8B898;
-  --earth-ochre: #D4AB6E;
+  --primary-text: #F5EFE4;   /* dark 藍字不過 4.5:1，改米色＋底線 */
+  --stone: #83664E;
+  /* earth tone 跨 mode 同 hex，dark 不覆寫（§2.2.2） */
 
   --hairline: rgba(94, 122, 141, 0.30);
   --border: rgba(245, 239, 228, 0.08);
@@ -424,7 +428,7 @@ https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.1.4/tokens/motion.jso
 - [ ] Light + Dark mode 都跑過一遍
 - [ ] Reduced motion 模式 ambient orbs / spinner / drift 都停下
 - [ ] Focus ring（鍵盤 Tab 所有互動元件）都看得見
-- [ ] 對比度 AA（小文字 4.5:1、大文字 3:1）
+- [ ] 對比度 AA（小文字 4.5:1、大文字 3:1）：藍色文字用 `--primary-text`、有字的藍底用 `--primary-fill`、ochre 底用 `--ink-on-light`、earth tone 不當文字色。數字以 DS repo 的 `python3 tokens/check-contrast.py` 為準，不要用文件裡手寫的數字
 - [ ] 沒引入新 hex / 新字體 / 新元件 anatomy
 - [ ] 反面教材 9 條全部沒踩
 - [ ] 邊緣狀態文案（404 / Error / Empty）有用 §10.3 而不是自己重寫

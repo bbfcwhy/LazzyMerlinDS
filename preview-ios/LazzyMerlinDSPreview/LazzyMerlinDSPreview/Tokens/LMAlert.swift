@@ -195,7 +195,7 @@ private struct LMActionSheetCard: View {
                     } label: {
                         Text(btn.title)
                             .font(.lmBody.weight(btn.role == .destructive ? .semibold : .regular))
-                            .foregroundStyle(btn.role == .destructive ? Color.earthRed : Color.ink)
+                            .foregroundStyle(Color.ink)   // destructive 靠 semibold 區分；earthRed 當字在深色 surface 只有 2.58:1（v0.5.0）
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, LMSpacing.lg)
                             .contentShape(Rectangle())

@@ -16,7 +16,7 @@ struct LMColorPicker: View {
 
     static let defaultPalette: [String] = [
         // brand
-        "F5EFE4", "DECCA7", "967459", "4E3029",
+        "F5EFE4", "DECCA7", "83664E", "4E3029",
         "0F1C26", "334D5C", "46647C", "5E7A8D",
         // earth
         "9E5949", "596751", "CB9B52",
@@ -172,7 +172,7 @@ private struct LMColorPickerSheet: View {
                 Spacer()
                 Text(String(format: "%.0f", value.wrappedValue))
                     .font(.system(.footnote, design: .monospaced))
-                    .foregroundStyle(Color.primaryBrand)
+                    .foregroundStyle(Color.primaryText)
             }
             LMSlider(value: value, range: 0...255, step: 1)
                 .onChange(of: value.wrappedValue) { _, _ in

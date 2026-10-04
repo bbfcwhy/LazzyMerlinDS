@@ -3,7 +3,7 @@ import SwiftUI
 struct DataView: View {
 
     private let rows: [ProjectRow] = [
-        .init(project: "專案 A", platform: "Web", status: "LIVE", statusColor: .primaryBrand, dau: "1,284", revenue: "$3,420"),
+        .init(project: "專案 A", platform: "Web", status: "LIVE", statusColor: .primaryFill, dau: "1,284", revenue: "$3,420"),
         .init(project: "專案 B", platform: "Web · iOS", status: "BETA", statusColor: .earthGreen, dau: "512", revenue: "$890"),
         .init(project: "專案 C", platform: "macOS", status: "DRAFT", statusColor: .stone, dau: "—", revenue: "—")
     ]
@@ -24,7 +24,7 @@ struct DataView: View {
 
                 LMSection("LIST") {
                     VStack(spacing: 0) {
-                        listRow(initial: "威", title: "把網站重構成 LazzyMerlin DS v5", meta: "2026-05-05 · 預估 4 小時", color: .primaryBrand)
+                        listRow(initial: "威", title: "把網站重構成 LazzyMerlin DS v5", meta: "2026-05-05 · 預估 4 小時", color: .primaryFill)
                         Divider().overlay(Color.border)
                         listRow(initial: "梅", title: "整理 preview component coverage", meta: "進行中", color: .stone)
                         Divider().overlay(Color.border)

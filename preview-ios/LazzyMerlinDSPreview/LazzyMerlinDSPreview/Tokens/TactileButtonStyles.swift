@@ -10,7 +10,7 @@ struct TactileRaisedButtonStyle: ButtonStyle {
     var radius: CGFloat = LMRadius.button
     var paddingV: CGFloat = LMControlSize.buttonMediumV
     var paddingH: CGFloat = LMControlSize.buttonMediumH
-    var baseColor: Color = .primaryBrand
+    var baseColor: Color = .primaryFill   // 有字的藍底：兩 mode 同 #46647C（v0.5.0）
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -130,7 +130,7 @@ struct TactileGhostButtonStyle: ButtonStyle {
             .modifier(TactileButtonLabelModifier(size: .fromPadding(paddingV)))
             .padding(.vertical, paddingV)
             .padding(.horizontal, paddingH)
-            .foregroundStyle(Color.primaryBrand)
+            .foregroundStyle(Color.primaryText)
             .opacity(configuration.isPressed ? 0.55 : 1.0)
             .animation(LMMotion.press, value: configuration.isPressed)
     }

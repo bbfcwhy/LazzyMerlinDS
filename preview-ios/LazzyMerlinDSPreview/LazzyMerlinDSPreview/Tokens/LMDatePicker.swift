@@ -119,7 +119,7 @@ struct LMDatePicker: View {
                 .background {
                     if day.isSelected {
                         Circle()
-                            .fill(Color.primaryBrand)
+                            .fill(Color.primaryFill)
                     } else if day.isToday {
                         Circle()
                             .strokeBorder(Color.primaryBrand.opacity(0.45), lineWidth: 1.5)

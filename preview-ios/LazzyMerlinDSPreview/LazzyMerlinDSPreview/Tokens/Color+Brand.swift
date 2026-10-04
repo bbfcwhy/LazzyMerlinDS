@@ -22,7 +22,10 @@
 //  PrimaryBrand    | Color.primaryBrand    | #46647C → #5E7A8D
 //                                            (asset 改名避開 SwiftUI 內建 Color.primary)
 //  PrimarySoft    | Color.primarySoft     | #5E7A8D → #46647C (互換)
-//  Stone           | Color.stone           | #967459 → #967459
+//  Stone           | Color.stone           | #83664E → #83664E
+//  PrimaryText     | Color.primaryText     | #46647C → #F5EFE4   (藍色文字 · v0.5.0)
+//  PrimaryFill     | Color.primaryFill     | #46647C → #46647C   (有字的藍底 · 不互換)
+//  InkOnLight      | Color.inkOnLight      | #0F1C26 → #0F1C26   (ochre 底上的字)
 //
 //  ## Earth Tone Status Extension (§2.2.2)
 //
@@ -32,7 +35,7 @@
 //
 //  ## Hairline / Border (§2.2.1)
 //
-//  Hairline        | Color.hairline        | #967459 30% → #5E7A8D 30%
+//  Hairline        | Color.hairline        | #83664E 30% → #5E7A8D 30%
 //  Border          | Color.border          | #0F1C26 10% → #F5EFE4 8%
 //
 //  ## Asset → Swift attribute 命名規則
@@ -54,13 +57,13 @@ import SwiftUI
 // 統一成語義化 alias、避免 hardcode magic number、跨 view 一致。
 //
 // 對應使用情境：
-//   inkMutedSubdued  · footer / meta / 次要說明文字 (0.65)
+//   inkMutedSubdued  · footer / meta / 次要說明文字 (0.80 · v0.5.0 起，0.65 時淺色只有 3.90:1)
 //   inkMutedDisabled · disabled state 的字色 / placeholder (0.40)
 //   borderSubtle     · skeleton / 不重要的分隔線 (0.16)
 
 extension Color {
-    /// 次要說明文字 · footer / meta / disabled hint (~65% inkMuted)
-    static var inkMutedSubdued: Color { Color.inkMuted.opacity(0.65) }
+    /// 次要說明文字 · footer / meta (80% inkMuted · 所有 surface 過 4.5:1，見 tokens/check-contrast.py)
+    static var inkMutedSubdued: Color { Color.inkMuted.opacity(0.80) }
 
     /// Disabled state 字色 / placeholder (~40% inkMuted)
     static var inkMutedDisabled: Color { Color.inkMuted.opacity(0.40) }

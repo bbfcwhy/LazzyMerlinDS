@@ -77,20 +77,20 @@
 
 ### 2.1 核心 4 色（Brand Tokens）
 
-每個 role 都有 Light/Dark 對應值。**Light mode 奶油紙 + 咖啡木質 + 藍調文字；Dark mode 深藍夜 + 奶油字**，palette 8 色（Coolors · `334D5C / 46647C / 5E7A8D / 0F1C26 / F5EFE4 / DECCA7 / 967459 / 4E3029`）：
+每個 role 都有 Light/Dark 對應值。**Light mode 奶油紙 + 咖啡木質 + 藍調文字；Dark mode 深藍夜 + 奶油字**，palette 8 色（Coolors · `334D5C / 46647C / 5E7A8D / 0F1C26 / F5EFE4 / DECCA7 / 83664E / 4E3029`；v0.5.0 起 Stone 由 `967459` 加深為 `83664E`，見 §16 2026-10-04）：
 
 | Role | Light | Dark | 用途 |
 |---|---|---|---|
 | **Surface** | `#F5EFE4` Parchment | `#0F1C26` Midnight Petrol | 頁面底色 |
 | **Ink** | `#0F1C26` Midnight Petrol | `#F5EFE4` Parchment | 主文字 |
 | **Primary Deep** | `#334D5C` Abyss Petrol | `#334D5C`（共用、decoration 限定）| 品牌強調、hero headline、logo 底、深色 mood fill |
-| **Primary** | `#46647C` Deep Petrol | `#5E7A8D` Mid Petrol | 主 CTA、連結、高對比 accent |
+| **Primary** | `#46647C` Deep Petrol | `#5E7A8D` Mid Petrol | 品牌主色、無字的強調（focus ring、icon、邊框、tint）。要當文字用 `--primary-text`、有字的填色用 `--primary-fill`（§2.2.1）|
 | **Primary Soft** | `#5E7A8D` Mid Petrol | `#46647C` Deep Petrol | 次要 accent、hover 底、info bg、selected state、secondary CTA |
-| **Stone** | `#967459` Coffee | `#967459` Coffee（共用） | 次文字、muted elements、warm neutral |
+| **Stone** | `#83664E` Coffee | `#83664E` Coffee（共用） | Pressed / selected 填色、muted elements、warm neutral（不當文字色，§2.3）|
 
 **品牌藍錨：** Midnight Petrol `#0F1C26` 一色扛兩個模式的角色對調（Light Ink ↔ Dark Surface），光這一色就讓 light 的文字跟 dark 的底都站在 Petrol 家族 —— 整個 DS 都以藍色為軸，Primary 系列深入到文字層。
 
-**Primary 跟 Primary Soft 兩模式互換角色。** Primary Deep `#334D5C` 在 dark mode 對比不足 AA（≈2.9:1 on `#0F1C26`），不要當文字，只做 mood 填色 / 裝飾 / illustration 陰影。
+**Primary 跟 Primary Soft 兩模式互換角色。** Primary Deep `#334D5C` 在 dark mode 對比不足 AA（1.94:1 on `#0F1C26`），不要當文字，只做 mood 填色 / 裝飾 / illustration 陰影。Dark mode 的 Primary `#5E7A8D` 當文字也只有 3.82:1，所以藍色文字改用 `--primary-text`（v0.5.0）。
 
 ### 2.2 延伸色（Semantic）
 
@@ -104,14 +104,19 @@
 | Surface Muted（區塊、表單） | `#DECCA7` Tan | `#4E3029` Espresso |
 | Ink Muted（次文字） | `#4E3029` Espresso | `#DECCA7` Tan |
 | Border | `rgba(15, 28, 38, 0.10)` | `rgba(245, 239, 228, 0.08)` |
-| Hairline（裝飾細線） | `rgba(150, 116, 89, 0.30)` | `rgba(94, 122, 141, 0.30)` |
+| Hairline（裝飾細線） | `rgba(131, 102, 78, 0.30)` | `rgba(94, 122, 141, 0.30)` |
 | **Ink on Brand**（彩色底文字） | `#F5EFE4` Parchment | `#F5EFE4` Parchment（**不翻轉**） |
+| **Ink on Light**（兩 mode 都淺的填色上的文字，目前只有 earth-ochre） | `#0F1C26` Midnight Petrol | `#0F1C26`（**不翻轉**） |
+| **Primary Text**（要當文字的藍：連結、ghost button、section label、選中 tab） | `#46647C` Deep Petrol | `#F5EFE4` Parchment（dark 沒有 palette 藍能在 `#0F1C26` 上過 4.5:1；連結靠底線辨識） |
+| **Primary Fill**（有字的藍底：主按鈕、`chip--primary`、status chip、avatar、日期選取、web 分頁 active） | `#46647C` Deep Petrol | `#46647C` Deep Petrol（**不互換**） |
 
 ##### 為什麼 `--ink-on-brand` 不跟 mode 翻轉
 
-彩色底（brand 藍三層 / earth tone 三色）需要的文字反差是「**永遠米色**」，不是「跟著 page bg 翻轉」。理由：彩色 fill + 米色字 = 跨平台跨 mode 都過 WCAG AA Large（≥3:1）；如果用 `--bg` 走 mode 翻轉，dark mode 時 Mid Petrol `#5E7A8D` 底配 Midnight Petrol `#0F1C26` 字 = 對比 3.4:1（剛過 AA Large 但近邊緣），Deep Petrol `#334D5C` 底配 Midnight Petrol 字 = 1.7:1（**完全不過 AA**）。
+彩色底（brand 藍 / terracotta / sage）需要的文字反差是「**永遠米色**」（例外：earth-ochre 兩 mode 都淺，字用 `--ink-on-light` 深字，§15.5.4），不是「跟著 page bg 翻轉」。理由：彩色 fill + 米色字 = 跨平台跨 mode 都過 WCAG AA（≥4.5:1，數字見 §14.3）；如果用 `--bg` 走 mode 翻轉，dark mode 時 Mid Petrol `#5E7A8D` 底配 Midnight Petrol `#0F1C26` 字 = 對比 3.82:1（不過 AA），Abyss Petrol `#334D5C` 底配 Midnight Petrol 字 = 1.94:1（**完全不過**）。
 
-實作：`--ink-on-brand: #F5EFE4` 在 `:root` 跟 `[data-theme="dark"]` 都同值。所有彩色底元件（button primary / deep / destructive、chip 彩色 variant、avatar、badge、toast、modal action button 等）的 `color` 屬性一律 `var(--ink-on-brand)` 而不是 `var(--bg)`。詳見 §15.5.4。
+**但 Mid Petrol `#5E7A8D` 配米色字也只有 3.95:1。** 所以有字的藍底一律用 `--primary-fill`（兩 mode 都是 `#46647C`，5.44:1），不跟 mode 互換；`--primary` 的互換只留給無字的強調（v0.5.0）。
+
+實作：`--ink-on-brand: #F5EFE4` 在 `:root` 跟 `[data-theme="dark"]` 都同值。所有彩色底元件（button primary / deep / destructive、chip 彩色 variant、avatar、badge、toast、modal action button 等）的 `color` 屬性一律 `var(--ink-on-brand)` 而不是 `var(--bg)`（ochre 填色例外用 `var(--ink-on-light)`）。詳見 §15.5.4。
 
 ##### Surface tier 規範（Card / Container 階層）
 
@@ -134,19 +139,21 @@ Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone E
 
 | Token | Hex（跨 mode 共用）| Light surface 對比 | Dark surface 對比 |
 |---|---|---|---|
-| **Earth Red** Terracotta | `#9E5949` | ~5.3:1 ✓ AA | ~3.4:1 邊緣 AA Large |
-| **Earth Green** Sage / Moss | `#596751` | ~5.3:1 ✓ AA | ~2.7:1 ⚠️ 不過 AA Large |
-| **Earth Ochre** Burnt Ochre | `#CB9B52` | ~2.2:1 ⚠️ 不過 AA | ~6.6:1 ✓ AA |
+| **Earth Red** Terracotta | `#9E5949` | 4.61:1 ✓ AA | 3.28:1 ⚠️ 只過大字 |
+| **Earth Green** Sage / Moss | `#596751` | 5.27:1 ✓ AA | 2.87:1 ⚠️ 不過 AA Large |
+| **Earth Ochre** Burnt Ochre | `#CB9B52` | 2.20:1 ⚠️ 不過 AA | 6.88:1 ✓ AA |
+
+**Earth tone 不當文字色**（v0.5.0）：上表每個 token 都有一個 mode 不過 4.5:1。狀態訊息、表單錯誤 / 成功、required `*`、stat trend、alert destructive 按鈕的文字一律用 `--ink`，earth 色只給 icon / dot / 邊框 / fill。
 
 **為什麼是大地色不是鮮色：**
-- 跟 wood palette 同調 —— 跟 Stone `#967459` 同 saturation 量級，同個畫面不會跳出來
+- 跟 wood palette 同調 —— 跟 Stone `#83664E` 同 saturation 量級，同個畫面不會跳出來
 - 跟「冷面笑匠 / 反美式紅綠燈情緒對比」tone 一致 —— 「壞了」用陶土紅比刺眼正紅更耐看
 - 仍可單眼識別 success / warning / error —— 色相確實不同（綠 / 黃 / 紅），但飽和度壓低
 
 **為什麼 v0.2.0-rc.4 收斂為 3 hex 不分 mode：**
 - 主人 review tuner 11 swatch 後決定簡化規範、單一 hex 跨 mode 視覺一致
 - 移除 6 個變體 token、減少維護負擔（原本 light/dark 各 3 個 = 6 個 colorset / CSS var）
-- Earth tone 是 status accent、不是 surface 主色 —— 對比度標準應對應「accent / icon / chip 小面積」WCAG SC 1.4.11 ≥ 3:1 而非 SC 1.4.3 文字 4.5:1
+- Earth tone 是 status accent、不是 surface 主色 —— 對比度標準應對應「accent / icon / chip 小面積」WCAG SC 1.4.11 ≥ 3:1 而非 SC 1.4.3 文字 4.5:1。**但 chip / badge 上的字仍是文字，要過 4.5:1**（§15.5.4）
 
 **Sage `#596751` + Ochre `#CB9B52` 對比度 trade-off（v0.2.0-rc.4 主人 confirm A 方案接受）：**
 
@@ -155,11 +162,11 @@ Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone E
 | 用法 | 是否合 spec |
 |---|---|
 | Status icon + 文字 ✓ | OK · icon stroke + 文字另用 `--ink` / `--ink-muted` 確保可讀 |
-| Chip / badge / dot 小面積 fill ✓ | OK · 小面積對比要求寬鬆（SC 1.4.11 3:1） |
+| Chip / badge / dot 小面積 fill ✓ | OK · fill 本身走 SC 1.4.11 3:1；有字時照 §15.5.4：terracotta / sage 底用 `--ink-on-brand`（4.61 / 5.27:1），ochre 底用 `--ink-on-light`（6.88:1） |
 | Toast / alert background tint（10-15% opacity）✓ | OK · 不作 fill 主體 |
-| **大面積 button fill** ✗ | **不建議** · sage 在 dark mode 對比 2.7:1 / ochre 在 light mode 對比 2.2:1，文字（即使 ink-on-brand 米白）都讀不清楚 |
-| Form validation error text ✗ | **不建議** · 建議用 `--earth-red` 而非 sage / ochre |
-| Destructive button fill ✓ | 用 `--earth-red` `#9E5949`（兩 mode 對比都 ≥ 3.4:1 過 AA Large、唯一適合大面積 fill 的 earth tone） |
+| **大面積 button fill** ✗ | **不建議** · fill 跟頁面底分不開（sage 在 dark mode 2.87:1 / ochre 在 light mode 2.20:1） |
+| 任何 earth tone 當文字色 ✗ | **禁止**（v0.5.0）· 文字用 `--ink`，earth 色只給 icon |
+| Destructive button fill ✓ | 用 `--earth-red` `#9E5949`（米色字 4.61:1 過 AA；fill 對頁面 light 4.61 / dark 3.28:1，唯一適合大面積 fill 的 earth tone） |
 
 實作時遇到 sage / ochre 大面積 fill 場景，請改用 0.10-0.15 opacity 的 surface tint（背景變淡綠 / 淡黃）+ 獨立 ochre / sage icon、不要直接整片填色。
 
@@ -223,9 +230,10 @@ Brand identity 仍是 8 色 wood palette；status 訊號用 **3 色 Earth Tone E
 ### 2.3 使用規則
 - **禁止**：純白 `#FFF`、純黑 `#000`、藍紫漸層、任何 SaaS gradient CTA、金色作為主色
 - **Primary 是唯一 brand accent**：連結、按鈕、重點強調。不同時使用多個 accent 爭奪視覺。
-- **Primary Soft 只做 tint，不做內容**：info 區塊底、selected state、hover 底色、illustration 亮調。不拿來當文字色或 CTA 填色（不夠對比）。
+- **Primary Soft 只做 tint，不做內容**：info 區塊底、selected state、hover 底色、illustration 亮調。不拿來當文字色或 CTA 填色（不夠對比）。`.chip--soft` 用 20% tint 配 `--ink`（§15.5.4）。
 - **色彩層級**：一頁至多 1 個 Primary 強調 + 1-2 處 Stone muted。不加第三種色調。
-- **對比度**：Ink on Surface、Primary on Surface 都需通過 WCAG AA（4.5:1）。Stone on Surface ~4.2:1，適用於 ≥14px 次文字。Primary Soft 不做文字。
+- **對比度**（v0.5.0 起以 `tokens/check-contrast.py` 實算為準，不手寫數字）：文字一律 ≥ 4.5:1（LMDS 的 chip 11–12pt、按鈕 13–16pt 都不是 WCAG 大字；大字是 ≥24px，或 ≥18.66px 粗體）。可以當文字的只有 `--ink`、`--ink-muted`、`--primary-text`，以及彩色底上的 `--ink-on-brand` / `--ink-on-light`。**Stone、Primary Soft、Primary Deep、Earth tone 都不做文字色**，次文字一律 `--ink-muted`。
+- **連結一律加底線**：dark mode 連結是米色（`--primary-text`），只靠底線跟內文區分。Tan / Espresso（`--bg-muted`）區塊裡的連結改用 `--ink` + 底線（`--primary-text` 在 Tan 上只有 3.94:1）。
 
 ### 2.4 Theme Switch（主題切換）
 
@@ -293,7 +301,7 @@ body { transition: background 400ms ease, color 400ms ease; }
 | Ambient orbs opacity | 0.08-0.18 | 0.10-0.14（整體降一級避免發光感過頭） |
 | Grain overlay | 0.035 / `multiply` | 0.03 / `soft-light` |
 | Tactile noise overlay | 0.55-0.6 / `overlay` | 0.75-0.85 / `soft-light` |
-| Focus ring 顏色 | `--primary` | `--primary-soft`（提亮） |
+| Focus ring 顏色 | `--primary` | `--primary`（`#5E7A8D`，3.82:1 過非文字 3:1；`--primary-soft` 在 dark 反而更暗，只有 2.78:1） |
 
 完整規格散落 §5.4.2、§14.1，此處只給速查表。
 
@@ -556,7 +564,7 @@ v0.2.0 改走 **Tactile-Heavy 雙軌等價**：web (CSS) 維持 v0.1.x 的 Tacti
 | Material | 背景 | 凸/凹 | 用途 | Web 代表元件 | SwiftUI ViewModifier |
 |---|---|---|---|---|---|
 | **Base** | `--bg-raised` | 微凸（薄浮雕） | 一般卡片、容器、page surface | `.card--editorial` | `.tactileBase()` |
-| **Raised** | `--primary` / `--primary-deep` / `--error` | 強凸（厚浮雕） | 主 CTA、Hero tile、強調 panel | `.btn--primary` / `.btn--deep` / `.btn--destructive` | `.tactileRaised()` |
+| **Raised** | `--primary-fill` / `--primary-deep` / `--error` | 強凸（厚浮雕） | 主 CTA、Hero tile、強調 panel | `.btn--primary` / `.btn--deep` / `.btn--destructive` | `.tactileRaised()` |
 | **Inset** | `--bg`（同底色） | 凹陷（光源反轉） | 表單輸入、容器內凹槽 | `.input` (Soft Inset) | `.tactileInset()` |
 | **Pressed** | `--stone` / `--primary` 加暗 | 整片下沉 | active 狀態、selected toggle | `.btn--primary:active` / `.chip--selected` | `.tactilePressed()` |
 
@@ -772,7 +780,7 @@ Input / Switch / Slider 這類控制元件不適合 Tactile（太厚重會擋視
 
 | 元件類型 | Material | Web class | SwiftUI |
 |---|---|---|---|
-| 主 CTA 按鈕 / Brand Deep / Destructive | **Tactile Raised** | `.btn--primary` / `.btn--deep` / `.btn--destructive` (4-layer rc.9) | `TactileRaisedButtonStyle` (預設 `.primaryBrand`) / `TactileDestructiveButtonStyle` (`.earthRed` base) |
+| 主 CTA 按鈕 / Brand Deep / Destructive | **Tactile Raised** | `.btn--primary` / `.btn--deep` / `.btn--destructive` (4-layer rc.9) | `TactileRaisedButtonStyle` (預設 `.primaryFill`) / `TactileDestructiveButtonStyle` (`.earthRed` base) |
 | 次 CTA / Hybrid button | **Tactile Secondary** (Hybrid) | `.btn--secondary` (neumorphic, `var(--shadow-soft-sm)`) | `TactileSecondaryButtonStyle` / `.tactileSecondary()` (raised-style directional shadow + bg fill + noise) |
 | Ghost button | 純文字 + color hover | `.btn--ghost` | `TactileGhostButtonStyle` (foregroundStyle + opacity) |
 | Editorial card / Article tile | **Tactile Base** | `.card--editorial` (4-layer Tactile-Heavy) | `.tactileBase(radius:isPressed:)` (`Color.surface1` + 軟漫射 shadow) |
@@ -787,7 +795,7 @@ Input / Switch / Slider 這類控制元件不適合 Tactile（太厚重會擋視
 | Slider | **Soft Inset** (track) + Tactile thumb | `.slider` + `.slider__thumb` | iOS `Slider().tint(.primaryBrand)` 或自繪 `LMSlider` |
 | Checkbox / Radio | **Soft Inset** (unchecked) → **Tactile Pressed** (checked) | `.checkbox` / `.radio` | iOS `Toggle(.checkbox)` + `.tint(...)` |
 | Pressed / Selected toggle | **Tactile Pressed** | `.btn--primary:active` / `.chip--selected` | `TactilePressedButtonStyle` / `.tactilePressed(radius:)` |
-| Pure text link | 只 color hover、不加 shadow / 上浮 | `.btn--ghost` | `Button` + `.foregroundStyle(.primaryBrand)` |
+| Pure text link | 常駐底線、只 color hover、不加 shadow / 上浮 | `<a>`（`--primary-text` + underline，例：`.asset-link`） | `Button` + `.foregroundStyle(.primaryText)` + `.underline()` |
 
 **SwiftUI 原生元件優先**：Switch / Slider / Checkbox 在 SwiftUI 端優先用內建 `Toggle()` / `Slider()`，只調 `.tint(.primaryBrand)` 套 brand color，不重造輪子 — Apple 的 native control 自動跟系統 Dynamic Type / Accessibility / Reduce Motion 整合。需要視覺對齊 web custom 樣式時才用 LM* 自繪元件（[LM 元件家族 catalog](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/) 內 `LMSlider` / `LMSwitchToggleStyle` / `LMSegmentedPicker` 等）。
 
@@ -802,7 +810,7 @@ Input / Switch / Slider 這類控制元件不適合 Tactile（太厚重會擋視
 | **Default** | 該材質的靜態 box-shadow | — |
 | **Hover** | `translateY(-3px)`，drop shadow 全部放大（近層 4→6 / 中層 8→10 / 遠層 20→22 / blur 各 +5），noise overlay opacity 不變 | `220ms cubic-bezier(0.4, 0, 0.2, 1)` |
 | **Pressed / Active** | `translateY(2px)`，外層 drop shadow 收掉，改用 inset shadow（模擬「被擠進去」），文字 `text-shadow` 加深 | `80ms ease` |
-| **Loading** | Default 位置 + 12px circular spinner（`border: 2px var(--hairline)`，`border-top: var(--primary)`），文字色 `color-mix(ink 60%, transparent)`，`padding-left: 32px` 給 spinner | spinner 自轉 `700ms linear infinite` |
+| **Loading** | Default 位置 + 12px circular spinner（`border: 2px var(--hairline)`，`border-top: var(--primary)`），文字色不變（不弱化：弱化後只剩約 1.9–2.2:1，不過 AA），`padding-left: 32px` 給 spinner | spinner 自轉 `700ms linear infinite` |
 | **Disabled** | `opacity: 0.4`，外層 drop shadow 縮減（只留近層 + hairline），`cursor: not-allowed` | — |
 
 **Pressed 規範 CSS（Tactile Raised）：**
@@ -879,7 +887,7 @@ MoonStars asset（品牌 sigil，主要）
 font-family: "Geist Mono";
 font-size: 12px;
 letter-spacing: 0.24em;
-color: var(--primary);  /* light: petrol ink / dark: sky petrol */
+color: var(--primary-text);  /* light: Deep Petrol / dark: Parchment（dark 藍字不過 4.5:1，v0.5.0） */
 text-transform: uppercase;
 ```
 例：`精選專案 · FEATURED SPELLS`、`近期手札 · NOTEBOOK`
@@ -938,6 +946,7 @@ iOS 平台優先順序：**遵循 Apple HIG > 套用 LazzyMerlin DS tokens > 硬
 - **`accentColor`** 設為 Petrol `#46647C`（Light）/ Mid Petrol `#5E7A8D`（Dark），對齊 §1 wood palette + §2.4 dark mode 互換規則
 - 在 Asset Catalog `AccentColor.colorset` 設 Any Appearance（light）+ Dark Appearance 兩值
 - **Tab bar / nav**：遵循 iOS 原生樣式，只染 `accentColor`，不自定 background
+- ⚠️ **dark `accentColor` `#5E7A8D` 當字色只有 3.82:1**：系統元件（toolbar 按鈕、alert 按鈕、NavigationLink）拿 accentColor 當字色時不過 AA。v0.5.0 尚未處理（改米色會讓 Toggle 開啟軌道變米色配白圓鈕，另案決定）；自訂文字一律用 `Color.primaryText`。
 - **Brand glyph**：品牌 sigil 一律使用 `MoonStars` asset；SF Symbols 只用於功能 icon，不再用 `star.fill` 或 `✦` 扮演 logo
 
 #### 7.2.2 Card surface tier · §2.2.1 iOS 對應
@@ -1016,7 +1025,7 @@ Line spacing (`LMLineSpacing`)：`tight: 2pt`（alert message）/ `normal: 4pt`�
 
 | Modifier | 用途 |
 |---|---|
-| `.sectionLabel()` | Section eyebrow · `lmLabel` + uppercase + tracking 1.2 + `Color.primaryBrand` |
+| `.sectionLabel()` | Section eyebrow · `lmLabel` + uppercase + tracking 1.2 + `Color.primaryText` |
 | `.chipLabel()` | Filter chip / badge · `lmLabel` + uppercase + tracking 0.8 |
 | `.statusChipLabel()` | Status chip · `lmLabel` + uppercase + tracking 0.6 |
 | `.eyebrow()` | Eyebrow / micro-heading · `lmLabel` + uppercase + tracking 1.2 + `Color.inkMuted`（跟 `sectionLabel` 差別在不用 brand 色） |
@@ -1035,7 +1044,7 @@ Text("SECTION LABEL")
     .font(.system(.caption2, design: .monospaced))
     .textCase(.uppercase)
     .tracking(1.2)               // 字距，模擬 web small-caps 的氣質
-    .foregroundStyle(.accentColor)
+    .foregroundStyle(Color.primaryText)  // 不用 .accentColor：dark 只有 3.82:1
 ```
 
 對應 web 端 `font-feature-settings: "smcp"` 寫法，**視覺結果不完全等同**（沒 lowercase 縮小版的微差），但語意層級一致。
@@ -1104,7 +1113,7 @@ enum LMTactile {
 
 | Modifier | 用途 | 視覺結構簡述 |
 |---|---|---|
-| `.tactileRaised(radius:)` | 主 CTA / Hero tile / 強調 panel | `baseColor` (預設 `.primaryBrand`) + 近垂直 LinearGradient (`white 0.10 → clear → black 0.10`) + `TactileNoise` PNG tile (`raisedNoiseOpacity=0.30`, blend `light=overlay/dark=softLight`) + continuous `RoundedRectangle` clip + 1pt `Color.black.opacity(0.10)` strokeBorder + 兩層 directional shadow (`shadowInk × 0.50`, radius 3, offset (3, 3)) + text shadow (`black 0.80, y=2`) |
+| `.tactileRaised(radius:)` | 主 CTA / Hero tile / 強調 panel | `baseColor` (預設 `.primaryFill`) + 近垂直 LinearGradient (`white 0.10 → clear → black 0.10`) + `TactileNoise` PNG tile (`raisedNoiseOpacity=0.30`, blend `light=overlay/dark=softLight`) + continuous `RoundedRectangle` clip + 1pt `Color.black.opacity(0.10)` strokeBorder + 兩層 directional shadow (`shadowInk × 0.50`, radius 3, offset (3, 3)) + text shadow (`black 0.80, y=2`) |
 | `.tactileBase(radius:isPressed:)` | 一般卡片 / 容器 / page surface | `Color.surface1` (page bg +1 階) + 近垂直 LinearGradient (`white 0.08/0.04 → clear → black 0.04/0.10` 跨 light/dark) + `TactileNoise` (`baseNoiseLight=0.55 / baseNoiseDark=0.75`) + 1pt 跨 mode 不同 strokeBorder + 單層軟漫射 shadow (radius 14, offset (4, 6), opacity 0.12/0.45 跨 mode) |
 | `.tactilePlain(radius:)` | List / table 容器 / 安靜卡片 | `Color.bg` + 1pt `Color.hairline` strokeBorder + 1 層 directional drop shadow (`black 0.10/0.35` 跨 mode, radius 3, offset (2, 2))。**無 noise**、最低調 |
 | `.tactileSecondary(radius:isPressed:)` | 次 CTA / Hybrid button | `Color.bg` + `TactileNoise` (`secondaryNoiseLight=0.55 / secondaryNoiseDark=0.70`) + 1pt `Color.hairline`/`.border` strokeBorder + 兩層 directional shadow (同 raised, `shadowInk × 0.50`, radius 3, offset (3, 3))。**無 baseColor fill**、透出 page bg |
@@ -1121,7 +1130,7 @@ enum LMTactile {
 
 | ButtonStyle | 對應 modifier | base color | 用途 |
 |---|---|---|---|
-| `TactileRaisedButtonStyle` | `TactileRaisedModifier` | `.primaryBrand` | 主 CTA |
+| `TactileRaisedButtonStyle` | `TactileRaisedModifier` | `.primaryFill` | 主 CTA |
 | `TactileDestructiveButtonStyle` | `TactileRaisedModifier` (複用) | `.earthRed` | Destructive action |
 | `TactileSecondaryButtonStyle` | `TactileSecondaryModifier` | (透 page bg) | 次 CTA |
 | `TactilePressedButtonStyle` | `TactilePressedModifier` | `.stone` | Selected toggle (本身就是 pressed 視覺、`configuration.isPressed` 額外 scale/offset) |
@@ -1145,7 +1154,7 @@ LazzyMerlin DS 在 [`preview-ios/.../Tokens/`](preview-ios/LazzyMerlinDSPreview/
 
 | 檔名 | 內容 | 對應規範 |
 |---|---|---|
-| [`Color+Brand.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/Color+Brand.swift) | Color extensions (`.bg` / `.ink` / `.primaryBrand` / `.surface1/2` / `.earthRed/Green/Ochre` / `.inkOnBrand` / `.hairline` / `.border`) | §2 Color Palette |
+| [`Color+Brand.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/Color+Brand.swift) | Color extensions (`.bg` / `.ink` / `.primaryBrand` / `.primaryText` / `.primaryFill` / `.surface1/2` / `.earthRed/Green/Ochre` / `.inkOnBrand` / `.inkOnLight` / `.hairline` / `.border`) | §2 Color Palette |
 | [`BrandTypography.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/BrandTypography.swift) | Font extensions（Brand identity + Functional UI 2-tier）+ `LMTracking` + `LMLineSpacing` + 4 個 compound modifier (`sectionLabel` / `chipLabel` / `statusChipLabel` / `eyebrow`) | §3 / §7.2.4 |
 | [`LMDesignTokens.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMDesignTokens.swift) | Numeric / motion / chrome tokens（`LMSpacing` / `LMRadius` / `LMControlSize` / `LMOpacity` / `LMMotion` / `LMTactile` / `LMOverlayChrome`） | §4 Spacing / Radius / §5 Motion / §5.4 Tactile |
 | [`LMFontLoader.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMFontLoader.swift) | LXGW WenKai TC 字體 register at app launch（`CTFontManagerRegisterGraphicsFont`） | §7.2.5 |
@@ -1220,7 +1229,7 @@ iOS 子專案落地時不一定要全 28 個都 bundle，按需選用：
 - **Tactile material**：§7.2.9 的 8 個 ViewModifier (`.tactileRaised` / `.tactileBase` / `.tactilePlain` / `.tactileSecondary` / `.tactileInset` / `.tactilePressed` / `.tactilePill` / `.tactileCircle`) 完全跨 iOS / macOS 通用（SwiftUI 同份 code）
 - **Window chrome**：保持 macOS 原生 traffic light + title bar，**不要**自繪
 - **Sidebar**：用 `.background(.regularMaterial)` 取得原生 macOS sidebar 質感，再疊 `tactileBase()` 內容卡片
-- **長文件 / note-taking app**：可強化「書房感」，側邊欄用 `Surface Raised` token，hairline 用 Stone 色 `#967459`
+- **長文件 / note-taking app**：可強化「書房感」，側邊欄用 `Surface Raised` token，hairline 用 Stone 色 `#83664E`
 - **macOS 14+ Liquid Glass**：可在 toolbar / sidebar 用 `.background(.ultraThinMaterial)` 達成 Liquid Glass 效果，跟 Tactile 卡片並存無衝突
 - **Icon**：LazzyMerlin 專屬 icon 使用 Petrol + Parchment 組合（§8.3.3 macOS 規範）
 
@@ -1695,17 +1704,15 @@ a:focus-visible,
   outline-offset: 2px;
 }
 
-/* Dark mode 提亮，避免 ring 在深底上看不見 */
-[data-theme="dark"] :focus-visible {
-  outline-color: var(--primary-soft);
-}
+/* Dark mode 不另外覆寫：--primary 在 dark 是 #5E7A8D（3.82:1，過非文字 3:1）。
+   不要換成 --primary-soft —— 它在 dark 是 #46647C，只有 2.78:1 */
 ```
 
 **規則：**
 - ❌ **永不**用 `outline: none` 而沒給替代視覺
 - ❌ 不用 `box-shadow` 當 focus ring（會跟 Tactile shadow 疊加打架）
 - ✅ 用 `:focus-visible`，不要用 `:focus`（後者會在滑鼠點擊後也卡著 ring，很醜）
-- ✅ Ring 顏色用 `--primary`（dark mode 自動換 `--primary-soft`）
+- ✅ Ring 顏色用 `--primary`（dark mode 自動是 `#5E7A8D`；不要換成 `--primary-soft`，它在 dark 只有 2.78:1）
 - ✅ Ring 寬度 2px，offset 3-4px，跟 Tactile 元件 radius 同步
 
 ### 14.2 Reduced Motion（前庭安全）
@@ -1743,18 +1750,28 @@ a:focus-visible,
 
 ### 14.3 Color Contrast
 
-§2 已聲明 Ink on Surface 與 Primary on Surface 都過 WCAG AA，這裡補 Tactile 場景的細節：
+§2.3 定了文字配對規則，這裡列實算數字（2026-10-04 用 `tokens/check-contrast.py` 實算）。改任何色碼或配對後重跑腳本，不要手寫數字 —— v0.4.0 以前這張表有兩格寫錯（見 §16 2026-10-04）。
 
-| 場景 | 對比度要求 | 注意事項 |
-|---|---|---|
-| **Tactile Raised** 上的文字（`--bg` on `--primary`） | ≥ 4.5:1 | Light mode 過、Dark mode `--primary` = `#5E7A8D` 對 `#F5EFE4` 約 4.6:1，剛好 |
-| **Tactile Pressed** 上的文字（`--bg` on `--stone`） | ≥ 4.5:1 | `#F5EFE4` 對 `#967459` 約 4.7:1，過 |
-| **Tactile Inset** 上的文字（`--ink` on `--bg`） | ≥ 4.5:1 | 跟一般文字同對比，過 |
-| **Disabled state** 文字 | ≥ 3:1 | opacity 0.4 後會掉到 ~3:1，邊緣 OK |
-| **Hairline border** | 不當文字、不當意義載體 | 它就是裝飾線 |
-| **Primary Soft** | **不做文字色** | 已在 §2.3 重申 |
+| 場景 | 要求 | Light | Dark |
+|---|---|---|---|
+| **Tactile Raised** 主按鈕（`--ink-on-brand` on `--primary-fill`） | ≥ 4.5:1 | 5.44 | 5.44 |
+| **Tactile Pressed** / 選中 chip / iOS `LMPagination` active（`--ink-on-brand` on `--stone`） | ≥ 4.5:1 | 4.62 | 4.62 |
+| Brand Deep（`--ink-on-brand` on `--primary-deep`） | ≥ 4.5:1 | 7.79 | 7.79 |
+| Destructive / error chip（`--ink-on-brand` on `--earth-red`） | ≥ 4.5:1 | 4.61 | 4.61 |
+| Success chip（`--ink-on-brand` on `--earth-green`） | ≥ 4.5:1 | 5.27 | 5.27 |
+| Warning chip（`--ink-on-light` on `--earth-ochre`） | ≥ 4.5:1 | 6.88 | 6.88 |
+| `.chip--soft`（`--ink` on primary-soft 20% tint） | ≥ 4.5:1 | 12.07 | 12.83 |
+| 連結 / 藍色文字（`--primary-text` on `--bg`） | ≥ 4.5:1 | 5.44 | 15.11 |
+| 次要說明（iOS `inkMutedSubdued` 80%，最差底色 `--bg-muted`） | ≥ 4.5:1 | 4.71 | 5.42 |
+| **Tactile Inset** 上的文字（`--ink` on `--bg`） | ≥ 4.5:1 | 15.11 | 15.11 |
+| Focus ring（`--primary`，非文字） | ≥ 3:1 | 5.44 | 3.82 |
+| **Disabled state** 文字 | WCAG 豁免 | opacity 0.4 約 2.0–2.8 | 同左 |
+| **Hairline border** | 不當文字、不當意義載體 | 裝飾線 | 裝飾線 |
+| **Stone / Primary Soft / Primary Deep / Earth tone** | **不做文字色** | §2.3 | §2.3 |
 
-**檢查工具：** Polypane / WebAIM Contrast Checker。每次新增 Tactile 變體（換新底色）都要過一次。
+**上表是純色填底的數字。** Tactile 漸層在字的垂直中段接近透明，但字的上緣會疊到少量白色 highlight：疊 3% 白時 stone 4.33、earth-red 4.34、primary-fill 5.07（2026-10-04 實算）。stone / earth-red 的餘裕只有約 0.1，新增 Tactile 變體時不要再加亮上緣 highlight。
+
+**檢查工具：** `python3 tokens/check-contrast.py`（exit 0 才算過，同時檢查 iOS colorset 跟 `tokens/color.json` 一致）。新增 Tactile 變體或換底色時，先在腳本的規則表加一組再改色。
 
 #### Surface / Border 對比度最低標（非文字場景）
 
@@ -1852,11 +1869,11 @@ LazzyMerlin 最常用的元件。Material 跟著用途走，**不要**根據顏�
 
 | Variant | 用途 | Material（§5.7） | Background | Text |
 |---|---|---|---|---|
-| **Primary** | 頁面主 CTA、表單送出 | Tactile Raised | `--primary` | `--bg` |
+| **Primary** | 頁面主 CTA、表單送出 | Tactile Raised | `--primary-fill` | `--ink-on-brand` |
 | **Secondary** | 次要動作、cancel、輔助 CTA | Hybrid | `--bg` | `--ink` |
-| **Tertiary / Ghost** | 工具列、低調操作、列表內 inline action | 純文字 + color hover | transparent | `--ink-muted` → `--primary` (hover) |
-| **Destructive** | 刪除、登出、不可逆操作 | Tactile Raised | semantic Error `#A84F3F` / dark `#D68F7A` | `--bg` |
-| **Brand Deep** | 限定 hero、品牌強調，一頁不超過 1 個 | Tactile Raised | `--primary-deep` | `--bg` |
+| **Tertiary / Ghost** | 工具列、低調操作、列表內 inline action | 純文字 + color hover | transparent | `--ink-muted` → `--primary-text` (hover) |
+| **Destructive** | 刪除、登出、不可逆操作 | Tactile Raised | `--error`（`#9E5949`，跨 mode 同值） | `--ink-on-brand` |
+| **Brand Deep** | 限定 hero、品牌強調，一頁不超過 1 個 | Tactile Raised | `--primary-deep` | `--ink-on-brand` |
 
 **一頁規則：** Primary 至多 1 個。Secondary 多個 OK。Destructive 不跟 Primary 並排（避免誤點），通常放在 modal 確認步驟內。
 
@@ -1908,7 +1925,7 @@ LazzyMerlin 最常用的元件。Material 跟著用途走，**不要**根據顏�
 
 - **Label** 永遠在欄位上方（不左右排列，避免 RWD 斷行錯亂）
 - **Helper text** 14px、`--ink-muted`、`margin-top: 6px`
-- **Error message** 14px、Error 色（`#A84F3F` / dark `#D68F7A`）、配 `alert-circle` icon
+- **Error message** 14px、文字 `--ink`、配 `alert-circle` icon（icon 用 `--error`；earth tone 不當文字色，§2.2.2）
 - **Required indicator** 用 `*` 不用「(必填)」
 - Label 用 `<label for="">` 顯式關聯（§14.6）
 
@@ -1933,7 +1950,7 @@ LazzyMerlin 最常用的元件。Material 跟著用途走，**不要**根據顏�
 ```
 
 - 自製 SVG mark，不用瀏覽器預設 checkbox（後者無法套 Tactile）
-- Mark icon 12×12，stroke 2px，`--bg` 色
+- Mark icon 12×12，stroke 2px，`--ink-on-brand` 色
 - Radio 同 logic，`border-radius: 50%`
 - Disabled：opacity 0.4、cursor not-allowed
 - Click target ≥ 24×24（連 label 一起算 ≥ 44×44，§14.7）
@@ -1993,7 +2010,7 @@ Re-blur, now valid             → show success indicator (optional)
 | **Inline + Summary（並用）** | 長表單（≥ 8 欄位）的 submit 錯誤 —— 頂部 Alert 列出「3 個欄位需修正」並 anchor link 到第一個錯誤 |
 
 Inline error 規範（§15.3.1 已定義 anatomy，這裡補行為）：
-- Error 訊息 + `alert-circle` icon 同色
+- Error 訊息文字用 `--ink`，只有 `alert-circle` icon 用 `--error`（v0.5.0：earth tone 當 13–14px 字不過 4.5:1）
 - 欄位本身 box-shadow 可加紅調 inset 強化（不換 background color）
 - 訊息要**具體**：`「Email 格式錯誤」` 不夠 → `「請含 @ 符號，例：name@example.com」` 才夠
 - 不要寫「無效輸入」/「Invalid」這類 robot 語
@@ -2075,9 +2092,9 @@ Summary error 用 §15.7.1 Alert（Error variant），第一行寫「請修正�
 - Radius：`radius-full`（pill）
 - Font：Geist Mono 11px、letter-spacing 0.1em、uppercase
 - Variants：
-  - `chip--primary`：bg `--primary`、text `--bg`
-  - `chip--soft`：bg `--primary-soft`、text `--bg`（**只做輕量 tint / hover bg / selected bg**，不建議當主 fill —— 跟 `chip--primary` 並排視覺差異被 noise 壓縮，難分辨）
-  - `chip--stone`：bg `--stone`、text `--bg`
+  - `chip--primary`：bg `--primary-fill`、text `--ink-on-brand`
+  - `chip--soft`：bg `color-mix(in srgb, var(--primary-soft) 20%, var(--bg))`、text `--ink`（v0.5.0 · **只做輕量 tint / hover bg / selected bg**，不建議當主 fill —— 跟 `chip--primary` 並排視覺差異被 noise 壓縮，難分辨）
+  - `chip--stone`：bg `--stone`、text `--ink-on-brand`
   - `chip--muted`：bg `--bg-muted`、text `--ink`
 - Selected state（Chip only）：套 Tactile Pressed inset shadow（**override** raised box-shadow）
 - Hover：`translateY(-2px)`，drop shadow 不另放大（chip 本身已小）
@@ -2129,20 +2146,21 @@ Avatar 是圓形不是 pill，球體感比 chip 更需要 inset rim 雕刻：
 
 | 底色等級 | 字色 | text-shadow（raised letter）|
 |---|---|---|
-| **深底**（primary, primary-deep, stone, earth-red, earth-green, earth-ochre） | `var(--ink-on-brand)` 米色 | `0 1px 0 rgba(0, 0, 0, 0.30)` 黑色 |
-| **中底**（primary-soft 中藍） | `var(--ink-on-brand)` 米色 | `0 1px 0 rgba(0, 0, 0, 0.25)` 黑色 |
+| **深底**（primary-fill, primary-deep, stone, earth-red, earth-green） | `var(--ink-on-brand)` 米色 | `0 1px 0 rgba(0, 0, 0, 0.30)` 黑色 |
+| **淺色填色**（earth-ochre，兩 mode 都淺） | `var(--ink-on-light)` 深字（不翻轉） | `0 1px 0 rgba(255, 255, 255, 0.4)` 白色 |
+| **淡藍 tint**（primary-soft 20% 疊 `--bg`，`.chip--soft`） | `var(--ink)` 跟著 mode 翻轉 | light 白色 0.4 / dark 黑色 0.25 |
 | **淺底**（bg-muted Tan） | `var(--ink)` 深 | `0 1px 0 rgba(255, 255, 255, 0.4)` 白色 |
 | **page surface**（bg / bg-raised 米色 light / Midnight Petrol dark）— 一般文字 | `var(--ink)` 跟著 mode 翻轉 | 視 Tactile 強度、可省略 |
 
 **關鍵：`--ink-on-brand` ≠ `--bg`**
 
-`--ink-on-brand` **永遠是 Parchment `#F5EFE4`**（light + dark 都一樣、不翻轉）；`--bg` 是 page surface、會跟著 mode 翻轉（light Parchment / dark Midnight Petrol）。彩色底用 `--ink-on-brand` 確保跨 mode 對比度都過 WCAG AA Large（≥3:1），避免 dark mode 下 Mid Petrol 配 Midnight Petrol 字（3.4:1 邊緣）或 Deep Petrol 配 Midnight Petrol 字（**1.7:1 不過 AA**）的問題。詳見 §2.2.1。
+`--ink-on-brand` **永遠是 Parchment `#F5EFE4`**（light + dark 都一樣、不翻轉）；`--bg` 是 page surface、會跟著 mode 翻轉（light Parchment / dark Midnight Petrol）。彩色底用 `--ink-on-brand` 確保跨 mode 文字對比都過 WCAG AA（≥4.5:1，數字見 §14.3），避免 dark mode 下 Mid Petrol 配 Midnight Petrol 字（3.82:1）或 Abyss Petrol 配 Midnight Petrol 字（1.94:1）的問題。藍色有字的底一律用 `--primary-fill`（v0.5.0）。詳見 §2.2.1。
 
 **例外：chip 預設變體（無 modifier）**
 chip default 走淺底（`bg-muted` Tan）規則：深字 + 白 text-shadow。
 
 **例外：button ghost / secondary（hairline / 透明底）**
-無 fill 的 button（`.btn--ghost` / `.btn--secondary`）走 page surface 規則：`var(--ink-muted)` 或 `var(--ink)` 深字，hover 時轉 `var(--primary)` 藍色。
+無 fill 的 button（`.btn--ghost` / `.btn--secondary`）走 page surface 規則：`var(--ink-muted)` 或 `var(--ink)` 深字，hover 時轉 `var(--primary-text)`（light 藍 / dark 米色）。
 
 #### 15.5.5 currentColor 在 color rule 內的踩坑警告
 
@@ -2157,7 +2175,7 @@ chip default 走淺底（`bg-muted` Tan）規則：深字 + 白 text-shadow。
 CSS 為了避免循環解析，當 `color` rule 自己內部出現 `currentColor` 時，**會從 parent inherited 取**，不是 element 當前的 color。如果你期望「降低 button variant 的 fg 色透明度」，會誤抓到 body 的 ink 色變成深字。
 
 正解兩種：
-1. **顯式指定 fg token** 取代 currentColor：
+1. **顯式指定 fg token** 取代 currentColor（⚠️ v0.5.0 起不建議：弱化後 dark 只剩約 2.2:1，不過 AA）：
    ```css
    .btn--primary[data-state="loading"] {
      color: color-mix(in srgb, var(--bg) 75%, transparent);
@@ -2395,7 +2413,7 @@ Reduced-motion：`animation: none; opacity: 0.5;` 靜態顯示。
 
 - Separator：用 `·` midline dot 或 `→`，不用 `/`（太工程感）
 - Last item（current page）：`--ink`、不可點
-- Other items：`--ink-muted` → `--primary` (hover)
+- Other items：`--ink-muted` → `--primary-text` (hover)，常駐底線（§2.3 連結規則）
 - ARIA：`aria-label="Breadcrumb"`、current 加 `aria-current="page"`
 
 #### 15.8.3 Pagination
@@ -2406,7 +2424,7 @@ Reduced-motion：`animation: none; opacity: 0.5;` 靜態顯示。
 - **Active page：Tactile Pressed**（不用 Raised）—— Raised 的 4 層 drop shadow 視覺中心會偏右下，造成數字看起來偏左上；且 Raised 在 list 內顯得太重。Pressed inset shadow 表達「被選中」，跟 §15.5.1 chip-selected 同邏輯：
   ```css
   .pagination .btn--primary {
-    background-color: var(--primary);
+    background-color: var(--primary-fill);
     background-image: none;       /* 取消 Tactile-Raised 的 linear gradient */
     box-shadow:
       inset 3px 4px 8px rgba(0, 0, 0, 0.30),
@@ -2420,14 +2438,14 @@ Reduced-motion：`animation: none; opacity: 0.5;` 靜態顯示。
 
 - Size scale：xs 24 / sm 32 / md 40 / lg 56 / xl 80
 - 形狀：圓形（`radius-full`）、不用方形
-- Fallback：純色背景 + 大寫姓名首字母（Geist 500、`--bg` 色文字）
-- Fallback 背景色從 palette 取（不是隨機色）：以 user id hash 對應 **`--primary` 藍 / `--stone` 棕 / `--earth-green` sage 綠** 三 hue 循環（不再用 primary-soft，避免跟 primary 視覺擠壓）
+- Fallback：純色背景 + 大寫姓名首字母（Geist 500、`--ink-on-brand` 色文字）
+- Fallback 背景色從 palette 取（不是隨機色）：以 user id hash 對應 **`--primary-fill` 藍 / `--stone` 棕 / `--earth-green` sage 綠** 三 hue 循環（不再用 primary-soft，避免跟 primary 視覺擠壓）
 - Status badge：右下 dot badge（§15.5.2）
 
 **為什麼 fallback 改 sage 不用 primary-soft：**
 原本三色循環是 `--primary / --stone / --primary-soft`，三色靠近 wood palette 的 narrow blue range 跟 stone 棕，加 Tactile + noise 後 primary 跟 primary-soft 兩藍視覺擠壓難分辨（特別是 avatar stack 重疊時）。改用「藍 + 棕 + 綠」三 hue → 任兩個並排都色相不同，識別性最高。
 
-借用 `--earth-green`（status palette）為 avatar fill 是 dual use —— avatar fallback 的色不傳達 status 語意（user 不會把「綠 avatar」誤解成「線上 / 成功」狀態），借色 OK。需要更多色循環時可再借 `--earth-ochre` 補一階。
+借用 `--earth-green`（status palette）為 avatar fill 是 dual use —— avatar fallback 的色不傳達 status 語意（user 不會把「綠 avatar」誤解成「線上 / 成功」狀態），借色 OK。需要更多色循環時可再借 `--earth-ochre` 補一階（ochre 底的字要改 `--ink-on-light`，米色字只有 2.20:1）。
 
 ### 15.9 Data Display
 
@@ -2615,13 +2633,14 @@ Centered spinner layout：
 | 2026-04-28 | v0.1.3 release · og-template.html 升版 + §11.3 路徑修正 | 觸發點：使用者 2nd Brain（Obsidian vault）未來要做大量社群貼文 + IG 圖卡 + Notion 同步，會把 LazzyMerlin §11.3 OG template 當 reference。但 og-template.html 整檔仍用 v0.1.0 finalize 前的舊 palette（`#F7F2E8 / #416880 / #1C1410 / #5C5247`），跟現行 wood palette 不一致 —— 如果 2nd Brain 閻多比拿這檔當 reference 會學到錯的調色。修法：(1) **og-template.html palette 全面升版到 wood palette role tokens**（`#F5EFE4 Parchment / #0F1C26 Midnight Petrol / #46647C Petrol / #4E3029 Espresso / #967459 Stone / hairline `rgba(150,116,89,0.30)`），dark mode 同步（`#0F1C26 bg / #5E7A8D primary 互換 / #DECCA7 ink-muted`）。(2) **og-orb-2 暖色從 `oklch(0.65 0.06 65 / 0.2)` 換成 `var(--earth-ochre)`**（`#8E6E37` light / `#D4AB6E` dark 提亮），保留「左下暖調 vs 右上 Petrol 冷調」對比但對齊 §2.2 earth tone status extension。`◈` corner sigil 保留（跟左上 `✦` 上下呼應的有趣 detail）。(3) **§11.3 模板檔案路徑修正**：原本指 `~/.gstack/projects/LazzyMerlin/designs/design-system-20260422/v3/og-template.html`（指錯到 gstack 外部 designs 目錄），改成 repo 內實際路徑 `preview/og-template.html`，跟 §13.3 一致。(4) **不影響任何已生產的 OG image PNG**（那些是 static screenshots 不會自動 regen），僅 future regenerated OG image 才會套新 palette。 |
 | 2026-05-01 | v0.1.4 release · evidence-driven patch · QTL iOS 落地 13 條 gap 一次到位 | LazzyMerlin DS **第一個 evidence-driven patch release**：所有變更都來自 QuickTimeLapse iOS 子專案 2026-04-29 ~ 2026-05-01 落地累積的 17 條 gap report（落地 commit 範圍 `49526a2..5ced89e`、M0 → M5 + 2 個 polish）。13 條納入本 patch，4 條留 v0.2 主菜統一處理。**P0（1 條）**：(#1) §7.2 L819 iOS `accentColor` 從 `#416880 / #699FC5`（v0.1.0-pre 舊 palette legacy、跟 og-template.html / preview.html 同批殘留、v0.1.3 修 og-template 時漏掃到）改 `#46647C / #5E7A8D`，對齊 §1 wood palette + dark mode 互換規則。**P1（5 條）**：(#2) §2.2.1 + §7.2.2 加 `surface-1 / surface-2` card tier token（light luminance delta +1.5%、dark +5%）；(#3) §7.2.3 加 iOS spacing 對齊建議表（DS 4px scale ↔ HIG 8pt grid）；(#10) §7.2.9 加 iOS noise opacity 0.05-0.08 或 opt-out（避免 Retina 高 DPI 認知為「螢幕髒」）；(#11) §2.2.1 + §14.3 補 surface vs card luminance delta 規範 + border 在 surface 上對比度 SC 1.4.11 標準；(#13) §7.2.4 加 iOS Type Scale 對照表（DS web px → iOS pt）。**P2（3 條）**：(#4) §7.2.7 補 `RoundedRectangle(cornerRadius:, style: .continuous)`；(#5) §7.2.8 加 dark mode 偏好（跟系統 + 三態 override）；(#8) §7.2.6 補 SwiftUI section label 範例（`.textCase(.uppercase) + tracking`）。**P3（4 條）**：(#7) landing-checklist title v0.1.1 → v0.1.4；(#12) landing-checklist + §16 註記 WebFetch summarize bias 警告（QTL M1 Tactile 強度只到 spec 1/4-1/8、M3.5 重做才修正，根因是 WebFetch 漏掉 §5.4.1 完整 box-shadow + §10.3 完整文案，用 curl raw 才完整）；(#16) landing-checklist 補 iOS 18 / Xcode 16 PBXFileSystemSynchronizedRootGroup Info.plist 須在 source folder 外的 specific note；(#17) §8.3.2 補 AI 生 icon prompt template + 雙層輪廓警告（AI 默認帶 rounded square 底會跟 iOS mask 疊成「框中框」）。**v0.2 留 4 條主菜**：#6 + #14 Tactile material iOS 等價 reference impl（需要完整章節 + reference QTL `TactileMaterial.swift`，太大顆）、#9 brand signature placement iOS（場景判斷需再想）、#15 text-shadow iOS 沒原生（跟 #6+#14 同主題、併入 Tactile iOS 章節）。回流報告 ref：`~/Projects/QuickTimeLapse/docs/lazzymerlin-ds-feedback.md`。本 patch 不含 token 結構變更（§17.6 第 2 條觀察期延續 v0.1.1 起點 2026-04-27）。 |
 | 2026-05-04 | **Tactile 配方收斂為跨平台最大公約數**（v0.2.0 主菜）| 觸發點：使用者反思 LazzyMerlin DS 的核心問題 ——「web 端 Tactile-Heavy 在 SwiftUI 跑不出來，QTL / 未來 iOS 子專案永遠落地不到位」。技術根因：CSS 的 `inset` shadow + SVG turbulence + `mix-blend-mode` 是 web pipeline 獨有，SwiftUI 無等價，硬模擬出來只到 50% 像。三個策略方向（A 降規格全平台 Tactile-Lite / B 分層等價維護兩套 spec / C 退為氣質方向 Tactile 限 web-only）討論後使用者明確選 **方向 D · 兩平台都做 Tactile，但只做 SwiftUI 也能對齊的部分**——比 C 更嚴格，要求視覺氣質「分不太出來」。修法：(1) **§5.4 Tactile 重新定義為「跨平台共通六件配方」**：對角微暗化 / 上亮下暗單層 stroke（取代雙層 inset rim）/ 2 層 drop shadow（從 4 層降到 2 層）/ PNG noise tile（取代 SVG turbulence dynamic）/ text shadow / continuous radius —— 六件每件都 web + SwiftUI 等價可實作。(2) **§5.4.1 四態材質重寫**：Base / Raised / Inset / Pressed 仍是四態語意，但每態用六件 building blocks 組合，CSS 規格大幅簡化（drop shadow 4→2 層、雙層 inset rim → 單層 stroke、SVG turbulence → PNG tile）。(3) **§5.4.2 dark mode** 同步降規格 + 新增「dark 上 noise opacity 0.10-0.12（要稍強才看見）」。(4) **§5.7 Material 對照表加 platform column**：Web class ↔ SwiftUI ViewModifier 對照，明訂 SwiftUI 原生元件優先（Toggle / Slider / Checkbox 用 `.tint(.accent)` 不重造輪子）。(5) **§7.2.9 重寫**（v0.1.4 補的「iOS noise opt-out / 0.05-0.08 克制」**作廢**）改為「Tactile material 跨平台等價」附完整 `tactileRaised()` ViewModifier reference impl。(6) **§7.3 macOS** 沿用 §7.2 SwiftUI ViewModifier 同份 code。(7) **新增 [`assets/tactile-noise.png`](assets/tactile-noise.png)**：256×256 RGBA PNG，從 `<feTurbulence baseFrequency='1.6' numOctaves='4' seed='5' stitchTiles='stitch'>` 用 `rsvg-convert` render，stitchable 無縫，跨平台共用。**Trade-off**：web 端 Tactile 視覺強度約 -30%（雙層 inset rim → 單層 stroke 雕刻感弱、4 層 drop shadow → 2 層浮起感弱、SVG turbulence dynamic → PNG tile static），換得 iOS / macOS / web 三端視覺氣質「分不太出來」+ iOS 子專案有完整 reference impl 可 copy-paste。**v1.0 路徑加新條件第 6 條**：「跨平台 Tactile 等價 reference impl 落地驗證 ✓（建 preview-ios/ + components 6 個 MVP 截圖比對）」，作為 v0.2.0 主菜的下一步（階段 2）。 |
-| 2026-05-05 | **新增 `--ink-on-brand` token · §15.5.4 generalize 為全 component 通用**（v0.2.0-rc.3）| 觸發點：使用者在 preview-ios buttons gallery dark mode 截圖觀察到藍色系按鈕（Primary / Brand Deep）內的文字「跟 light mode 反差不夠大」。技術根因：v0.1.x 起所有彩色底元件（button / chip / avatar / badge）都用 `color: var(--bg)` —— light mode `--bg = Parchment #F5EFE4` 米色字 ✓ OK，但 dark mode `--bg = Midnight Petrol #0F1C26` 深藍字 ⚠️：Mid Petrol `#5E7A8D` 底配 Midnight Petrol 字 = 對比 3.4:1（剛過 AA Large 但邊緣），Deep Petrol `#334D5C` 底配 Midnight Petrol 字 = **1.7:1 完全不過 AA**。§15.5.4「彩色底配米色字」原則 v0.1.0 已存在但只規範 chip / avatar，未 generalize 到 button，且實作上用 `var(--bg)` 而非「永遠米色」。修法：(1) **§2.2.1 加 `--ink-on-brand` token**：`#F5EFE4` Parchment 在 light + dark 都同值（**不翻轉**）。明確區分 `--bg`（page surface 翻轉）vs `--ink-on-brand`（彩色底文字不翻轉）。(2) **§15.5.4 重寫 generalize 為全 component 通用**：button / chip / badge / avatar / toast / modal action 任何 Tactile 彩色 fill 文字一律 `var(--ink-on-brand)`，例外只剩淺底（`bg-muted` Tan）走深字 + ghost / secondary 透明底走 page surface 規則。(3) **`tokens/color.json` 加 `ink-on-brand`** + (4) **components-preview.html `:root` + `[data-theme="dark"]` 加 `--ink-on-brand: #F5EFE4`**，所有彩色 button / chip 變體 `color` 改 `var(--ink-on-brand)`。(5) **新增 `InkOnBrand.colorset`**（light + dark 同 `#F5EFE4`），iOS auto-gen `Color.inkOnBrand`。(6) **iOS source files**（TactileMaterial.swift / ButtonsView / ChipsView / ButtonsTunerView）內彩色 fill 文字 `Color.bg` → `Color.inkOnBrand`，page background 用法（`Color.bg.ignoresSafeArea` 等）保持 `Color.bg` 不動。對比驗證：所有彩色底配 Parchment 字跨 light / dark 對比一致（Mid Petrol 5.4:1、Deep Petrol 7.5:1、Earth Red 5.3:1），全過 AA Large。 |
+| 2026-05-05 | **新增 `--ink-on-brand` token · §15.5.4 generalize 為全 component 通用**（v0.2.0-rc.3）| 觸發點：使用者在 preview-ios buttons gallery dark mode 截圖觀察到藍色系按鈕（Primary / Brand Deep）內的文字「跟 light mode 反差不夠大」。技術根因：v0.1.x 起所有彩色底元件（button / chip / avatar / badge）都用 `color: var(--bg)` —— light mode `--bg = Parchment #F5EFE4` 米色字 ✓ OK，但 dark mode `--bg = Midnight Petrol #0F1C26` 深藍字 ⚠️：Mid Petrol `#5E7A8D` 底配 Midnight Petrol 字 = 對比 3.4:1（剛過 AA Large 但邊緣），Deep Petrol `#334D5C` 底配 Midnight Petrol 字 = **1.7:1 完全不過 AA**。§15.5.4「彩色底配米色字」原則 v0.1.0 已存在但只規範 chip / avatar，未 generalize 到 button，且實作上用 `var(--bg)` 而非「永遠米色」。修法：(1) **§2.2.1 加 `--ink-on-brand` token**：`#F5EFE4` Parchment 在 light + dark 都同值（**不翻轉**）。明確區分 `--bg`（page surface 翻轉）vs `--ink-on-brand`（彩色底文字不翻轉）。(2) **§15.5.4 重寫 generalize 為全 component 通用**：button / chip / badge / avatar / toast / modal action 任何 Tactile 彩色 fill 文字一律 `var(--ink-on-brand)`，例外只剩淺底（`bg-muted` Tan）走深字 + ghost / secondary 透明底走 page surface 規則。(3) **`tokens/color.json` 加 `ink-on-brand`** + (4) **components-preview.html `:root` + `[data-theme="dark"]` 加 `--ink-on-brand: #F5EFE4`**，所有彩色 button / chip 變體 `color` 改 `var(--ink-on-brand)`。(5) **新增 `InkOnBrand.colorset`**（light + dark 同 `#F5EFE4`），iOS auto-gen `Color.inkOnBrand`。(6) **iOS source files**（TactileMaterial.swift / ButtonsView / ChipsView / ButtonsTunerView）內彩色 fill 文字 `Color.bg` → `Color.inkOnBrand`，page background 用法（`Color.bg.ignoresSafeArea` 等）保持 `Color.bg` 不動。對比驗證：所有彩色底配 Parchment 字跨 light / dark 對比一致（Mid Petrol 5.4:1、Deep Petrol 7.5:1、Earth Red 5.3:1），全過 AA Large。**（2026-10-04 更正：這三個數字對錯了顏色。5.4:1 是 `#46647C` 的值，Mid Petrol `#5E7A8D` 配米色只有 3.95:1；Primary Deep 實算 7.79:1、Earth Red 4.61:1。v0.5.0 起有字的藍底改用 `--primary-fill`，見 2026-10-04。）** |
 | 2026-05-05 | **v0.2.0-rc Tactile 收斂 web 端 visual revert · 回 v0.1.4 Tactile-Heavy 9-layer**（反思修正）| 觸發點：使用者在 components-preview chip variants section 觀察「chip 跟 badge / avatar 視覺感不一樣」，分析後發現 v0.2.0-rc.1 收斂時把 chip 從 6-layer 降到 4-layer，badge / avatar 沒一起改保留 6-9 layer。使用者 follow up「舊 6-9 layer Tactile-Heavy 配方好像比較好看」並重新表態：「我是比較喜歡原本的設計、但 SwiftUI 一直做不出來一致的、所以用 tuner 自己手動調、看能否調出類似的、這樣可以維持原本的設計」。**策略反思**：v0.2.0-rc.1「跨平台共通六件配方」收斂太極端、犧牲 web 視覺強度太多 (-30% 太狠)。新策略：web 端維持 v0.1.x Tactile-Heavy 9-layer 美學、SwiftUI 端用 Tuner 校到「視覺氣質接近 web」的配方、跨平台一致性 = 視覺氣質一致而非 pixel-perfect 數值對齊。**修法**：(1) `tokens/shadow.json` 整檔 `git checkout v0.1.4 --` 回 9-layer Tactile-Heavy。(2) `preview/components-preview.html` 整檔 `git checkout v0.1.4 --` 回 v0.1.x web visual + re-apply 主人 v0.2.0-rc 期間明確 confirm 過的優化：(a) `--ink-on-brand: #F5EFE4` token + 13 處彩色底文字 `var(--bg)` → `var(--ink-on-brand)` (§15.5.4) (b) earth tone 跨 mode 同 hex (主人選定 sage `#596751` / ochre `#CB9B52`) (c) dark mode earth tone 提亮 override 砍除。**保留不動**：preview-ios SwiftUI app + Tuner（角色從「校共通配方」變成「校 SwiftUI 接近 web v0.1.x 的數值」）、ink-on-brand spec 規範 (§15.5.4)、earth tone 3 hex 收斂 (§2.2.2)、surface tier (§2.2.1)、brandPage modifier、swatch refactor 等純優化。**待後續 finalize**：DESIGN.md §5.4 / §5.4.1 / §5.4.2 / §5.7 / §7.2.9 spec 文字目前仍是 v0.2.0-rc 共通六件配方版本、跟 web visual / tokens（已 revert v0.1.x）暫時不一致；待主人 Tuner 校好 SwiftUI 接近版本後 batch revisit、寫成「web Tactile-Heavy + SwiftUI 接近版本」雙軌 spec（類似先前提的方向 B 分層等價）。components-preview.html 內 swatch refactor (data-theme attribute + var(--border) chip border + 色票卡 Earth Tone 跨 mode 同 hex 兩列對照) 也待 batch re-apply。**v0.2.0-rc 主菜的 spec 收斂方向** (跨平台最大公約數共通六件配方) **正式作廢**、改走 v0.1.x web 美學 + SwiftUI 視覺接近的「氣質一致」路線。 |
 | 2026-05-05 | **§2.2.2 Earth Tone 收斂為 3 hex 跨 mode 同值**（v0.2.0-rc.4）| 觸發點：使用者在 ButtonsTunerView 內加 BaseFillChoice picker 顯示 §2.1 完整 8 wood + earth tone 預覽時，看到「6 個變體（earth-red light/dark / sage light/dark / ochre light/dark）太多了，只想保留 3 個 hex」並逐次指定 (a) 初版 `#9E5949` terracotta + `#6A7A60` sage + `#D4AB6E` ochre (b) 進一步調整為 sage `#596751`（更深綠）+ ochre `#CB9B52`（更深黃）。決策方向 A 接受 trade-off：sage 在 dark mode 對比 2.7:1 邊緣不過 AA Large，ochre 在 light mode 對比 2.2:1 不過 AA。**最終 3 hex**：terracotta `#9E5949` (cross-mode L 5.3:1 / D 3.4:1)、sage `#596751` (L 5.3:1 / **D 2.7:1 ⚠️**)、ochre `#CB9B52` (**L 2.2:1 ⚠️** / D 6.6:1)。修法：(1) **`tokens/color.json` color.earth** 從 6 變體（terracotta-light/dark, sage-light/dark, ochre-light/dark）收斂為 3 token（terracotta, sage, ochre）跨 mode 同 hex。(2) **semantic.dark** success / warning / error / destructive 改 reference 同一個 earth.* token（不再 reference -dark 版）。(3) **`EarthRed/EarthGreen/EarthOchre.colorset`** light + dark Contents.json 改成同 hex（最終值 9E5949 / 596751 / CB9B52）。(4) **`components-preview.html` `:root`** ochre 從 `#8E6E37` 改 `#CB9B52`、green `#6A7A60` 改 `#596751`、`[data-theme="dark"]` earth tone 提亮 override 整段砍除；色票卡 section 砍掉 Light → Dark 提亮對照、改單一 3 hex 排展示。(5) **§2.2.2 重寫**：移除 light/dark 提亮對照表、改 3 hex 跨 mode 同值表 + 補完整對比度數據（含 sage / ochre 兩 mode 對比警告）+ Trade-off 表格（status icon / chip / dot / 小面積 OK，大面積 button fill / form error text ✗）+ 「sage / ochre 大面積場景」guidance（用 0.10-0.15 opacity tint + icon 取代直接 fill；只 earth-red 適合大面積 destructive button fill）。(6) **`ButtonsTunerView` BaseFillChoice** earth tone 同 3 hex hardcode 對齊。**下游影響**：v0.1.x destructive / success / warning components 跨 mode 視覺從「light 深 / dark 淺提亮」改成「跨 mode 同 hex」，子專案落地時要 review status indicator 對比度（特別是 dark mode sage 跟 light mode ochre 大面積 fill 場景），sage / ochre 改用 surface tint + icon 取代直接 fill。 |
 | 2026-05-07 | **v0.2.0 release · 雙軌 spec finalize · LM* SwiftUI 元件家族 catalog 落地** | 觸發點：使用者 Tuner 校到 v0.2.0-rc.9、SwiftUI 端視覺氣質已接近 web v0.1.x Tactile-Heavy。落實 §16 2026-05-05 v0.2.0-rc.5「待主人 Tuner 校好 SwiftUI 接近版本後 batch revisit、寫成雙軌 spec」TODO。**修法**：(1) **DESIGN.md §5.4 / §5.4.1 / §5.4.2 / §5.4.3 / §5.7 / §7.2.9 全面改寫**：rc.1「跨平台共通配方 / 視覺氣質分不太出來 / web -30%」narrative 退役、改寫成「Tactile-Heavy 雙軌等價」（web 維持 v0.1.x + SwiftUI 校到視覺氣質接近、跨平台一致 = 視覺氣質一致而非 pixel-perfect 數值對齊）。§7.2.9 整段重寫為 Tactile material SwiftUI 落地、附 8 modifier 結構表 + 7 ButtonStyle 表 + LMTactile namespace + Tuner 校準工具段。(2) **§7.2.4 補 iOS Typography 2-tier 規則**（Brand identity LXGW 永遠 / Functional UI system 字 dev toggle）+ Tracking / Line spacing / 4 個 compound modifier。Production iOS app 真正需要 bundle 的 LXGW weight 只剩 Medium ~150KB subset。(3) **§7.2.10 新增「LM* SwiftUI 元件家族 catalog」**：preview-ios/.../Tokens/ 28 個檔案分 6 group（Foundation 5 / Tactile 2 / Layout-Content 5 / Form-Input 7 / Navigation 5 / Overlay-Status-Data 6）+ 子專案落地建議（最低需求 ~10 個 vs 完整 28 個）。(4) **§8.3.2 / §8.3.3 App Icon 對齊 commit `7f5f7e3`**：iOS padding 10% → 11%、stylized 巫師帽 + ✦ → LazzyMerlinLogo3D 整顆；macOS 5 size × 2 scale = 10 個 PNG 從 1024 master LANCZOS 縮、不另繪 macOS-specific 立體版（保留 future work option）。(5) **`tokens/shadow.json`**：button-light/dark 4-layer rc.9 對齊（取代 rc.1 / v0.1.4 殘留 9-layer）+ noise-overlay 加 size token + opacity 0.55/0.75 → 0.30/0.30 收斂。(6) **`preview/components-preview.html`**：noise PNG tile 同源化（cross-platform 同 asset）+ dead variable `--noise-bg-blend` → active var refactor + 3 個 inline SVG 特例（card-editorial / modal / logo-card）統一收進 var pattern + 拿掉 2D Flat Logo card / Tuner Reference section（階段任務完成）+ MoonStars mask path 從 `.xcassets` 改 `assets/` 平面位置（修瀏覽器 fetch 失敗）。(7) **`assets/moon-stars-glyph.png` 新增**（從 preview-ios MoonStars.imageset 24pt@3x copy）。**v1.0 路徑第 6 條達成 ✓**：跨平台 Tactile 視覺氣質一致落地驗證（preview-ios SwiftUI multiplatform app + 28 個 LM* 元件 + Tuner 校到 rc.9 視覺氣質接近 web）。本 release 不含 token 結構 breaking change（§17.6 第 2 條觀察期延續 v0.1.1 起點 2026-04-27）。 |
 | 2026-06-04 | **收編 ChronoPath landing 兩個 pattern 成 DS 正式 helper（`LMTextField`/`LMTextEditor` + `lmFormChrome`）** | 觸發點：ChronoPath landing 回饋（`docs/feedback/chronopath-landing-2026-06.md` §3）指出兩個「各專案重複手刻」的 pattern 值得收進 DS。**修法**：(1) 新增 [`Tokens/LMTextField.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMTextField.swift)：`LMTextField`（單行）/ `LMTextEditor`（多行）包原生 `TextField`/`TextEditor` 成 DS inset 輸入框（`.scrollContentBackground(.hidden)` + tokenized padding + `.tactileInset(radius:)`、文字色 `Color.ink`、placeholder 自畫 `Color.inkMuted`），帶 `isInvalid`（earthRed 外框）/ `isDisabled`（變灰）state + 可傳 a11y label。`radius` 預設 `LMRadius.xl`、`minHeight` 預設 96，對齊 §15.3.2。(2) 新增 [`Tokens/LMFormChrome.swift`](preview-ios/LazzyMerlinDSPreview/LazzyMerlinDSPreview/Tokens/LMFormChrome.swift)：`.lmFormChrome()` / `.lmListChrome()` 把原生 `Form`/`List` 容器層灰底壓平成米色 + 配套 `.lmListRow()`（逐 Section/row 清白卡 + 系統分隔線）。**關鍵限制（已在模擬器實測、含對照組截圖）**：`.listRowBackground(.clear)` 無法從 Form/List **容器層 propagate** 到 cell，cell 白卡必須逐 Section/row 套 `.lmListRow()` 才會消失——故 `.lmFormChrome()` 只負責容器背景、`.lmListRow()` 是必要配套，非 over-engineering。(3) §15.3.2 補 iOS 實作引用、§7.2.10 catalog Form/Input group 7 → 9 檔。(4) FormView gallery 加新元件展示 + `FormChromeDemo`（含「未套配套 → 白卡仍在」對照）。純新增，無既有元件 / token 變更，非 breaking。 |
 | 2026-06-05 | **DS 套用方式定案為兩 tier：Full Brand（自己用）vs Palette-Only（給別人用）** | 觸發點：YourlyOmamori（保險業務員客戶管理 iOS App，屬「給別人用」）原本嘗試套整套 LazzyMerlin DS，實測兩個問題：(1) **太刻意**——使用者沒要求 serif / 暖色紙質 / 特殊 button shape 那種視覺，硬套等於借 App 強推作者自己的 brand；(2) **開發複雜度不對等**——serif title 撞 iOS NavigationStack、mono 字級撞 tab bar、自有 button shape 對不齊 iOS 17+ chrome dimensions，要寫額外 workaround。**決定**：以後套 DS 一律先二選一——自己的 idea / 給自己用 → Tier 1 完整套；別人委託 / 給別人用 / B2B / 長輩 → Tier 2 **只套配色**（palette），typography / spacing / radius / button 走平台原生，保留識別但不強迫對方接受整個 brand。Tier 2 配色含 earth status 三色（大地色 status 是 palette 最有辨識度的部分）。**修法**：(1) §7.0 新增兩 tier 總則 + 判準；(2) `README.md` 第一屏加決策表（借用者一眼知道選哪個）；(3) `tokens/` 五檔頂層加 W3C `$extensions.com.lazzymerlin.tier`（`color.json=palette`、其餘四檔 `=full`），讓「只取 palette」成 machine-readable first-class export——Tier 2 只複製 `color.json` 一個檔；(4) `tokens/README.md` 加 tier 對照表 + 篩選範例。**不再細分**：兩 tier 剛好，三層以上只增加每次接 case 的選擇成本。純文件 + metadata，零 hex / token 值變更，非 breaking。實作參照：YourlyOmamori `Theme.swift > LazzyMerlinPaletteOnlyTheme`。 |
 | 2026-09-10 | **SwiftUI token layer 收斂 + MoonStars sigil 現行規格定案** | 觸發點：SwiftUI preview app 經過多輪調參與 Claude 正規化後，仍有 spacing / radius / motion / overlay chrome / tactile recipe 分散在各元件，且現行 spec 仍殘留把 `✦` 當品牌 logo 的文字。修法：(1) 新增 `LMDesignTokens.swift`，集中 `LMSpacing` / `LMRadius` / `LMControlSize` / `LMMotion` / `LMTactile` / `LMOverlayChrome` / `LMLayout`，讓 button、tab bar、alert、action sheet、toast、skeleton、cards、states 不再各自寫 magic number。(2) 新增 `Surface1.colorset` / `Surface2.colorset`，把 editorial card 與 overlay chrome 的 elevation tier 從口頭規格落到 SwiftUI token。(3) `TactileMaterial.swift` 改吃 `LMTactile` recipe，overlay / tooltip / action sheet 改用純色 `surface2` chrome，不套 tactile-noise。(4) `DESIGN.md` 現行規格改為 MoonStars asset 是品牌 sigil；`✦` 只保留在歷史 Decisions Log 與一般舊紀錄，不再是新元件或 logo 指引。 |
+| 2026-10-04 | **v0.5.0 · 文字對比修正：Stone 加深、拆出 `primary-text` / `primary-fill` / `ink-on-light`、earth tone 不當文字** | 觸發點：Stashly 套用 LMDS 時用 WCAG 公式實算，三組文字低於 4.5:1：深色純文字連結 `#5E7A8D` on `#0F1C26` 3.82、選中 chip 米色字 on Stone `#967459` 3.72、深色 Raised 主按鈕米色字 on `#5E7A8D` 3.95。全掃（文字色 × 4 種底色 × 2 mode ＋ 7 種填色）另外找到：earth tone 當文字（深色 error 3.28 / success 2.87）、ochre chip 配米色字 2.20、iOS `inkMutedSubdued` 65% 3.90、淺色 `chip--soft` 3.95，以及 §2.3「stone 可當 14px 次文字」實為 3.72。**根因**：(a) 文件數字寫錯 —— §14.3 的 4.6 / 4.7 實為 3.95 / 3.72，2026-05-05 的「Mid Petrol 5.4:1」其實是 `#46647C` 的值，推測是兩個藍名字混淆；(b) §2.2.1 / §15.5.4 把彩色底目標訂在 AA Large 3:1，但 chip 11–12pt、按鈕 13–16pt 都不是 WCAG 大字；(c) lazzywill 2026-04-28 落地時只量了「深字配 `#5E7A8D`」，改米色字後沒再量，所以「AA 對比全綠」沒有數字支撐。**數學限制**：dark mode 要藍字在 `#0F1C26` 上過 4.5，藍的相對亮度 L ≥ 0.2232；要米色字在藍底上過 4.5，L ≤ 0.1539。不存在一個藍同時當連結與按鈕底，所以 `primary` 拆成三個角色。**修法**（主人在 HTML 稽核頁逐組拍板）：(1) 新增 `primary-text`（light `#46647C` / dark `#F5EFE4`，連結常駐底線）、`primary-fill`（兩 mode `#46647C`，不互換）、`ink-on-light`（兩 mode `#0F1C26`），全部指向既有 hex，不加新色；(2) Stone `#967459` → `#83664E`（同色相 HSL 加深，米色字 4.62:1），hairline light 跟著改；(3) earth tone 不當文字色，訊息文字改 `--ink`、icon 保留 earth 色；(4) ochre 底改深字（6.88:1）；(5) `inkMutedSubdued` 0.65 → 0.80；(6) `chip--soft` 改 primary-soft 20% tint ＋ `--ink`；(7) dark focus ring 用 `--primary`（3.82）不用 `--primary-soft`（2.78）。新增 `tokens/check-contrast.py`：46 組規則＋colorset 一致性檢查，6 種突變（連結藍改回、stone 改回、subdued 改回、fill 改回 mid-petrol、ink-on-light 改米色、colorset 漂移）都會讓它失敗。**被否決的替代方案**：深色連結新增較亮的藍 `#68869A`（打破嚴格 8 色，且放進卡片 surface-2 只剩 3.55）；選中 chip 改 Espresso（dark mode 跟未選中 chip 的 bgMuted 同一色）；選中 chip 改 Primary Deep（失去 Pressed 的木質暖色）；深色按鈕改 Primary Deep（主 CTA 對頁面只剩 1.94，不醒目）；深色按鈕改亮藍＋深字（違反 2026-04-25「中藍底配深字像被染黑」與 2026-05-05「彩色底一律米色字」）；earth tone 加深色模式文字變體（新增 2 hex）。**版本**：Stone hex 變更屬 breaking。主人選定依 §17.1「v0.x 的 MINOR 可含 breaking」以 v0.5.0 發布並在 CHANGELOG 標 Breaking，不走 §17.4 預告一版（預告期間選中 chip 會繼續不過）。**未處理**：iOS `AccentColor` dark 仍是 `#5E7A8D`，系統元件拿它當字色只有 3.82:1；改米色會讓 Toggle 開啟軌道變米色配白圓鈕，另案決定。 |
 
 ---
 
@@ -2676,7 +2695,7 @@ Tokens：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.1.0/tokens
 4. 給子專案至少一個 release window 跟上
 
 範例（hypothetical）：
-- v0.5.0：CHANGELOG 標 「Deprecated: `chip--soft` token 將在 v1.0.0 移除，改用 `chip--earth-green`」
+- v0.N：CHANGELOG 標 「Deprecated: `chip--xxx` token 將在 v1.0.0 移除，改用 `chip--yyy`」
 - v1.0.0：實際移除，子專案需 migrate
 
 ### 17.5 各子專案落地建議
@@ -2698,13 +2717,13 @@ LazzyMerlin DS pinned: v0.1.0
 
 ### 17.6 v0.x → v1.0 路徑
 
-當前 v0.2.0。預計 v1.0.0 release 條件（持續更新）：
+當前 v0.5.0。預計 v1.0.0 release 條件（持續更新）：
 
 - [x] 至少 1 個子專案完整落地驗證（任一 web 或 iOS / macOS 專案）— **2026-04-28 達成 · 個人網站 lazzywill** 完整落地，驗收 checklist 10 項全綠（見 CHANGELOG v0.1.2 · Validated 段）
 - [ ] Token 結構穩定 3 個月無 breaking change（觀察期：v0.1.1 release 為起點 2026-04-27 → 2026-07-27）
 - [x] 跨平台落地 QA Checklist 完成 — **2026-04-27 達成 · `docs/landing-checklist.md`**
 - [ ] iOS / macOS SDK 範例專案（驗證 §7.2 / §7.3 規範可行）
-- [ ] Accessibility audit 過一輪（§14 規範實測 · lazzywill 落地已過初步檢查，但未做正式 audit）
+- [ ] Accessibility audit 過一輪（§14 規範實測 · 2026-10-04 文字對比全掃完成、修正後 `tokens/check-contrast.py` 全過；focus / ARIA / 觸控目標 / reduced motion 尚未實測）
 - [x] 跨平台 Tactile 視覺氣質一致落地驗證 — **2026-05-07 達成 · v0.2.0 雙軌等價策略** + [`preview-ios/`](preview-ios/) SwiftUI multiplatform app + 28 個 LM* 元件 catalog（§7.2.10）+ iOS Tuner 校到 rc.9 視覺氣質接近 web v0.1.x Tactile-Heavy（見 CHANGELOG v0.2.0 + DESIGN.md §5.4 / §7.2.9 / §7.2.10）
 
 到 v1.0.0 後 LazzyMerlin DS 成為 brand 級穩定 SoT，破壞性更動需嚴格遵守 semver MAJOR bump。

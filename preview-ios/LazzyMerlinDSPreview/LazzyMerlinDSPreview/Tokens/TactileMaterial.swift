@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TactileRaisedModifier: ViewModifier {
     let radius: CGFloat
-    var baseColor: Color = .primaryBrand
+    var baseColor: Color = .primaryFill   // 有字的藍底：兩 mode 同 #46647C（v0.5.0）
     var isPressed: Bool = false
     @Environment(\.colorScheme) private var colorScheme
     private var shadowInk: Color { LMTactile.shadowInk(colorScheme) }
@@ -281,21 +281,23 @@ struct TactilePressedModifier: ViewModifier {
 // MARK: - Tactile Pill (chip / badge / inline status · Capsule with full tactile recipe)
 // 配方同 raised 但 elevation 較輕 (drop 3/3/2 vs raised 5/5/3)
 // isFilled = false 時用 bgMuted、適合 unselected filter chip
+// onLightFill = true：填色兩 mode 都是淺色（earthOchre）→ 字用 inkOnLight 深字 + 白色 raised letter（§15.5.4）
 
 struct TactilePillModifier: ViewModifier {
     let color: Color
     let isFilled: Bool
+    var onLightFill: Bool = false
     @Environment(\.colorScheme) private var colorScheme
 
     func body(content: Content) -> some View {
         content
-            .foregroundStyle(isFilled ? Color.inkOnBrand : Color.ink)
+            .foregroundStyle(isFilled ? (onLightFill ? Color.inkOnLight : Color.inkOnBrand) : Color.ink)
             .shadow(
-                color: isFilled
+                color: isFilled && !onLightFill
                     ? .black.opacity(colorScheme == .dark ? 0.40 : 0.50)
-                    : .white.opacity(colorScheme == .dark ? 0 : 0.40),
+                    : .white.opacity(colorScheme == .dark && !onLightFill ? 0 : 0.40),
                 radius: 0,
-                y: isFilled ? 2 : 1
+                y: isFilled && !onLightFill ? 2 : 1
             )
             .background {
                 Capsule()
@@ -441,8 +443,9 @@ extension View {
     }
 
     /// Tactile Pill — chip / badge / inline status (Capsule + 完整 tactile 配方)
-    func tactilePill(color: Color, isFilled: Bool = true) -> some View {
-        modifier(TactilePillModifier(color: color, isFilled: isFilled))
+    /// onLightFill：earthOchre 這類兩 mode 都淺的填色要傳 true（深字），否則米色字只有 2.20:1
+    func tactilePill(color: Color, isFilled: Bool = true, onLightFill: Bool = false) -> some View {
+        modifier(TactilePillModifier(color: color, isFilled: isFilled, onLightFill: onLightFill))
     }
 
     /// Tactile Circle — avatar / status dot (Circle + 完整 tactile 配方)
