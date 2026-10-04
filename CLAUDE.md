@@ -7,8 +7,8 @@
 **做任何視覺 / UI 決策前先讀 `DESIGN.md`。**
 
 `DESIGN.md` 是所有專案的設計源頭：
-- 色彩 tokens（5 色，light/dark 兩套）
-- 字體系統（Cormorant Garamond + 霞鶩文楷 + Geist + Noto Sans TC）
+- 色彩 tokens（核心 4 色，light/dark 兩套）
+- 字體系統（4-tier：Display 霞鶩文楷、Sans Geist + Noto Sans TC、Serif Source Serif 4 + Noto Serif TC、Mono Geist Mono）
 - 間距 / 形狀 / 動態 tokens
 - 6 個平台的套用指南（Web、iOS、macOS、Notion、Chrome ext、IG）
 - 反面教材清單
@@ -19,11 +19,11 @@
 - **Notion 模板**：依 §7.4 用 Notion 原生色映射 brand tokens
 - **Chrome ext**：共用 Web tokens
 - **IG 素材**：依 §7.6 版型
-- **Game**：Opt-out，但 splash / About 帶入 `✦ LazzyMerlin` 簽名
+- **Game**：Opt-out，但 splash / About 帶入 MoonStars + `LazzyMerlin` 簽名
 
 ## 修改 DESIGN.md
 
-- 任何對 brand tokens 的變更（色、字、間距）都要更新 §10 Decisions Log，註明 Rationale
+- 任何對 brand tokens 的變更（色、字、間距）都要更新 §16 Decisions Log，註明 Rationale
 - 各平台指南（§7）可因實作經驗迭代
 - 大幅修改（例：更換主色、更換字體家族）需要在更新後重新跑 `/design-consultation` 檢查跨平台一致性
 
