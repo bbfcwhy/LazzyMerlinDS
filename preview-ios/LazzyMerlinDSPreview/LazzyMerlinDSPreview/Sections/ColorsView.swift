@@ -10,7 +10,7 @@ struct ColorsView: View {
         .init(name: "PRIMARY", hex: "#46647C", color: .primaryBrand),
         .init(name: "PRIMARY-SOFT", hex: "#5E7A8D", color: .primarySoft),
         .init(name: "PRIMARY-DEEP", hex: "#334D5C", color: .primaryDeep),
-        .init(name: "STONE", hex: "#967459", color: .stone)
+        .init(name: "STONE", hex: "#83664E", color: .stone)
     ]
 
     private let statusRoles: [ColorSwatch] = [

@@ -15,8 +15,9 @@
       --ink: #0F1C26;
       --ink-muted: #4E3029;
       --primary: #46647C;
-      --stone: #967459;
-      --hairline: rgba(150, 116, 89, 0.30);
+      --primary-text: #46647C;
+      --stone: #83664E;
+      --hairline: rgba(131, 102, 78, 0.30);
       /* Earth tone status · 本檔僅 og-orb-2 用到 ochre 暖調 */
       --earth-ochre: #8E6E37;
     }
@@ -28,7 +29,8 @@
       --ink: #F5EFE4;
       --ink-muted: #DECCA7;
       --primary: #5E7A8D;
-      --stone: #967459;
+      --primary-text: #F5EFE4;  /* dark 藍字不過 4.5:1 */
+      --stone: #83664E;
       --hairline: rgba(94, 122, 141, 0.30);
       --earth-ochre: #D4AB6E;
     }
@@ -169,7 +171,7 @@
       font-family: 'Geist Mono', monospace;
       font-size: 13px;
       letter-spacing: 0.22em;
-      color: var(--primary);
+      color: var(--primary-text);
       text-transform: uppercase;
       margin-bottom: 20px;
       display: flex;

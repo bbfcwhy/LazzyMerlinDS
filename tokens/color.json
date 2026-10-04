@@ -9,18 +9,18 @@
       "$description": "Brand Core 8 色 wood palette（§2.1）。所有其他色都從這裡 reference 出來，不做新 hex。",
       "parchment":       { "$value": "#F5EFE4", "$type": "color", "$description": "Light surface · 奶油紙底" },
       "tan":             { "$value": "#DECCA7", "$type": "color", "$description": "Light surface muted / Dark ink muted" },
-      "stone":           { "$value": "#967459", "$type": "color", "$description": "中性 muted accent · 兩 mode 共用" },
+      "stone":           { "$value": "#83664E", "$type": "color", "$description": "中性 muted accent · 兩 mode 共用" },
       "espresso":        { "$value": "#4E3029", "$type": "color", "$description": "Light ink muted / Dark surface muted" },
       "midnight-petrol": { "$value": "#0F1C26", "$type": "color", "$description": "Dark surface · Light ink · 品牌藍錨" },
       "primary-deep":    { "$value": "#334D5C", "$type": "color", "$description": "Brand 強調 · 兩 mode 共用 · dark mode 不當文字（對比不足）" },
-      "primary":         { "$value": "#46647C", "$type": "color", "$description": "主 CTA / 連結色 · light primary = dark primary-soft" },
+      "primary":         { "$value": "#46647C", "$type": "color", "$description": "Deep Petrol · light primary / primary-text = 兩 mode 的 primary-fill（有字的藍底）= dark primary-soft" },
       "mid-petrol":      { "$value": "#5E7A8D", "$type": "color", "$description": "Light primary-soft = dark primary（兩 mode 互換）" }
     },
     "earth": {
       "$description": "Status Extension（§2.2）· 大地色系，跟 wood palette 同 saturation 量級。Status-only 不擴 brand core。",
       "terracotta": { "$value": "#9E5949", "$type": "color", "$description": "Error / destructive · Terracotta 陶土紅 · 跨 mode 同 hex (v0.2.0-rc.4 起收斂)" },
-      "sage":       { "$value": "#596751", "$type": "color", "$description": "Success · Sage / Moss 苔蘚綠 · 跨 mode 同 hex · ⚠️ dark surface 上對比 ~2.7:1 邊緣不過 AA Large、僅適合 status icon / chip / dot 小面積" },
-      "ochre":      { "$value": "#CB9B52", "$type": "color", "$description": "Warning · Burnt Ochre 赭石黃 · 跨 mode 同 hex · ⚠️ light surface 上對比 ~2.2:1 不過 AA、僅適合 status icon / chip 小面積、不作大 button fill" }
+      "sage":       { "$value": "#596751", "$type": "color", "$description": "Success · Sage / Moss 苔蘚綠 · 跨 mode 同 hex · ⚠️ dark surface 上對比 2.87:1 不過 AA Large、不當文字色，僅適合 status icon / chip / dot 小面積" },
+      "ochre":      { "$value": "#CB9B52", "$type": "color", "$description": "Warning · Burnt Ochre 赭石黃 · 跨 mode 同 hex · ⚠️ light surface 上對比 2.20:1 不過 AA、不當文字色，僅適合 status icon / chip 小面積、不作大 button fill · 當底色時字用 ink-on-light" }
     },
     "light": {
       "$description": "Light mode role tokens · 所有 light mode CSS 用這層",
@@ -30,7 +30,10 @@
       "ink":           { "$value": "{color.wood.midnight-petrol}", "$type": "color" },
       "ink-muted":     { "$value": "{color.wood.espresso}",        "$type": "color" },
       "ink-on-brand":  { "$value": "{color.wood.parchment}",       "$type": "color", "$description": "彩色底文字（不翻轉）· §15.5.4 全 component 通用 · v0.2.0-rc.3 起" },
-      "primary":       { "$value": "{color.wood.primary}",         "$type": "color" },
+      "ink-on-light":  { "$value": "{color.wood.midnight-petrol}", "$type": "color", "$description": "跨 mode 都是淺色的填色（warning ochre）上的文字 · 不翻轉 · v0.5.0 起" },
+      "primary-text":  { "$value": "{color.wood.primary}",         "$type": "color", "$description": "要當文字的藍：連結（加底線）/ ghost button / section label / 選中 tab · v0.5.0 起" },
+      "primary-fill":  { "$value": "{color.wood.primary}",         "$type": "color", "$description": "有字的藍底（主按鈕 / chip--primary / status chip）· 不跟 mode 互換 · v0.5.0 起" },
+      "primary":       { "$value": "{color.wood.primary}",         "$type": "color", "$description": "無字的藍色強調（focus ring / tint / icon / 邊框）· 文字改用 primary-text、有字的填色改用 primary-fill" },
       "primary-soft":  { "$value": "{color.wood.mid-petrol}",      "$type": "color" },
       "primary-deep":  { "$value": "{color.wood.primary-deep}",    "$type": "color" },
       "stone":         { "$value": "{color.wood.stone}",           "$type": "color" },
@@ -48,7 +51,10 @@
       "ink":           { "$value": "{color.wood.parchment}",       "$type": "color" },
       "ink-muted":     { "$value": "{color.wood.tan}",             "$type": "color" },
       "ink-on-brand":  { "$value": "{color.wood.parchment}",       "$type": "color", "$description": "彩色底文字（不翻轉、跟 light mode 同 hex）· §15.5.4" },
-      "primary":       { "$value": "{color.wood.mid-petrol}",      "$type": "color", "$description": "= light primary-soft（互換）" },
+      "ink-on-light":  { "$value": "{color.wood.midnight-petrol}", "$type": "color", "$description": "跟 light mode 同 hex（不翻轉）· v0.5.0 起" },
+      "primary-text":  { "$value": "{color.wood.parchment}",       "$type": "color", "$description": "dark mode 沒有任何 palette 藍能在 #0F1C26 上過 4.5:1，藍色文字改米色（連結靠底線辨識）· v0.5.0 起" },
+      "primary-fill":  { "$value": "{color.wood.primary}",         "$type": "color", "$description": "跟 light mode 同 hex（不互換）· 米色字 5.44:1 · v0.5.0 起" },
+      "primary":       { "$value": "{color.wood.mid-petrol}",      "$type": "color", "$description": "= light primary-soft（互換）· 無字的強調用（focus ring 3.82:1 過非文字 3:1），不當文字、不當有字的填色" },
       "primary-soft":  { "$value": "{color.wood.primary}",         "$type": "color", "$description": "= light primary（互換）" },
       "primary-deep":  { "$value": "{color.wood.primary-deep}",    "$type": "color" },
       "stone":         { "$value": "{color.wood.stone}",           "$type": "color" },
@@ -62,7 +68,7 @@
       "$description": "rgba 透明度層（hairline / border / focus ring 等）",
       "border-light":     { "$value": "rgba(15, 28, 38, 0.10)",   "$type": "color" },
       "border-dark":      { "$value": "rgba(245, 239, 228, 0.08)", "$type": "color" },
-      "hairline-light":   { "$value": "rgba(150, 116, 89, 0.30)",  "$type": "color" },
+      "hairline-light":   { "$value": "rgba(131, 102, 78, 0.30)",  "$type": "color" },
       "hairline-dark":    { "$value": "rgba(94, 122, 141, 0.30)",  "$type": "color" }
     }
   }

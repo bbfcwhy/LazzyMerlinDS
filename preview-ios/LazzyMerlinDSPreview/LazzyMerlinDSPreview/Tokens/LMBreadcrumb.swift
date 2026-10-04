@@ -2,7 +2,7 @@ import SwiftUI
 
 // LazzyMerlin DS · Breadcrumb (層級導航)
 // 結構：[首頁] · [專案] · [當前頁]
-//   - 前面項目用 primaryBrand 字 (可點)
+//   - 前面項目用 primaryText 字 + 底線 (可點 · 連結規則 §2.3)
 //   - 最後一項 (current page) 用 inkMuted 字 (不可點)
 //   - 中間用 · 分隔符 inkMuted
 
@@ -47,7 +47,8 @@ struct LMBreadcrumb: View {
                 onTap?(crumb.id)
             } label: {
                 Text(crumb.text)
-                    .foregroundStyle(Color.primaryBrand)
+                    .foregroundStyle(Color.primaryText)
+                    .underline()
             }
             .buttonStyle(.plain)
         }

@@ -112,7 +112,7 @@ struct FormView: View {
                             Spacer()
                             Text(String(format: "%.0f%%", sliderVal * 100))
                                 .font(.system(.footnote, design: .monospaced))
-                                .foregroundStyle(Color.primaryBrand)
+                                .foregroundStyle(Color.primaryText)
                         }
                         LMSlider(value: $sliderVal, range: 0...1, step: 0.01)
                     }
@@ -170,7 +170,7 @@ struct FormView: View {
                 if required {
                     Text("*")
                         .font(.lmBodySmall.weight(.medium))
-                        .foregroundStyle(Color.earthRed)
+                        .foregroundStyle(Color.ink)
                 }
             }
 
@@ -184,18 +184,20 @@ struct FormView: View {
             if let error {
                 HStack(spacing: LMSpacing.xs) {
                     Image(systemName: "exclamationmark.circle")
+                        .foregroundStyle(Color.earthRed)
                     Text(error)
                 }
                 .font(.lmCaption)
-                .foregroundStyle(Color.earthRed)
+                .foregroundStyle(Color.ink)   // 狀態靠 icon + 文字，earth 色只給 icon（v0.5.0）
             }
             if let success {
                 HStack(spacing: LMSpacing.xs) {
                     Image(systemName: "checkmark")
+                        .foregroundStyle(Color.earthGreen)
                     Text(success)
                 }
                 .font(.lmCaption)
-                .foregroundStyle(Color.earthGreen)
+                .foregroundStyle(Color.ink)
             }
         }
     }

@@ -89,7 +89,7 @@ struct RadiusView: View {
         HStack(alignment: .top, spacing: LMSpacing.md) {
             Text(token)
                 .font(.lmLabel)
-                .foregroundStyle(Color.primaryBrand)
+                .foregroundStyle(Color.primaryText)
                 .frame(width: 130, alignment: .leading)
             Text(usage)
                 .font(.lmBodySmall)

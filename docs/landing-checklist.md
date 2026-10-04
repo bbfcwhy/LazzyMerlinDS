@@ -12,7 +12,7 @@
 切到子專案資料夾開新 Claude Code session 後，paste 以下這段給它：
 
 ```
-我要把 LazzyMerlin Design System v0.4.0 套用到這個子專案。
+我要把 LazzyMerlin Design System v0.5.0 套用到這個子專案。
 
 LazzyMerlin DS 是我的跨平台品牌核心 design system，住在獨立 repo：
 https://github.com/bbfcwhy/LazzyMerlinDS
@@ -63,10 +63,10 @@ error: Multiple commands produce 'Info.plist'
 
 ```bash
 # ✅ 正確
-curl -s https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/DESIGN.md > /tmp/lm-spec.md
+curl -s https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/DESIGN.md > /tmp/lm-spec.md
 
 # ✗ 錯誤
-WebFetch https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.4.0/DESIGN.md
+WebFetch https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.5.0/DESIGN.md
 ```
 
 **為什麼：** WebFetch / browse 工具會 LLM-summarize 內容、漏掉 spec 的關鍵數值（box-shadow 完整 multi-layer 數值、邊緣狀態文案完整 wording、inset rim 兩層 hex 等）。QTL 落地踩過此雷：M1 Tactile material 強度只到 spec 1/4 ~ 1/8，因為 WebFetch 漏掉 §5.4.1 完整 box-shadow stack，M3.5 重做才修正。
@@ -150,7 +150,7 @@ body { font-family: var(--font-geist), var(--font-noto-sans-tc), sans-serif; }
 
 LXGW WenKai TC 在 Google Fonts 上有，但檔案較大（繁中 subset 仍 ~5MB），考慮 subset 或自行 host。Astro 推薦走 `@fontsource/*` package（`@fontsource/geist` / `@fontsource/noto-sans-tc`，build 時自動 self-host）。
 
-> 不想手寫：直接引入 DS 現成的 [`tokens/font.css`](https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/font.css)。它已含 Google Fonts `@import`、4 個字族變數（`--lm-font-display` / `-sans` / `-serif` / `-mono`）和字級 token，比上面的 `<link>` 多了長文用的 Serif tier（Source Serif 4 + Noto Serif TC）。只適用 Tier 1。
+> 不想手寫：直接引入 DS 現成的 [`tokens/font.css`](https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/font.css)。它已含 Google Fonts `@import`、4 個字族變數（`--lm-font-display` / `-sans` / `-serif` / `-mono`）和字級 token，比上面的 `<link>` 多了長文用的 Serif tier（Source Serif 4 + Noto Serif TC）。只適用 Tier 1。
 
 ### iOS / macOS bundle
 
@@ -175,14 +175,14 @@ body { font-family: 'Geist', 'Noto Sans TC', sans-serif; }
 
 ```bash
 mkdir -p src/styles/tokens
-curl -o src/styles/tokens/color.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/color.json
-curl -o src/styles/tokens/typography.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/typography.json
-curl -o src/styles/tokens/dimension.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/dimension.json
-curl -o src/styles/tokens/shadow.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/shadow.json
-curl -o src/styles/tokens/motion.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/motion.json
+curl -o src/styles/tokens/color.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/color.json
+curl -o src/styles/tokens/typography.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/typography.json
+curl -o src/styles/tokens/dimension.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/dimension.json
+curl -o src/styles/tokens/shadow.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/shadow.json
+curl -o src/styles/tokens/motion.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/motion.json
 ```
 
-子專案 README 寫一行：「LazzyMerlin DS pinned: v0.4.0（[CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md)）」。
+子專案 README 寫一行：「LazzyMerlin DS pinned: v0.5.0（[CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md)）」。
 
 ### B · Style Dictionary 自動產 CSS variables
 
@@ -213,12 +213,18 @@ npx style-dictionary build
   --primary-deep: #334D5C;
   --primary: #46647C;
   --primary-soft: #5E7A8D;
-  --stone: #967459;
+  --stone: #83664E;
+
+  /* === 文字配對（§15.5.4 · v0.5.0）=== */
+  --ink-on-brand: #F5EFE4;   /* 彩色底上的字，不翻轉 */
+  --ink-on-light: #0F1C26;   /* ochre 底上的字，不翻轉 */
+  --primary-text: #46647C;   /* 藍色文字：連結（加底線）/ label */
+  --primary-fill: #46647C;   /* 有字的藍底：主按鈕 / chip，不互換 */
 
   /* === Earth tone Status Extension === */
   --earth-red:   #9E5949;
-  --earth-green: #6A7A60;
-  --earth-ochre: #8E6E37;
+  --earth-green: #596751;
+  --earth-ochre: #CB9B52;
 
   /* === Semantic alias === */
   --info: var(--primary);
@@ -228,7 +234,7 @@ npx style-dictionary build
   --destructive: var(--earth-red);
 
   /* === Hairline / Border === */
-  --hairline: rgba(150, 116, 89, 0.30);
+  --hairline: rgba(131, 102, 78, 0.30);
   --border: rgba(15, 28, 38, 0.10);
 
   /* === Tactile noise overlay === */
@@ -255,11 +261,9 @@ npx style-dictionary build
   --primary-deep: #334D5C;
   --primary: #5E7A8D;        /* 互換 */
   --primary-soft: #46647C;   /* 互換 */
-  --stone: #967459;
-
-  --earth-red:   #C58775;
-  --earth-green: #A8B898;
-  --earth-ochre: #D4AB6E;
+  --primary-text: #F5EFE4;   /* dark 藍字不過 4.5:1，改米色＋底線 */
+  --stone: #83664E;
+  /* earth tone 跨 mode 同 hex，dark 不覆寫（§2.2.2） */
 
   --hairline: rgba(94, 122, 141, 0.30);
   --border: rgba(245, 239, 228, 0.08);
@@ -349,7 +353,7 @@ CSS pattern 全部從 `preview/components-preview.html` Phase 4 copy。**reduced
 
 文案直接 copy DESIGN.md §10.3 表格，不要自己重寫。
 
-MoonStars 是品牌 sigil 圖檔（web 用 `assets/moon-stars-glyph.png`，iOS 用 `assets/moon-stars-ios/`），不要用 `✦` 字元代替。v0.4.0 的 DESIGN.md 還寫 `✦`；2026-09-10 已定案改用 MoonStars（見 main 的 DESIGN.md §6.1），以這裡為準。
+MoonStars 是品牌 sigil 圖檔（web 用 `assets/moon-stars-glyph.png`，iOS 用 `assets/moon-stars-ios/`），不要用 `✦` 字元代替。v0.5.0 起 DESIGN.md §6.1 已改用 MoonStars（2026-09-10 定案）；更早的版本還寫 `✦`，以 §6.1 為準。
 
 ---
 
@@ -402,36 +406,30 @@ MoonStars 是品牌 sigil 圖檔（web 用 `assets/moon-stars-glyph.png`，iOS �
 ## 重要 GitHub URLs
 
 - **Repo**：https://github.com/bbfcwhy/LazzyMerlinDS
-- **Spec v0.4.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.4.0/DESIGN.md
-- **Components Preview v0.4.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.4.0/preview/components-preview.html
-- **Tokens v0.4.0**：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.4.0/tokens
+- **Spec v0.5.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.5.0/DESIGN.md
+- **Components Preview v0.5.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.5.0/preview/components-preview.html
+- **Tokens v0.5.0**：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.5.0/tokens
 - **CHANGELOG**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md
 
-### Pin 到 v0.4.0 的 raw URLs
+### Pin 到 v0.5.0 的 raw URLs
 
 ```
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/color.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/typography.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/dimension.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/shadow.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/motion.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/color.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/typography.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/dimension.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/shadow.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/motion.json
 ```
 
-### v0.4.0 之後到 main HEAD 的改動
+### v0.5.0 之後到 main HEAD 的改動
 
-截至 2026-10-04：`tokens/` 五檔與 v0.4.0 完全相同，pin v0.4.0 拿到的 token 值就是最新，不需要 cherry-pick。
+v0.4.0 → v0.5.0 的變更見 [CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md) 的 `[0.5.0]`。**含 Breaking**：Stone 色碼由 `#967459` 改為 `#83664E`，並新增 `primary-text` / `primary-fill` / `ink-on-light` 三個角色 token。從 v0.4.0 以前升上來的子專案，要整檔換 `tokens/color.json` 與 iOS colorset，再照 CHANGELOG 的 Downstream Impact 改字色。
 
-main 上還沒發版的改動（尚未寫進 CHANGELOG、尚未打 tag）：
-
-- `DESIGN.md`：earth status 色的說明文字對齊 `tokens/color.json`（token 值沒變）；品牌 sigil 由 `✦` 改為 MoonStars asset（§6.1，本清單 Phase 8 已跟進）；補 SwiftUI token namespace 對照
-- `preview-ios/`：寫死的間距／圓角數字改用 token 名稱，沒有新元件
-- `preview/components-preview.html`：版本標籤改為 v0.4.0
-
-自己查最新狀態（在 LazzyMerlinDS repo 裡跑）：
+v0.5.0 之後 main 有沒有新改動，自己查（在 LazzyMerlinDS repo 裡跑）：
 
 ```bash
-git log --oneline v0.4.0..origin/main
-git diff --stat v0.4.0 origin/main -- tokens/
+git log --oneline v0.5.0..origin/main
+git diff --stat v0.5.0 origin/main -- tokens/
 ```
 
 第二條指令沒輸出 = token 值沒變。
@@ -446,7 +444,7 @@ git diff --stat v0.4.0 origin/main -- tokens/
 - [ ] Light + Dark mode 都跑過一遍
 - [ ] Reduced motion 模式 ambient orbs / spinner / drift 都停下
 - [ ] Focus ring（鍵盤 Tab 所有互動元件）都看得見
-- [ ] 對比度 AA（小文字 4.5:1、大文字 3:1）
+- [ ] 對比度 AA（小文字 4.5:1、大文字 3:1）：藍色文字用 `--primary-text`、有字的藍底用 `--primary-fill`、ochre 底用 `--ink-on-light`、earth tone 不當文字色。數字以 DS repo 的 `python3 tokens/check-contrast.py` 為準，不要用文件裡手寫的數字
 - [ ] 沒引入新 hex / 新字體 / 新元件 anatomy
 - [ ] 反面教材 9 條全部沒踩
 - [ ] 邊緣狀態文案（404 / Error / Empty）有用 §10.3 而不是自己重寫

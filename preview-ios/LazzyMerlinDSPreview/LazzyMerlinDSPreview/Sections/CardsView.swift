@@ -32,7 +32,7 @@ struct CardsView: View {
                                 .font(.lmH3)
                             Text("跨平台品牌核心")
                                 .font(.lmBodySmall)
-                                .foregroundStyle(Color.inkOnBrand.opacity(0.85))
+                                .foregroundStyle(Color.inkOnBrand)   // 85% 只有 4.45:1
                         }
                         Spacer()
                     }
@@ -57,9 +57,9 @@ struct CardsView: View {
 
                 LMSection("STAT CARDS") {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: LMSpacing.md)], spacing: LMSpacing.md) {
-                        statCard("DAU", value: "1,284", trend: "↑ 12% vs 上週", color: .earthGreen)
-                        statCard("RETENTION", value: "68%", trend: "↓ 3% vs 上週", color: .earthRed)
-                        statCard("REVENUE", value: "$3,420", trend: "↑ 8%", color: .earthGreen)
+                        statCard("DAU", value: "1,284", trend: "↑ 12% vs 上週")
+                        statCard("RETENTION", value: "68%", trend: "↓ 3% vs 上週")
+                        statCard("REVENUE", value: "$3,420", trend: "↑ 8%")
                     }
                 }
 
@@ -73,7 +73,7 @@ struct CardsView: View {
 
 
     @ViewBuilder
-    private func statCard(_ label: String, value: String, trend: String, color: Color) -> some View {
+    private func statCard(_ label: String, value: String, trend: String) -> some View {
         VStack(alignment: .leading, spacing: LMSpacing.lg) {
             Text(label)
                 .sectionLabel()
@@ -85,7 +85,7 @@ struct CardsView: View {
                 .minimumScaleFactor(0.7)
             Text(trend)
                 .font(.lmCaption)
-                .foregroundStyle(color)
+                .foregroundStyle(Color.ink)   // 方向靠 ↑↓；earth 色當字不過 4.5:1（v0.5.0）
         }
         .padding(LMSpacing.editorial)
         .frame(maxWidth: .infinity, minHeight: 180, alignment: .leading)

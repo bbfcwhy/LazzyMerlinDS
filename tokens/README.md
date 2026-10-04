@@ -22,6 +22,16 @@ tokens/
 └── motion.json      duration / easing tokens
 ```
 
+## 對比檢查
+
+改任何色碼、角色 token 或元件的字色配對之後，跑：
+
+```bash
+python3 tokens/check-contrast.py
+```
+
+它用 WCAG 2.x 公式檢查 46 組「字色 × 底色」（light / dark 各一輪），並比對 iOS colorset 跟 `color.json` 是否一致。exit 0 才算過。`DESIGN.md §14.3` 的對比數字以它的輸出為準，不要手算後直接寫進文件。
+
 ## Token 層級
 
 Tokens 分三層，從原始值往語意層 reference：

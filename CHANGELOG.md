@@ -4,6 +4,59 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 > Breaking change 政策、版本 bump 規則見 `DESIGN.md §17 Versioning`。
 
+## [0.5.0] — 2026-10-04
+
+> ⚠️ **Breaking**：Stone 色碼由 `#967459` 改為 `#83664E`（hairline light 跟著改）。依 `DESIGN.md §17.1`「v0.x 的 MINOR 可含 breaking」以 MINOR 發布。子專案同步時要整檔換 `tokens/color.json` 與 iOS colorset。
+
+文字對比修正。來源：Stashly 套用時實算發現 3 組低於 WCAG AA 4.5:1，全掃後再找到 4 類。完整稽核與決策見 `DESIGN.md §16` 2026-10-04。
+
+### Added
+
+- **3 個角色 token**（全部指向既有 hex，不加新色）：
+  - `primary-text`：要當文字的藍（連結、ghost button、section label、選中 tab）· light `#46647C` / dark `#F5EFE4`。
+  - `primary-fill`：有字的藍底（主按鈕、`chip--primary`、status chip、avatar、日期選取、web 分頁 active）· 兩 mode 都 `#46647C`。
+  - `ink-on-light`：兩 mode 都淺的填色（earth-ochre）上的文字 · 兩 mode 都 `#0F1C26`。
+  - 對應 web CSS 變數 `--primary-text` / `--primary-fill` / `--ink-on-light`，iOS colorset `PrimaryText` / `PrimaryFill` / `InkOnLight`（`Color.primaryText` 等）。
+- **`tokens/check-contrast.py`**：46 組字色 × 底色規則（WCAG 2.x 公式）＋ iOS colorset 與 `color.json` 一致性檢查。改色碼後跑一次，exit 0 才算過。
+- `TactilePillModifier` / `.tactilePill()` / `LMStatusChip` 新增 `onLightFill` 參數：ochre 底傳 `true`，字改深色。
+
+### Changed
+
+- **Stone** `#967459` → `#83664E`：選中 chip / Tactile Pressed / iOS 分頁 active 的米色字 3.72 → 4.62:1。
+- **連結常駐底線**：dark mode 連結改米色（`--primary-text`），靠底線跟內文區分（深色連結 3.82 → 15.11:1）。
+- **有字的藍底不跟 mode 互換**：主按鈕、`chip--primary`、status chip、avatar、分頁、日期選取改用 `primary-fill`（深色主按鈕 3.95 → 5.44:1）。`--primary` 的 light / dark 互換只留給無字的強調（focus ring、icon、邊框、tint）。
+- **Earth tone 不當文字色**：表單錯誤 / 成功訊息、required `*`、stat trend、LMAlert destructive 按鈕文字改 `--ink`，earth 色只留給 icon。
+- **Ochre 底的 chip / badge 改深字**（`--ink-on-light`，2.20 → 6.88:1）。
+- **`.chip--soft`** 改 primary-soft 20% tint + `--ink`（淺色 3.95 → 12.07:1）。
+- **iOS `inkMutedSubdued`** alpha 0.65 → 0.80（淺色頁面 3.90 → 5.89:1）。
+- **Dark focus ring** 用 `--primary`（3.82:1）取代 `--primary-soft`（2.78:1）。
+- Section label / kicker / ghost button / 選中 tab / breadcrumb 連結改用 `primary-text`；web breadcrumb 連結加底線。
+- `DESIGN.md` 其他段落（§5.4.1、§6.3、§7.2、§15.2–15.8）的字色 / 填色寫法同步改成新 token；loading 狀態不再弱化字色。
+
+### Fixed
+
+- `DESIGN.md` 寫錯的對比數字：§14.3（4.6 / 4.7 → 實為 3.95 / 3.72）、§16 2026-05-05（Mid Petrol 5.4 → 3.95，5.4 是 `#46647C` 的值）、§2.1 Primary Deep（2.9 → 1.94）、§2.2.1（3.4 → 3.82）、§2.2.2 earth tone 表、§2.3 stone「~4.2:1 可當 14px 次文字」（實為 3.72，14px 也不是大字）。§15.5.4 目標由 AA Large 3:1 改為 4.5:1。
+- §2.4.4 / §14 寫「dark focus ring 換 primary-soft 提亮」：dark primary-soft 其實更暗。
+
+### Changed（v0.4.0 之後已在 main、先前未寫進 CHANGELOG）
+
+- **品牌 sigil 由 `✦` 改為 MoonStars asset**（`DESIGN.md §6.1`，§16 2026-09-10 定案）；Unicode 裝飾字（◈ ❦ ☾）只作文字分隔。
+- `DESIGN.md`：earth status 色說明文字對齊 `tokens/color.json`（token 值沒變）；補 SwiftUI token namespace 對照。
+- `preview-ios/`：寫死的間距 / 圓角數字改用 token 名稱，沒有新元件。
+- `preview/components-preview.html`：版本標籤與註解版本字串統一。
+- `README.md`：加 GitHub Pages 線上預覽網址。
+- `CLAUDE.md` / `AGENTS.md` / `DESIGN.md`：過時說明文字修正（PR #6）。
+- `docs/landing-checklist.md`：版本釘選由 v0.1.4 更新（PR #7）；Phase 8 與驗收清單的 sigil 改 MoonStars、Phase 1 加 `tokens/font.css` 指路（PR #8）；本版再改為 v0.5.0，並重寫「之後到 main HEAD 的改動」段。
+- `.gitignore`：加入 Windows `Thumbs.db`。
+
+### Downstream Impact
+
+- **所有子專案**（Stashly、MeowLog、lazzywill、QuickTimeLapse 等）：整檔同步 `tokens/color.json` 與 colorset（含新增 3 個）；有字的藍底改 `primaryFill` / `--primary-fill`，藍色文字改 `primaryText` / `--primary-text`，連結加底線，ochre chip 傳 `onLightFill: true`，earth 色文字改 `ink`。改完在 DS repo 跑 `python3 tokens/check-contrast.py` 對照數字。
+- `docs/landing-checklist.md` 的 CSS 範本 earth 色改回跨 mode 同值（原本還是 rc.4 以前的 `#6A7A60` / `#8E6E37` 與 dark 提亮版）。
+- 已知未處理：iOS `AccentColor` dark 仍是 `#5E7A8D`，系統元件（toolbar 按鈕等）拿它當字色只有 3.82:1，另案處理。
+
+[0.5.0]: https://github.com/bbfcwhy/LazzyMerlinDS/releases/tag/v0.5.0
+
 ## [0.4.0] — 2026-07-31
 
 ### Added
