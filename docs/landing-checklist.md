@@ -150,6 +150,8 @@ body { font-family: var(--font-geist), var(--font-noto-sans-tc), sans-serif; }
 
 LXGW WenKai TC 在 Google Fonts 上有，但檔案較大（繁中 subset 仍 ~5MB），考慮 subset 或自行 host。Astro 推薦走 `@fontsource/*` package（`@fontsource/geist` / `@fontsource/noto-sans-tc`，build 時自動 self-host）。
 
+> 不想手寫：直接引入 DS 現成的 [`tokens/font.css`](https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/font.css)。它已含 Google Fonts `@import`、4 個字族變數（`--lm-font-display` / `-sans` / `-serif` / `-mono`）和字級 token，比上面的 `<link>` 多了長文用的 Serif tier（Source Serif 4 + Noto Serif TC）。只適用 Tier 1。
+
 ### iOS / macOS bundle
 
 見 DS DESIGN.md §3 + §7.2 / §7.3，bundle OTF 進 app target。LXGW WenKai TC 檔案 ~10MB，iOS app 建議做繁體常用字 subset（用 `pyftsubset`）。本 checklist 暫不展開細節。
@@ -345,11 +347,13 @@ CSS pattern 全部從 `preview/components-preview.html` Phase 4 copy。**reduced
 - **Error**：「壞了。可能是我沒做對 — 再試試看 ↻」
 - **Empty**：「這裡還沒寫東西。懶人通常這樣。」
 - **Empty search**：「找不到。換個字試試？」
-- **Loading > 8 秒**：「比預期久一點，再等一下 ✦」
-- **Success toast**：「好了 ✦」
-- **Footer 簽名**：「Laziness sets your soul free. ✦」
+- **Loading > 10 秒**：「比預期久一點，再等一下」+ MoonStars
+- **Success toast**：「好了」+ MoonStars
+- **Footer 簽名**：「Laziness sets your soul free.」+ MoonStars
 
 文案直接 copy DESIGN.md §10.3 表格，不要自己重寫。
+
+MoonStars 是品牌 sigil 圖檔（web 用 `assets/moon-stars-glyph.png`，iOS 用 `assets/moon-stars-ios/`），不要用 `✦` 字元代替。v0.5.0 起 DESIGN.md §6.1 已改用 MoonStars（2026-09-10 定案）；更早的版本還寫 `✦`，以 §6.1 為準。
 
 ---
 
@@ -444,8 +448,8 @@ git diff --stat v0.5.0 origin/main -- tokens/
 - [ ] 沒引入新 hex / 新字體 / 新元件 anatomy
 - [ ] 反面教材 9 條全部沒踩
 - [ ] 邊緣狀態文案（404 / Error / Empty）有用 §10.3 而不是自己重寫
-- [ ] Footer 有 `Laziness sets your soul free. ✦` 簽名
+- [ ] Footer 有 `Laziness sets your soul free.` + MoonStars 簽名
 
 ---
 
-`✦ LAZZYMERLIN · EST. MMXXVI`
+<img src="../assets/moon-stars-glyph.png" alt="MoonStars" width="16" height="16"> `LAZZYMERLIN · EST. MMXXVI`
