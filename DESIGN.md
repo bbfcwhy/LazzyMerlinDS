@@ -1315,7 +1315,7 @@ App icon 不是 favicon 放大版。各平台對「應用 icon」有強硬規範
 4. 三 variant 各自 paste：Light → parchment 底 / Dark → navy 底 / Tinted → grayscale + 保留 transparent alpha
 5. 三 PNG 直接放進 `AppIcon.appiconset/` + 更新 `Contents.json` 的 `filename` field（Xcode 會自動抓）
 
-> **替代方案**：如果未來重做 stylized icon、可走 Figma 1024×1024 master + [Bakery](https://apps.apple.com/app/bakery) / `xcrun actool` 批量產出 pipeline。當前 v0.2.0 直接用 Logo 3D 整顆、走 PIL resize 流程。
+> **替代方案**：如果未來重做 stylized icon、可走 Figma 1024×1024 master + [Bakery](https://apps.apple.com/app/bakery) / `xcrun actool` 批量產出 pipeline。當前 v0.4.0 直接用 Logo 3D 整顆、走 PIL resize 流程。
 
 LazzyMerlin iOS icon 設計（v0.2.0 起）：
 - **Light**：Parchment `#F5EFE4` 底 + LazzyMerlinLogo3D 整顆（78% logo size、11% padding per side）
@@ -1367,7 +1367,7 @@ LazzyMerlin macOS icon 設計（v0.2.0 起）：
 - 跟 iOS Light variant 視覺一致（Parchment `#F5EFE4` 底 + LazzyMerlinLogo3D 整顆）
 - macOS 不另畫圓底 + 厚度陰影（跟 iOS 走 flat / 不過度堆疊）
 
-> **未來重做選項**：macOS 14+ 支援 `Liquid Glass` 風格（多層、可帶陰影投射），如果之後想做 macOS-specific 立體版本（背景 Petrol 漸層 + 中層 logo + 前景 `✦` 的 multi-plane 美學、模仿 macOS Sequoia），可以另開一輪 design + source 出 `.icns` 用 `iconutil -c icns`。當前 v0.2.0 直接用 iOS 同源 logo 縮放、保持兩平台視覺統一。
+> **未來重做選項**：macOS 14+ 支援 `Liquid Glass` 風格（多層、可帶陰影投射），如果之後想做 macOS-specific 立體版本（背景 Petrol 漸層 + 中層 logo + 前景 `✦` 的 multi-plane 美學、模仿 macOS Sequoia），可以另開一輪 design + source 出 `.icns` 用 `iconutil -c icns`。當前 v0.4.0 直接用 iOS 同源 logo 縮放、保持兩平台視覺統一。
 
 #### 8.3.4 Android Adaptive Icon
 

@@ -309,5 +309,5 @@ DS 應該是 brand-level 的純規範，不該耦合具體子專案。子專案�
 - **Loading state 不弱化 color，靠 spinner + `pointer-events: none`**（避免 `currentColor` cycle 踩坑 + alpha mix 字色不一致）
 - **品牌定位為「二人（+ 雙貓）實驗室」**（Merlin 是老婆名字諧音 · 梅林出主意 · 威爾用 AI 實現）
 
-[Unreleased]: https://github.com/bbfcwhy/LazzyMerlinDS/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/bbfcwhy/LazzyMerlinDS/compare/v0.4.0...HEAD
 [0.1.0]: https://github.com/bbfcwhy/LazzyMerlinDS/releases/tag/v0.1.0
