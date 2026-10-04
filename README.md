@@ -1,6 +1,6 @@
 # LazzyMerlin Design System
 
-> *Laziness sets your soul free.* ✦
+> *Laziness sets your soul free.* <img src="assets/moon-stars-glyph.png" alt="MoonStars" width="16">
 
 **慵懶梅林實驗室 · LazzyMerlin Lab** 跨平台品牌核心設計系統。
 
@@ -67,7 +67,7 @@ LazzyMerlin 是一個「二人（+ 雙貓）實驗室」—— 梅林出主意�
 ### 在 Notion 落地
 
 依 `DESIGN.md §7.4`：
-- 頁面 icon 用 `✦` glyph
+- 頁面 icon 用 MoonStars 或 LazzyMerlin 專屬 emoji
 - Cover 用奶茶米底
 - 用 Notion 原生 blue / brown / gray 模擬 brand tokens
 
@@ -77,7 +77,7 @@ LazzyMerlin 是一個「二人（+ 雙貓）實驗室」—— 梅林出主意�
 
 **色彩克制** —— 嚴格 8 色 wood palette（Petrol 三層藍 + 木質暖調），加 3 色 Earth Tone Extension 表達 status（Terracotta / Sage / Ochre · 大地色不是鮮豔紅綠黃）。反美式紅綠燈情緒對比，符合「冷面笑匠」tone。
 
-**魔法感不靠顏色，靠字體與裝飾承載** —— 霞鶩文楷手繪感 + Unicode glyphs（✦ ◈ ❦ ☾）+ 羅馬數字（MMXXVI）+ Small-caps label。
+**魔法感不靠顏色，靠字體與裝飾承載** —— 霞鶩文楷手繪感 + MoonStars 品牌 sigil + Unicode 裝飾字（◈ ❦ ☾，只作文字分隔）+ 羅馬數字（MMXXVI）+ Small-caps label。
 
 **對使用者克制** —— 「壞了」用陶土紅比刺眼正紅更耐看；「處理中」spinner 已足夠 indicate loading 不需弱化文字；error 不嘲諷使用者只用冷面笑匠機鋒（「頁面沒了。可能我當初就沒做出來。」）。
 
@@ -134,4 +134,4 @@ LazzyMerlin DS 採 **dual licensing**，分清楚「能參考的」跟「不能�
 
 ---
 
-`✦ LAZZYMERLIN · EST. MMXXVI`
+<img src="assets/moon-stars-glyph.png" alt="MoonStars" width="16"> `LAZZYMERLIN · EST. MMXXVI`
