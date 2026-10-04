@@ -12,7 +12,7 @@
 切到子專案資料夾開新 Claude Code session 後，paste 以下這段給它：
 
 ```
-我要把 LazzyMerlin Design System v0.4.0 套用到這個子專案。
+我要把 LazzyMerlin Design System v0.5.0 套用到這個子專案。
 
 LazzyMerlin DS 是我的跨平台品牌核心 design system，住在獨立 repo：
 https://github.com/bbfcwhy/LazzyMerlinDS
@@ -63,10 +63,10 @@ error: Multiple commands produce 'Info.plist'
 
 ```bash
 # ✅ 正確
-curl -s https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/DESIGN.md > /tmp/lm-spec.md
+curl -s https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/DESIGN.md > /tmp/lm-spec.md
 
 # ✗ 錯誤
-WebFetch https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.4.0/DESIGN.md
+WebFetch https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.5.0/DESIGN.md
 ```
 
 **為什麼：** WebFetch / browse 工具會 LLM-summarize 內容、漏掉 spec 的關鍵數值（box-shadow 完整 multi-layer 數值、邊緣狀態文案完整 wording、inset rim 兩層 hex 等）。QTL 落地踩過此雷：M1 Tactile material 強度只到 spec 1/4 ~ 1/8，因為 WebFetch 漏掉 §5.4.1 完整 box-shadow stack，M3.5 重做才修正。
@@ -173,14 +173,14 @@ body { font-family: 'Geist', 'Noto Sans TC', sans-serif; }
 
 ```bash
 mkdir -p src/styles/tokens
-curl -o src/styles/tokens/color.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/color.json
-curl -o src/styles/tokens/typography.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/typography.json
-curl -o src/styles/tokens/dimension.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/dimension.json
-curl -o src/styles/tokens/shadow.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/shadow.json
-curl -o src/styles/tokens/motion.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/motion.json
+curl -o src/styles/tokens/color.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/color.json
+curl -o src/styles/tokens/typography.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/typography.json
+curl -o src/styles/tokens/dimension.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/dimension.json
+curl -o src/styles/tokens/shadow.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/shadow.json
+curl -o src/styles/tokens/motion.json https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/motion.json
 ```
 
-子專案 README 寫一行：「LazzyMerlin DS pinned: v0.4.0（[CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md)）」。
+子專案 README 寫一行：「LazzyMerlin DS pinned: v0.5.0（[CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md)）」。
 
 ### B · Style Dictionary 自動產 CSS variables
 
@@ -402,36 +402,30 @@ CSS pattern 全部從 `preview/components-preview.html` Phase 4 copy。**reduced
 ## 重要 GitHub URLs
 
 - **Repo**：https://github.com/bbfcwhy/LazzyMerlinDS
-- **Spec v0.4.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.4.0/DESIGN.md
-- **Components Preview v0.4.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.4.0/preview/components-preview.html
-- **Tokens v0.4.0**：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.4.0/tokens
+- **Spec v0.5.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.5.0/DESIGN.md
+- **Components Preview v0.5.0**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/v0.5.0/preview/components-preview.html
+- **Tokens v0.5.0**：https://github.com/bbfcwhy/LazzyMerlinDS/tree/v0.5.0/tokens
 - **CHANGELOG**：https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md
 
-### Pin 到 v0.4.0 的 raw URLs
+### Pin 到 v0.5.0 的 raw URLs
 
 ```
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/color.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/typography.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/dimension.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/shadow.json
-https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.4.0/tokens/motion.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/color.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/typography.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/dimension.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/shadow.json
+https://raw.githubusercontent.com/bbfcwhy/LazzyMerlinDS/v0.5.0/tokens/motion.json
 ```
 
-### v0.4.0 之後到 main HEAD 的改動
+### v0.5.0 之後到 main HEAD 的改動
 
-截至 2026-10-04：`tokens/` 五檔與 v0.4.0 完全相同，pin v0.4.0 拿到的 token 值就是最新，不需要 cherry-pick。
+v0.4.0 → v0.5.0 的變更見 [CHANGELOG](https://github.com/bbfcwhy/LazzyMerlinDS/blob/main/CHANGELOG.md) 的 `[0.5.0]`。**含 Breaking**：Stone 色碼由 `#967459` 改為 `#83664E`，並新增 `primary-text` / `primary-fill` / `ink-on-light` 三個角色 token。從 v0.4.0 以前升上來的子專案，要整檔換 `tokens/color.json` 與 iOS colorset，再照 CHANGELOG 的 Downstream Impact 改字色。
 
-main 上還沒發版的改動（尚未寫進 CHANGELOG、尚未打 tag）：
-
-- `DESIGN.md`：earth status 色的說明文字對齊 `tokens/color.json`（token 值沒變）；品牌 sigil 由 `✦` 改為 MoonStars asset（§6.1）；補 SwiftUI token namespace 對照
-- `preview-ios/`：寫死的間距／圓角數字改用 token 名稱，沒有新元件
-- `preview/components-preview.html`：版本標籤改為 v0.4.0
-
-自己查最新狀態（在 LazzyMerlinDS repo 裡跑）：
+v0.5.0 之後 main 有沒有新改動，自己查（在 LazzyMerlinDS repo 裡跑）：
 
 ```bash
-git log --oneline v0.4.0..origin/main
-git diff --stat v0.4.0 origin/main -- tokens/
+git log --oneline v0.5.0..origin/main
+git diff --stat v0.5.0 origin/main -- tokens/
 ```
 
 第二條指令沒輸出 = token 值沒變。

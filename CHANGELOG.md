@@ -38,6 +38,17 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 - `DESIGN.md` 寫錯的對比數字：§14.3（4.6 / 4.7 → 實為 3.95 / 3.72）、§16 2026-05-05（Mid Petrol 5.4 → 3.95，5.4 是 `#46647C` 的值）、§2.1 Primary Deep（2.9 → 1.94）、§2.2.1（3.4 → 3.82）、§2.2.2 earth tone 表、§2.3 stone「~4.2:1 可當 14px 次文字」（實為 3.72，14px 也不是大字）。§15.5.4 目標由 AA Large 3:1 改為 4.5:1。
 - §2.4.4 / §14 寫「dark focus ring 換 primary-soft 提亮」：dark primary-soft 其實更暗。
 
+### Changed（v0.4.0 之後已在 main、先前未寫進 CHANGELOG）
+
+- **品牌 sigil 由 `✦` 改為 MoonStars asset**（`DESIGN.md §6.1`，§16 2026-09-10 定案）；Unicode 裝飾字（◈ ❦ ☾）只作文字分隔。
+- `DESIGN.md`：earth status 色說明文字對齊 `tokens/color.json`（token 值沒變）；補 SwiftUI token namespace 對照。
+- `preview-ios/`：寫死的間距 / 圓角數字改用 token 名稱，沒有新元件。
+- `preview/components-preview.html`：版本標籤與註解版本字串統一。
+- `README.md`：加 GitHub Pages 線上預覽網址。
+- `CLAUDE.md` / `AGENTS.md` / `DESIGN.md`：過時說明文字修正（PR #6）。
+- `docs/landing-checklist.md`：版本釘選由 v0.1.4 更新（PR #7）；本版再改為 v0.5.0，並重寫「之後到 main HEAD 的改動」段。
+- `.gitignore`：加入 Windows `Thumbs.db`。
+
 ### Downstream Impact
 
 - **所有子專案**（Stashly、MeowLog、lazzywill、QuickTimeLapse 等）：整檔同步 `tokens/color.json` 與 colorset（含新增 3 個）；有字的藍底改 `primaryFill` / `--primary-fill`，藍色文字改 `primaryText` / `--primary-text`，連結加底線，ochre chip 傳 `onLightFill: true`，earth 色文字改 `ink`。改完在 DS repo 跑 `python3 tokens/check-contrast.py` 對照數字。
