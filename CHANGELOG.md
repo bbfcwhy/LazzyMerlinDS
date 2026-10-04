@@ -46,7 +46,7 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 - `preview/components-preview.html`：版本標籤與註解版本字串統一。
 - `README.md`：加 GitHub Pages 線上預覽網址。
 - `CLAUDE.md` / `AGENTS.md` / `DESIGN.md`：過時說明文字修正（PR #6）。
-- `docs/landing-checklist.md`：版本釘選由 v0.1.4 更新（PR #7）；本版再改為 v0.5.0，並重寫「之後到 main HEAD 的改動」段。
+- `docs/landing-checklist.md`：版本釘選由 v0.1.4 更新（PR #7）；Phase 8 與驗收清單的 sigil 改 MoonStars、Phase 1 加 `tokens/font.css` 指路（PR #8）；本版再改為 v0.5.0，並重寫「之後到 main HEAD 的改動」段。
 - `.gitignore`：加入 Windows `Thumbs.db`。
 
 ### Downstream Impact
