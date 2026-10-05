@@ -4,6 +4,12 @@ LazzyMerlin Design System 版本紀錄。版本號遵循 [Semantic Versioning](h
 
 > Breaking change 政策、版本 bump 規則見 `DESIGN.md §17 Versioning`。
 
+## [Unreleased]
+
+### Added
+
+- **`assets/moon-stars-glyph-dark.png`**：MoonStars 深色模式版（72×72，alpha 與 `moon-stars-glyph.png` 逐像素相同，顏色改 Parchment `#F5EFE4`）。原圖純黑，在 GitHub 深色模式（`#0d1117`）對比只有 1.11:1，幾乎看不見；深色版 16.54:1。README 與 `docs/landing-checklist.md` 的嵌圖改用 `<picture>` + `prefers-color-scheme: dark` 切換。決策見 `DESIGN.md §16` 2026-10-05。
+
 ## [0.5.0] — 2026-10-04
 
 > ⚠️ **Breaking**：Stone 色碼由 `#967459` 改為 `#83664E`（hairline light 跟著改）。依 `DESIGN.md §17.1`「v0.x 的 MINOR 可含 breaking」以 MINOR 發布。子專案同步時要整檔換 `tokens/color.json` 與 iOS colorset。
