@@ -452,4 +452,4 @@ git diff --stat v0.5.0 origin/main -- tokens/
 
 ---
 
-<img src="../assets/moon-stars-glyph.png" alt="MoonStars" width="16" height="16"> `LAZZYMERLIN · EST. MMXXVI`
+<picture><source media="(prefers-color-scheme: dark)" srcset="../assets/moon-stars-glyph-dark.png"><img src="../assets/moon-stars-glyph.png" alt="MoonStars" width="16" height="16"></picture> `LAZZYMERLIN · EST. MMXXVI`

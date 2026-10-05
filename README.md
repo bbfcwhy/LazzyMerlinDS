@@ -1,6 +1,6 @@
 # LazzyMerlin Design System
 
-> *Laziness sets your soul free.* <img src="assets/moon-stars-glyph.png" alt="MoonStars" width="16">
+> *Laziness sets your soul free.* <picture><source media="(prefers-color-scheme: dark)" srcset="assets/moon-stars-glyph-dark.png"><img src="assets/moon-stars-glyph.png" alt="MoonStars" width="16"></picture>
 
 **慵懶梅林實驗室 · LazzyMerlin Lab** 跨平台品牌核心設計系統。
 
@@ -134,4 +134,4 @@ LazzyMerlin DS 採 **dual licensing**，分清楚「能參考的」跟「不能�
 
 ---
 
-<img src="assets/moon-stars-glyph.png" alt="MoonStars" width="16"> `LAZZYMERLIN · EST. MMXXVI`
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/moon-stars-glyph-dark.png"><img src="assets/moon-stars-glyph.png" alt="MoonStars" width="16"></picture> `LAZZYMERLIN · EST. MMXXVI`
